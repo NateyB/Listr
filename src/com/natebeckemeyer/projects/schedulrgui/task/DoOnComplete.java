@@ -6,7 +6,7 @@ package com.natebeckemeyer.projects.schedulrgui.task;
 public interface DoOnComplete
 {
     /**
-     * Specifies behavior to be performed when a task is completed.
+     * Specifies behavior to perform when a task is completed.
      */
     void perform(Task completed);
 }
