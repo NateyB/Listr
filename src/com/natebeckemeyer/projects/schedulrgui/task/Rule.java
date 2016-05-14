@@ -10,4 +10,5 @@ import java.util.function.Predicate;
  */
 public interface Rule extends Predicate<Task>
 {
+    String getName();
 }

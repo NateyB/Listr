@@ -12,15 +12,9 @@ import javafx.stage.Stage;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Main extends Application
 {
-
-    /**
-     * This is the prefix for all of the rules that will be instantiated by name.
-     */
-    private static String prefix = "com.natebeckemeyer.projects.schedulrgui.task";
 
     @Override
     public void start(Stage primaryStage) throws Exception
@@ -39,11 +33,9 @@ public class Main extends Application
         test.add(new Task("Upgrade Schedulr", new GregorianCalendar(2016, 4, 12)));
 
         Rule today = Schedulr.getRule("Today");
-        List<Task> display = test.stream().filter(today).collect(Collectors.toList());
+        Schedulr.addTasks(test);
+        List<Task> display = Schedulr.getTasksMatchingRule(today);
 
-        for (Task item : display)
-        {
-            System.out.println(item);
-        }
+        display.forEach(System.out::println);
     }
 }

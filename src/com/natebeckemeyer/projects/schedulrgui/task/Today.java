@@ -21,4 +21,9 @@ public class Today implements Rule
 
         return today.compareTo(task.getDueDate()) >= 0;
     }
+
+    @Override public String getName()
+    {
+        return "Today";
+    }
 }

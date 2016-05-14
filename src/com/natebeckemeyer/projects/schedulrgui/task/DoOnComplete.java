@@ -6,6 +6,13 @@ package com.natebeckemeyer.projects.schedulrgui.task;
 public interface DoOnComplete
 {
     /**
+     * Returns the name of the completion behavior (to display to the user).
+     *
+     * @return The name of the completion behavior.
+     */
+    String getName();
+
+    /**
      * Specifies behavior to perform when a task is completed.
      */
     void perform(Task completed);
