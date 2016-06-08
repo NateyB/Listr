@@ -27,24 +27,21 @@ public final class Schedulr
      */
     private static Map<String, Rule> mapping = new HashMap<>();
 
+    // Place the rules into the mapping
+    // This static initializer allows me to hardcode in the package searching and initialization without storing
+    // all of the options.
+    static
+    {
+        List<Rule> rules = Arrays.asList(new Today(), Tag.getTag("courses"));
+        rules.forEach(rule -> mapping.put(rule.getName(), rule));
+    }
+
     /**
      * The tasks that Schedulr is currently handling.
      */
     // TODO update this so that the priority is calculated as the distance from the current time, and allow only
     // some of the tasks to be handled at one time (a certain number, for instance)
     private static PriorityQueue<Task> tasks = new PriorityQueue<>();
-
-    // Place the rules into the mapping
-    // This static initializer allows me to hardcode in the package searching and initialization without storing
-    // all of the options.
-    static
-    {
-        List<Rule> rules = Arrays.asList(new Today(), new Tag("Homework"));
-        for (Rule rule : rules)
-        {
-            mapping.put(rule.getName(), rule);
-        }
-    }
 
     /**
      * Returns the rule corresponding to {@code name}.
@@ -56,7 +53,12 @@ public final class Schedulr
     @Nullable
     public static Rule getRule(String name)
     {
-        return mapping.get(name);
+        Rule returned = mapping.get(name);
+
+        if (returned == null)
+            return Tag.getTag(name);
+
+        return returned;
     }
 
     /**

@@ -1,14 +1,80 @@
 package com.natebeckemeyer.projects.schedulrgui.task;
 
+import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-04-28.
- *
- * This interface is merely a layer of abstraction for the Predicate interface, in case I decide to add something later.
- * Of course, I've parametrized it to work only with tasks.
  */
 public interface Rule extends Predicate<Task>
 {
     String getName();
+
+    default Rule and(Rule other)
+    {
+        Rule thisOne = this;
+        Objects.requireNonNull(other);
+        return new Rule()
+        {
+            @Override public String getName()
+            {
+                return String.format("(%s & %s)", thisOne.getName(), other.getName());
+            }
+
+            @Override public boolean test(Task task)
+            {
+                return thisOne.test(task) && other.test(task);
+            }
+
+            @Override public String toString()
+            {
+                return getName();
+            }
+        };
+    }
+
+    default Rule or(Rule other)
+    {
+        Rule thisOne = this;
+        Objects.requireNonNull(other);
+        return new Rule()
+        {
+            @Override public String getName()
+            {
+                return String.format("(%s + %s)", thisOne.getName(), other.getName());
+            }
+
+            @Override public boolean test(Task task)
+            {
+                return thisOne.test(task) || other.test(task);
+            }
+
+            @Override public String toString()
+            {
+                return getName();
+            }
+        };
+    }
+
+    default Rule negate()
+    {
+        Rule thisOne = this;
+        return new Rule()
+        {
+            @Override public String getName()
+            {
+                return String.format("!%s", thisOne.getName());
+            }
+
+            @Override public boolean test(Task task)
+            {
+                return !thisOne.test(task);
+            }
+
+            @Override public String toString()
+            {
+                return getName();
+            }
+        };
+    }
 }

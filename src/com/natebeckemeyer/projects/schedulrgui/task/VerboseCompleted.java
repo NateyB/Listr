@@ -8,17 +8,17 @@ import java.util.Objects;
  * <p>
  * Created for Schedulr by @author Nate Beckemeyer on 2016-05-11.
  */
-public class VerboseCompleted implements DoOnComplete
+public class VerboseCompleted implements OnCompletion
 {
     /**
      * Ensures that only one object is ever created.
      */
-    private static DoOnComplete me = new VerboseCompleted();
+    private static OnCompletion me = new VerboseCompleted();
 
     /**
      * @return The instance of this object that currently exists
      */
-    public static DoOnComplete getInstance()
+    public static OnCompletion getInstance()
     {
         return Objects.requireNonNull(me);
     }
@@ -38,5 +38,25 @@ public class VerboseCompleted implements DoOnComplete
     {
         completed.completed = true;
         System.out.printf("Task <<%s>> completed.%n", completed);
+    }
+
+    /**
+     * Deserializes an object from a string. Note that the string <i>cannot</i> contain a pipe character.
+     *
+     * @param serialized
+     * @return The new object containing the relevant fields.
+     */
+    @Override public void loadFromString(String serialized)
+    {
+        // NOOP
+    }
+
+    /**
+     * Serializes an OnCompletion object into a string. Note that the string <i>cannot</i> contain a pipe character.
+     * Including the pipe character will result in an InvalidCharacterException.
+     */
+    @Override public String convertToString()
+    {
+        return " ";
     }
 }

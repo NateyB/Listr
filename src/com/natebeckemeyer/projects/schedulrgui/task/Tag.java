@@ -1,31 +1,48 @@
 package com.natebeckemeyer.projects.schedulrgui.task;
 
+import java.util.HashMap;
+
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-04-28.
  */
 public class Tag implements Rule
 {
+    private static HashMap<String, Tag> tags = new HashMap<>();
+
     /**
-     * The name of the tag.
+     * The name of the tag. Note that this name can only contain alphabetic characters.
      */
     private String name;
 
     /**
-     * Creates a tag with name <i>name</i>.
+     * Creates a tag with name {@code name}. Can only contain alphabetic characters.
      *
      * @param name The name to give the tag
      */
-    public Tag(String name)
+    private Tag(String name)
     {
         this.name = name;
     }
 
+    public static Tag getTag(String name)
+    {
+        Tag returned = tags.get(name);
+
+        if (returned == null)
+        {
+            returned = new Tag(name);
+            tags.put(name, returned);
+        }
+
+        return returned;
+    }
+
     /**
-     * @return The name of the tag
+     * @return A string of the format {@code "Tag: name of tag"}
      */
     public String toString()
     {
-        return getName();
+        return String.format("Tag: %s", getName());
     }
 
     /**

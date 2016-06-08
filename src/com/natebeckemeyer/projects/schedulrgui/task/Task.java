@@ -28,12 +28,12 @@ public class Task implements Comparable<Task>
     /**
      * The object specifying the action to perform upon completion of the task.
      */
-    private DoOnComplete onComplete;
+    private OnCompletion onComplete;
 
     /**
      * The list of tags associated with the task.
      */
-    private Set<Tag> tags;
+    private Set<Tag> tags = new HashSet<>();
 
     /**
      * @return The name of the task
@@ -189,7 +189,7 @@ public class Task implements Comparable<Task>
      * @param dueDate    The Calendar object representing the due date of the task.
      * @param onComplete The specified completion behavior.
      */
-    public Task(String name, Calendar dueDate, DoOnComplete onComplete)
+    public Task(String name, Calendar dueDate, OnCompletion onComplete)
     {
         this.name = name;
         this.due = dueDate;
@@ -207,7 +207,7 @@ public class Task implements Comparable<Task>
     // relevant information about the date.
     public Task(String name, Calendar dueDate)
     {
-        this(name, dueDate, MarkCompleted.getInstance());
+        this(name, dueDate, new MarkCompleted());
     }
 
     /**

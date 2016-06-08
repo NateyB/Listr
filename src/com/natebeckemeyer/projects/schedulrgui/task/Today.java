@@ -8,6 +8,8 @@ import java.util.GregorianCalendar;
  */
 public class Today implements Rule
 {
+    private static String name = "Today";
+
     /**
      * Returns true if the task is due today or before today.
      *
@@ -24,6 +26,6 @@ public class Today implements Rule
 
     @Override public String getName()
     {
-        return "Today";
+        return name;
     }
 }

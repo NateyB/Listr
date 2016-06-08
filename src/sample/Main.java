@@ -1,5 +1,6 @@
 package sample;
 
+import com.natebeckemeyer.projects.schedulrgui.core.Parser;
 import com.natebeckemeyer.projects.schedulrgui.core.Schedulr;
 import com.natebeckemeyer.projects.schedulrgui.task.Rule;
 import com.natebeckemeyer.projects.schedulrgui.task.Task;
@@ -9,8 +10,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.util.GregorianCalendar;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Main extends Application
@@ -29,12 +28,9 @@ public class Main extends Application
     public static void main(String[] args)
     {
         //launch(args);
-        LinkedList<Task> test = new LinkedList<>();
-        test.add(new Task("Upgrade Schedulr", new GregorianCalendar(2016, 4, 12)));
-
-        Rule today = Schedulr.getRule("Today");
-        Schedulr.addTasks(test);
-        List<Task> display = Schedulr.getTasksMatchingRule(today);
+        Schedulr.addTasks(Parser.readTasksFromFile("tasks/current.dat"));
+        Rule test = Parser.processInput("!research + !ai");
+        List<Task> display = Schedulr.getTasksMatchingRule(test);
 
         display.forEach(System.out::println);
     }
