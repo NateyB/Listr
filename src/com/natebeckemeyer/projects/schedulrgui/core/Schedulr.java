@@ -9,7 +9,8 @@ import java.util.stream.Collectors;
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-04-28.
  * <p>
- * This class functions as the engine of the to-do app. It handles rules, their mapping, and controls which tasks will
+ * This class functions as the engine of the to-do app. It handles rules, their ruleMapping, and controls which tasks
+ * will
  * be displayed, etc.
  */
 public final class Schedulr
@@ -22,15 +23,15 @@ public final class Schedulr
     /**
      * The mapping from the display name to the object of the rules (so that only one instance of each is made).
      */
-    private static Map<String, Rule> mapping = new HashMap<>();
+    private static Map<String, Rule> ruleMapping = new HashMap<>();
 
-    // Place the rules into the mapping
+    // Place the rules into the ruleMapping
     // This static initializer allows me to hardcode in the package searching and initialization without storing
     // all of the options.
     static
     {
         List<Rule> rules = Arrays.asList(new Today(), new Week());
-        rules.forEach(rule -> mapping.put(rule.getName(), rule));
+        rules.forEach(rule -> ruleMapping.put(rule.getName(), rule));
     }
 
     /**
@@ -50,7 +51,7 @@ public final class Schedulr
     @Nullable
     public static Rule getRule(String name)
     {
-        Rule returned = mapping.get(name);
+        Rule returned = ruleMapping.get(name);
 
         if (returned == null)
             return Tag.getTag(name);
