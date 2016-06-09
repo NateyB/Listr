@@ -1,6 +1,5 @@
 package com.natebeckemeyer.projects.schedulrgui.task;
 
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 /**
@@ -8,7 +7,7 @@ import java.util.GregorianCalendar;
  */
 public class Today implements Rule
 {
-    private static String name = "Today";
+    private static String name = "today";
 
     /**
      * Returns true if the task is due today or before today.
@@ -19,9 +18,7 @@ public class Today implements Rule
      */
     @Override public boolean test(Task task)
     {
-        Calendar today = new GregorianCalendar();
-
-        return today.compareTo(task.getDueDate()) >= 0;
+        return new GregorianCalendar().compareTo(task.getDueDate()) >= 0;
     }
 
     @Override public String getName()

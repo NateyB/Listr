@@ -1,9 +1,6 @@
 package com.natebeckemeyer.projects.schedulrgui.core;
 
-import com.natebeckemeyer.projects.schedulrgui.task.Rule;
-import com.natebeckemeyer.projects.schedulrgui.task.Tag;
-import com.natebeckemeyer.projects.schedulrgui.task.Task;
-import com.natebeckemeyer.projects.schedulrgui.task.Today;
+import com.natebeckemeyer.projects.schedulrgui.task.*;
 import com.sun.istack.internal.Nullable;
 
 import java.util.*;
@@ -32,7 +29,7 @@ public final class Schedulr
     // all of the options.
     static
     {
-        List<Rule> rules = Arrays.asList(new Today(), Tag.getTag("courses"));
+        List<Rule> rules = Arrays.asList(new Today(), new Week());
         rules.forEach(rule -> mapping.put(rule.getName(), rule));
     }
 

@@ -79,6 +79,16 @@ public class Task implements Comparable<Task>
     }
 
     /**
+     * Used by JavaFX to display the date that the task is due.
+     *
+     * @return A string of the format {@code yyyy-mm-dd}.
+     */
+    public String getDueString()
+    {
+        return String.format("%04d-%02d-%02d", getDueYear(), getDueMonth() + 1, getDueDay());
+    }
+
+    /**
      * Returns the due date of the item in array form. Note that month is on a scale from {@code 0} to {@code 11}.
      *
      * @return A 3-item array of the form {@code [year, month, day]}.
@@ -95,7 +105,7 @@ public class Task implements Comparable<Task>
      */
     public String toString()
     {
-        return String.format("%04d-%02d-%02d: %s", getDueYear(), getDueMonth() + 1, getDueDay(), getName());
+        return String.format("%s: %s", getDueString(), getName());
     }
 
     /**

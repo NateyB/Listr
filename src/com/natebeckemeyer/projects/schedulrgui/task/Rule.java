@@ -28,7 +28,7 @@ public interface Rule extends Predicate<Task>
 
             @Override public String toString()
             {
-                return getName();
+                return String.format("Composition: %s", getName());
             }
         };
     }
@@ -51,7 +51,7 @@ public interface Rule extends Predicate<Task>
 
             @Override public String toString()
             {
-                return getName();
+                return String.format("Composition: %s", getName());
             }
         };
     }
@@ -73,7 +73,7 @@ public interface Rule extends Predicate<Task>
 
             @Override public String toString()
             {
-                return getName();
+                return String.format("Composition: %s", getName());
             }
         };
     }
