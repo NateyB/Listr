@@ -4,9 +4,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="223.0"
             prefWidth="391.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.natebeckemeyer.projects.schedulrgui.graphics.Controller">
+            fx:controller="com.natebeckemeyer.projects.schedulrgui.graphics.AddTaskPopupController">
     <children>
-        <Button fx:id="addTaskButton" layoutX="210.0" layoutY="188.0" mnemonicParsing="false"
+        <Button layoutX="210.0" layoutY="188.0" mnemonicParsing="false"
                 onMouseClicked="#addTaskButtonClicked" text="Add Task"/>
         <TextField fx:id="addTaskNameField" layoutX="119.0" layoutY="20.0" prefHeight="27.0" prefWidth="258.0"
                    promptText="Read research paper"/>
