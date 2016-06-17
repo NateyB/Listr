@@ -26,7 +26,7 @@ public class Task implements Comparable<Task>
     private String name;
 
     /**
-     * The object specifying the action to perform upon completion of the task.
+     * The object specifying the action to markCompleted upon completion of the task.
      */
     private OnCompletion onComplete;
 
@@ -65,6 +65,14 @@ public class Task implements Comparable<Task>
     public int getDueDay()
     {
         return due.get(Calendar.DAY_OF_MONTH);
+    }
+
+    /**
+     * @return Whether or not this task has been completed
+     */
+    public boolean isCompleted()
+    {
+        return completed;
     }
 
     /**
@@ -172,9 +180,12 @@ public class Task implements Comparable<Task>
     /**
      * This method is called when the task is checked as completed, and handles the completion of the object.
      */
-    public void markCompleted()
+    public void setCompleted(boolean completed)
     {
-        onComplete.perform(this);
+        if (completed)
+            onComplete.markCompleted(this);
+        else
+            onComplete.markUncompleted(this);
     }
 
     /**

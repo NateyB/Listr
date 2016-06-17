@@ -48,6 +48,7 @@ public final class Parser
                 int year = console.nextInt();
                 int month = console.nextInt();
                 int day = console.nextInt();
+                String completed = console.next();
                 LinkedList<Tag> labels = new LinkedList<>();
 
                 Scanner labelParser = new Scanner(console.next());
@@ -75,6 +76,8 @@ public final class Parser
                 String name = console.next();
                 Task toContribute = new Task(name, new GregorianCalendar(year, month - 1, day), onCompletion);
                 toContribute.addTags(labels);
+                if (completed.startsWith("y"))
+                    toContribute.setCompleted(true);
                 tasks.add(toContribute);
             }
 
@@ -124,7 +127,9 @@ public final class Parser
     }
 
     /**
-     * Creates a rule based on the string input.
+     * Creates a rule based on the string input. + indicates set union, - indicates set difference, & indicates set
+     * intersection, and ! indicates set inverse. TODO I intend to add an XOR (symmetric difference) symbol ($) in a
+     * future update.
      *
      * @param input Input to parse.
      * @return The filtering rule.
@@ -132,6 +137,8 @@ public final class Parser
     public static Rule processInput(String input)
     {
         ArrayList<String> subRules = new ArrayList<>();
+
+        input = input.replaceAll(" - ", " & !");
 
         while (input.matches(".*\\(.*\\).*"))
         {
@@ -142,7 +149,21 @@ public final class Parser
             input = String.format("%s%d%s", input.substring(0, begin), subRules.size() - 1, input.substring(end));
         }
 
-        return processInput(input, subRules);
+        Rule result = processInput(input, subRules);
+        if (result == null)
+            return new Rule()
+            {
+                @Override public String getName()
+                {
+                    return "Default (none)";
+                }
+
+                @Override public boolean test(Task task)
+                {
+                    return false;
+                }
+            };
+        return result;
     }
 
     private static Rule processInput(String input, ArrayList<String> subRules)

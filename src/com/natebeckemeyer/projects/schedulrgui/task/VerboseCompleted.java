@@ -34,10 +34,21 @@ public class VerboseCompleted implements OnCompletion
      *
      * @param completed The task that's been completed
      */
-    @Override public void perform(Task completed)
+    @Override public void markCompleted(Task completed)
     {
         completed.completed = true;
         System.out.printf("Task <<%s>> completed.%n", completed);
+    }
+
+    /**
+     * Specifies behavior to mark a task uncompleted
+     *
+     * @param uncompleted
+     */
+    @Override public void markUncompleted(Task uncompleted)
+    {
+        uncompleted.completed = false;
+        System.out.printf("Task <<%s>> uncompleted.%n", uncompleted);
     }
 
     /**

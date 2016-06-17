@@ -16,9 +16,14 @@ public interface OnCompletion
     String getName();
 
     /**
-     * Specifies behavior to perform when a task is completed.
+     * Specifies behavior to markCompleted when a task is completed.
      */
-    void perform(Task completed);
+    void markCompleted(Task completed);
+
+    /**
+     * Specifies behavior to mark a task uncompleted
+     */
+    void markUncompleted(Task uncompleted);
 
     /**
      * Deserializes an object from a string. Note that the string <i>cannot</i> contain a pipe character.

@@ -22,13 +22,23 @@ public class MarkCompleted implements OnCompletion
     }
 
     /**
-     * Specifies behavior to perform when a task is completed.
+     * Specifies behavior to markCompleted when a task is completed.
      *
      * @param completed
      */
-    @Override public void perform(Task completed)
+    @Override public void markCompleted(Task completed)
     {
         completed.completed = true;
+    }
+
+    /**
+     * Specifies behavior to mark a task uncompleted
+     *
+     * @param uncompleted
+     */
+    @Override public void markUncompleted(Task uncompleted)
+    {
+        uncompleted.completed = false;
     }
 
     /**

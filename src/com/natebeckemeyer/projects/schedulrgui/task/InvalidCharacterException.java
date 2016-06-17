@@ -5,7 +5,7 @@ package com.natebeckemeyer.projects.schedulrgui.task;
  */
 public class InvalidCharacterException extends RuntimeException
 {
-    InvalidCharacterException(String message)
+    public InvalidCharacterException(String message)
     {
         super(message);
     }
