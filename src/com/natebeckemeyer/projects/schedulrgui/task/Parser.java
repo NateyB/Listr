@@ -1,13 +1,12 @@
-package com.natebeckemeyer.projects.schedulrgui.core;
+package com.natebeckemeyer.projects.schedulrgui.task;
 
-import com.natebeckemeyer.projects.schedulrgui.task.OnCompletion;
-import com.natebeckemeyer.projects.schedulrgui.task.Rule;
-import com.natebeckemeyer.projects.schedulrgui.task.Tag;
-import com.natebeckemeyer.projects.schedulrgui.task.Task;
+import com.natebeckemeyer.projects.schedulrgui.core.Schedulr;
 import com.sun.istack.internal.Nullable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -24,6 +23,40 @@ public final class Parser
     // Disable instantiation
     private Parser()
     {
+    }
+
+    /**
+     * Given a file, save the current tasks to that file.
+     */
+    public static void saveTasksToFile(File sourceFile, Collection<Task> tasks) throws IOException
+    {
+        FileWriter writer = new FileWriter(sourceFile);
+
+        String output = "";
+        for (Task task : tasks)
+        {
+            String labels = "";
+            for (Tag tag : task.getTags())
+                labels = String.format("%s%s ", labels, tag.getName());
+
+            String onCompleteOut = task.getOnComplete().convertToString();
+            if (onCompleteOut.isEmpty())
+                onCompleteOut = " ";
+
+            output = String.format("%s%4d|%02d|%02d|%s|%s|%s|%s|%s%n", output,
+                    task.getDueYear(), task.getDueMonth(), task.getDueDay(),
+                    task.isCompleted() ? "y" : "n", labels.trim(),
+                    task.getOnComplete().getClass().getSimpleName(),
+                    onCompleteOut, task.getName());
+        }
+
+        writer.write(output.trim());
+        writer.close();
+    }
+
+    public static void saveTasksToFile(String sourceFile, Collection<Task> tasks) throws IOException
+    {
+        saveTasksToFile(new File(sourceFile), tasks);
     }
 
     /**
@@ -74,7 +107,7 @@ public final class Parser
                 }
 
                 String name = console.next();
-                Task toContribute = new Task(name, new GregorianCalendar(year, month - 1, day), onCompletion);
+                Task toContribute = new Task(name, new GregorianCalendar(year, month, day), onCompletion);
                 toContribute.addTags(labels);
                 if (completed.startsWith("y"))
                     toContribute.setCompleted(true);

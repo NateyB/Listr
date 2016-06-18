@@ -36,6 +36,14 @@ public class Task implements Comparable<Task>
     private Set<Tag> tags = new HashSet<>();
 
     /**
+     * Returns the OnCompletion object associated with this task
+     */
+    OnCompletion getOnComplete()
+    {
+        return onComplete;
+    }
+
+    /**
      * @return The name of the task
      */
     public String getName()
@@ -114,6 +122,11 @@ public class Task implements Comparable<Task>
     public String toString()
     {
         return String.format("%s: %s", getDueString(), getName());
+    }
+
+    public Set<Tag> getTags()
+    {
+        return tags;
     }
 
     /**
@@ -224,7 +237,7 @@ public class Task implements Comparable<Task>
      * @param name    The name of the task.
      * @param dueDate The Calendar object representing the date that the object is due.
      */
-    // TODO These calendar objects seem like they hold too much information. Perhaps create something that parses
+    // TODO These calendar objects seem like they hold too much information. Perhaps create something that parses only
     // relevant information about the date.
     public Task(String name, Calendar dueDate)
     {

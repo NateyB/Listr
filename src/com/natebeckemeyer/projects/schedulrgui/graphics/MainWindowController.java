@@ -1,8 +1,8 @@
 package com.natebeckemeyer.projects.schedulrgui.graphics;
 
 
-import com.natebeckemeyer.projects.schedulrgui.core.Parser;
 import com.natebeckemeyer.projects.schedulrgui.core.Schedulr;
+import com.natebeckemeyer.projects.schedulrgui.task.Parser;
 import com.natebeckemeyer.projects.schedulrgui.task.Task;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -33,7 +33,6 @@ public class MainWindowController
     @FXML
     private TextField taskListDefinition;
 
-
     @FXML
     private void provideView()
     {
@@ -47,6 +46,9 @@ public class MainWindowController
         @SuppressWarnings("unchecked")
         TableColumn<Task, Boolean> checkMarks = (TableColumn<Task, Boolean>) mainTaskList.getColumns().get(0);
         // TODO Fix this up. It's very hacky (and not functioning perfectly).
+        // Specifically, it messes up the first time that the list loads.
+        // Additionally, when you attempt to do a column-based resort, the checkboxes
+        // don't sync up with the new order.
         checkMarks.setCellFactory(column -> {
             CheckBoxTableCell<Task, Boolean> checkBox = new CheckBoxTableCell<>();
             BooleanProperty selected;

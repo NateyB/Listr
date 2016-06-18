@@ -58,6 +58,6 @@ public class MarkCompleted implements OnCompletion
      */
     @Override public String convertToString()
     {
-        return " ";
+        return "";
     }
 }

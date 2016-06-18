@@ -1,7 +1,9 @@
 package com.natebeckemeyer.projects.schedulrgui.graphics;
 
-import com.natebeckemeyer.projects.schedulrgui.core.Parser;
 import com.natebeckemeyer.projects.schedulrgui.core.Schedulr;
+import com.natebeckemeyer.projects.schedulrgui.task.Parser;
+import com.natebeckemeyer.projects.schedulrgui.task.Rule;
+import com.natebeckemeyer.projects.schedulrgui.task.Task;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -11,8 +13,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -22,9 +26,60 @@ public class Main extends Application
 {
     private static MenuBar nativeMenuBar;
 
+    private static Stage primary;
+
+    private static FileChooser fileChooser = new FileChooser();
+
     public static MenuBar getMenuBar()
     {
         return nativeMenuBar;
+    }
+
+    static
+    {
+        fileChooser.setTitle("Task File");
+        fileChooser.setInitialDirectory(new File("tasks"));
+    }
+
+    private static MenuItem initializeLoadButton()
+    {
+        MenuItem loadButton = new MenuItem("Load");
+        loadButton.onActionProperty().setValue(event -> {
+            File taskFile = fileChooser.showOpenDialog(primary);
+            if (taskFile != null)
+                Schedulr.setTasks(Parser.readTasksFromFile(taskFile));
+        });
+        return loadButton;
+    }
+
+    private static MenuItem initializeSaveButton()
+    {
+        MenuItem saveButton = new MenuItem("Save");
+        saveButton.onActionProperty().setValue(event -> {
+            File taskFile = fileChooser.showSaveDialog(primary);
+            if (taskFile != null)
+                try
+                {
+                    Parser.saveTasksToFile(taskFile, Schedulr.getTasksMatchingRule(new Rule()
+                    {
+                        @Override public String getName()
+                        {
+                            return "All";
+                        }
+
+                        @Override public boolean test(Task task)
+                        {
+                            return true;
+                        }
+                    }));
+                } catch (IOException e)
+                {
+                    e.printStackTrace();
+                    System.exit(13);
+                }
+        });
+
+        return saveButton;
     }
 
     private static void initializeNativeBar(boolean reinitialize)
@@ -42,7 +97,7 @@ public class Main extends Application
         } else
         {
             Menu[] menu = new Menu[]{new Menu("File")};
-            menu[0].getItems().addAll(new MenuItem("Save"), new MenuItem("Load"));
+            menu[0].getItems().addAll(initializeSaveButton(), initializeLoadButton());
 
             MenuBar nativeBar = new MenuBar();
             nativeBar.getMenus().addAll(Arrays.asList(menu));
@@ -78,6 +133,7 @@ public class Main extends Application
         primaryStage.setTitle("Schedulr");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
+        primary = primaryStage;
     }
 
     /**
@@ -107,7 +163,6 @@ public class Main extends Application
 
     public static void main(String[] args)
     {
-        Schedulr.addTasks(Parser.readTasksFromFile("tasks/current.dat"));
         launch(args);
     }
 }

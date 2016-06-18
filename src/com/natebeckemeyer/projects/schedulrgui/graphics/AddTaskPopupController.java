@@ -73,7 +73,7 @@ public class AddTaskPopupController
             @Override public OnCompletion fromString(String string)
             {
                 throw new RuntimeException(
-                        "Attempted to convert to OnCompletion from string. This operation is not supported.");
+                        "Attempted to instantiate OnCompletion from string. This operation is not supported.");
             }
         });
 

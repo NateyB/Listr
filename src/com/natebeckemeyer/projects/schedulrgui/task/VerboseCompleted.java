@@ -68,6 +68,6 @@ public class VerboseCompleted implements OnCompletion
      */
     @Override public String convertToString()
     {
-        return " ";
+        return "";
     }
 }
