@@ -17,21 +17,38 @@ import java.util.Scanner;
 
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-06-09.
+ * <p>
+ * This is the controller for the "add task" window.
  */
 public class AddTaskPopupController
 {
+    /**
+     * The DatePicker object that selects the due date.
+     */
     @FXML
     private DatePicker addTaskDueDatePicker;
 
+    /**
+     * The TextField object which users use to name the task.
+     */
     @FXML
     private TextField addTaskNameField;
 
+    /**
+     * The TextField object which users use to specify labels (separated by spaces).
+     */
     @FXML
     private TextField addTaskLabelField;
 
+    /**
+     * The ChoiceBox from which the user selects the OnCompletion behavior for the new task.
+     */
     @FXML
     private ChoiceBox<OnCompletion> addTaskChoiceBox;
 
+    /**
+     * Creates the Task from the population of the input parameters, and then inserts it into Schedulr's task listing.
+     */
     @FXML
     private void addTaskButtonClicked()
     {
@@ -57,6 +74,10 @@ public class AddTaskPopupController
         ((Stage) addTaskChoiceBox.getScene().getWindow()).close();
     }
 
+    /**
+     * Specifies the initialization behavior for this popup; specifically, it specifies the default populations where
+     * necessary.
+     */
     @FXML
     private void initialize()
     {

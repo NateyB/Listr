@@ -8,8 +8,18 @@ import java.util.function.Predicate;
  */
 public interface Rule extends Predicate<Task>
 {
+    /**
+     * @return The name of the rule; this is both the name that will be displayed and used to identify the rule in the
+     * mapping of all rules
+     */
     String getName();
 
+    /**
+     * By default, performs a logical "and".
+     *
+     * @param other The rule with which to perform a logical and
+     * @return A new rule that is the conjunction of this rule and the other rule.
+     */
     default Rule and(Rule other)
     {
         Rule thisOne = this;
@@ -33,6 +43,12 @@ public interface Rule extends Predicate<Task>
         };
     }
 
+    /**
+     * By default, performs a logical "or".
+     *
+     * @param other The rule with which to perform a logical or
+     * @return A new rule that is the disjunction of this rule and the other rule.
+     */
     default Rule or(Rule other)
     {
         Rule thisOne = this;
@@ -56,6 +72,11 @@ public interface Rule extends Predicate<Task>
         };
     }
 
+    /**
+     * By default, performs a logical negation.
+     *
+     * @return The inverse of this rule.
+     */
     default Rule negate()
     {
         Rule thisOne = this;

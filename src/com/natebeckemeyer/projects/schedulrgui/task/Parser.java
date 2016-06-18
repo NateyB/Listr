@@ -20,13 +20,19 @@ public final class Parser
      */
     private static final String prefix = "com.natebeckemeyer.projects.schedulrgui.task";
 
-    // Disable instantiation
+    /**
+     * This constructor is private to disable instantiation.
+     */
     private Parser()
     {
     }
 
     /**
-     * Given a file, save the current tasks to that file.
+     * Given a path to a file, writes the tasks provided to that file.
+     *
+     * @param sourceFile file to which this class will write these tasks
+     * @param tasks      the tasks to write to that file
+     * @throws IOException if the file is not found or could not be written to
      */
     public static void saveTasksToFile(File sourceFile, Collection<Task> tasks) throws IOException
     {
@@ -54,6 +60,13 @@ public final class Parser
         writer.close();
     }
 
+    /**
+     * Given a path to a file, writes the tasks provided to that file.
+     *
+     * @param sourceFile path to file
+     * @param tasks      the tasks to write to that file
+     * @throws IOException if the file is not found or could not be written to
+     */
     public static void saveTasksToFile(String sourceFile, Collection<Task> tasks) throws IOException
     {
         saveTasksToFile(new File(sourceFile), tasks);
@@ -148,11 +161,11 @@ public final class Parser
     }
 
     /**
-     * Returns the index at which the first substring ends
+     * Returns the index in the superstring at which the first substring ends
      *
-     * @param sup
-     * @param sub
-     * @return
+     * @param sup The superstring
+     * @param sub The substring
+     * @return The index in the superstring at which the first substring ends
      */
     private static int getEndIndex(String sup, String sub)
     {
@@ -161,8 +174,8 @@ public final class Parser
 
     /**
      * Creates a rule based on the string input. + indicates set union, - indicates set difference, & indicates set
-     * intersection, and ! indicates set inverse. TODO I intend to add an XOR (symmetric difference) symbol ($) in a
-     * future update.
+     * intersection, and ! indicates set inverse. A future update will include an XOR (symmetric difference) symbol, $.
+     * The order of operations is simply right-associative; use parentheses to change the order of evaluation.
      *
      * @param input Input to parse.
      * @return The filtering rule.
@@ -199,6 +212,13 @@ public final class Parser
         return result;
     }
 
+    /**
+     * Performs the actual processing of the text describing the rule.
+     *
+     * @param input    The text (wherein nested parentheses have been replaced with indexes of rules in subRules)
+     * @param subRules The array containing the rules inside of parentheses
+     * @return The filtering rule.
+     */
     private static Rule processInput(String input, ArrayList<String> subRules)
     {
         Scanner parser = new Scanner(input);

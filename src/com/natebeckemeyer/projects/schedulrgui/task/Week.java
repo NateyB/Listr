@@ -14,10 +14,10 @@ public class Week implements Rule
     }
 
     /**
-     * Evaluates this predicate on the given argument.
+     * Returns true if the task is due before the end of the week
      *
-     * @param task the input argument
-     * @return {@code true} if the input argument matches the predicate,
+     * @param task the task to be tested
+     * @return {@code true} if the task is due before the end of the week,
      * otherwise {@code false}
      */
     @Override public boolean test(Task task)

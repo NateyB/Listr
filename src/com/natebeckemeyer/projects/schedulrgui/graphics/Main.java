@@ -24,12 +24,24 @@ import java.util.List;
 
 public class Main extends Application
 {
+    /**
+     * The application-wide menu bar that's used
+     */
     private static MenuBar nativeMenuBar;
 
+    /**
+     * The primary stage at any given point.
+     */
     private static Stage primary;
 
-    private static FileChooser fileChooser = new FileChooser();
+    /**
+     * The object for selecting files to load from and save to. Initialized to the tasks directory.
+     */
+    private static final FileChooser fileChooser = new FileChooser();
 
+    /**
+     * @return The application-wide menu bar
+     */
     public static MenuBar getMenuBar()
     {
         return nativeMenuBar;
@@ -41,6 +53,9 @@ public class Main extends Application
         fileChooser.setInitialDirectory(new File("tasks"));
     }
 
+    /**
+     * @return A functional "Load" button which loads tasks from a file
+     */
     private static MenuItem initializeLoadButton()
     {
         MenuItem loadButton = new MenuItem("Load");
@@ -52,6 +67,9 @@ public class Main extends Application
         return loadButton;
     }
 
+    /**
+     * @return A functional "Save" button which saves tasks to a file
+     */
     private static MenuItem initializeSaveButton()
     {
         MenuItem saveButton = new MenuItem("Save");
@@ -82,6 +100,12 @@ public class Main extends Application
         return saveButton;
     }
 
+    /**
+     * Initializes the application-wide menu bar.
+     *
+     * @param reinitialize If true, the current menu bar will be replaced by a new one; else, it will just become
+     *                     visible again.
+     */
     private static void initializeNativeBar(boolean reinitialize)
     {
         if (!reinitialize && nativeMenuBar != null)
@@ -110,17 +134,32 @@ public class Main extends Application
 
     }
 
+    /**
+     * Initializes the application-wide menu bar without reinitializing it (a future update will fix this inaccuracy).
+     */
     private static void initializeNativeBar()
     {
         // Initialize the File menu
-        initializeNativeBar(true); // TODO Fix this up
+        initializeNativeBar(true);
     }
 
+    /**
+     * Loads the main window
+     *
+     * @return The application's main window
+     * @throws IOException If the file cannot be found
+     */
     private Parent initializeMainWindow() throws IOException
     {
         return FXMLLoader.load(getClass().getResource("mainWindow.fxml"));
     }
 
+    /**
+     * Initializes the main window & menu bar, configures them, and displays the stage.
+     *
+     * @param primaryStage The main stage of the application.
+     * @throws IOException Resources not found.
+     */
     @Override
     public void start(Stage primaryStage) throws IOException
     {
@@ -151,7 +190,6 @@ public class Main extends Application
 
         initializeNativeBar();
         MenuBar menuBar = getMenuBar();
-        menuBar.setVisible(true);
 
         elementList.add(menuBar);
         rootGroup.getChildren().addAll(elementList);

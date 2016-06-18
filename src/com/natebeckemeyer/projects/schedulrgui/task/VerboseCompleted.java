@@ -1,7 +1,5 @@
 package com.natebeckemeyer.projects.schedulrgui.task;
 
-import java.util.Objects;
-
 /**
  * This rule says which objects it marks as completed by printing to the console,
  * as opposed to the normal MarkCompleted, which makes no such claims.
@@ -10,19 +8,6 @@ import java.util.Objects;
  */
 public class VerboseCompleted implements OnCompletion
 {
-    /**
-     * Ensures that only one object is ever created.
-     */
-    private static OnCompletion me = new VerboseCompleted();
-
-    /**
-     * @return The instance of this object that currently exists
-     */
-    public static OnCompletion getInstance()
-    {
-        return Objects.requireNonNull(me);
-    }
-
     @Override public String getName()
     {
         return "Verbose";

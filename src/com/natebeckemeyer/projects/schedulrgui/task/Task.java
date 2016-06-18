@@ -124,6 +124,9 @@ public class Task implements Comparable<Task>
         return String.format("%s: %s", getDueString(), getName());
     }
 
+    /**
+     * @return The set of tags associated with this object
+     */
     public Set<Tag> getTags()
     {
         return tags;
@@ -191,7 +194,7 @@ public class Task implements Comparable<Task>
 
 
     /**
-     * This method is called when the task is checked as completed, and handles the completion of the object.
+     * Marks the task as completed or uncompleted.
      */
     public void setCompleted(boolean completed)
     {
@@ -207,9 +210,6 @@ public class Task implements Comparable<Task>
      * @param toCheck The tag to check
      * @return True if this item contains that tag; false otherwise
      */
-    // TODO This is currently n*m, where n is the number of tasks and m the number of tags. See if I can improve it
-    // (perhaps using a multiply linked list). Of course, this compromises the generalization of a tag to a rule,
-    // so I will have to revisit this issue later.
     public boolean contains(Tag toCheck)
     {
         return tags.contains(toCheck);
@@ -237,17 +237,15 @@ public class Task implements Comparable<Task>
      * @param name    The name of the task.
      * @param dueDate The Calendar object representing the date that the object is due.
      */
-    // TODO These calendar objects seem like they hold too much information. Perhaps create something that parses only
-    // relevant information about the date.
     public Task(String name, Calendar dueDate)
     {
         this(name, dueDate, new MarkCompleted());
     }
 
     /**
-     * Compares two items according to their due dates, exactly in accordance with the following algorithm.
+     * Compares two tasks, exactly in accordance with the following algorithm.
      * First, uncompleted tasks always take priority over completed ones. Second, the tasks are ordered in accordance
-     * with their calendar due dates. Third, the names are compared for lexicographical ordering.
+     * with their calendar due dates (older first). Third, the names are compared for lexicographical ordering.
      *
      * @param other The task to compare this task against
      * @return -1 if this task is ordered before the other task, 0 if they're ordered same time, and 1 if this task

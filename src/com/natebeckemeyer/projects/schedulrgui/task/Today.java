@@ -7,13 +7,11 @@ import java.util.GregorianCalendar;
  */
 public class Today implements Rule
 {
-    private static String name = "today";
-
     /**
      * Returns true if the task is due today or before today.
      *
      * @param task the task to check against
-     * @return {@code true} if the input argument matches the predicate,
+     * @return {@code true} if the task is due before tomorrow,
      * otherwise {@code false}
      */
     @Override public boolean test(Task task)
@@ -23,6 +21,6 @@ public class Today implements Rule
 
     @Override public String getName()
     {
-        return name;
+        return "today";
     }
 }

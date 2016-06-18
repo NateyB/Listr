@@ -10,12 +10,15 @@ import java.util.stream.Collectors;
  * Created for Schedulr by @author Nate Beckemeyer on 2016-04-28.
  * <p>
  * This class functions as the engine of the to-do app. It handles rules, their ruleMapping, and controls which tasks
- * will
- * be displayed, etc.
+ * will be displayed, etc.
+ * <p>
+ * A static initialization block places all of the rules included in the task package into the ruleMapping.
  */
 public final class Schedulr
 {
-    // Disables instantiation (as this class was coded as a static reference class, not designed to be inherited from).
+    /**
+     * Disables instantiation (as this class was coded as a static reference class, not designed to be inherited from).
+     */
     private Schedulr()
     {
     }
@@ -23,7 +26,7 @@ public final class Schedulr
     /**
      * The mapping from the display name to the object of the rules (so that only one instance of each is made).
      */
-    private static Map<String, Rule> ruleMapping = new HashMap<>();
+    private static final Map<String, Rule> ruleMapping = new HashMap<>();
 
     // Place the rules into the ruleMapping
     // This static initializer allows me to hardcode in the package searching and initialization without storing
@@ -37,8 +40,6 @@ public final class Schedulr
     /**
      * The tasks that Schedulr is currently handling.
      */
-    // TODO update this so that the priority is calculated as the distance from the current time, and allow only
-    // some of the tasks to be handled at one time (a certain number, for instance)
     private static PriorityQueue<Task> tasks = new PriorityQueue<>();
 
     /**

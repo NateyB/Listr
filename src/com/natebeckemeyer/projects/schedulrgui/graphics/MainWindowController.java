@@ -27,12 +27,21 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainWindowController
 {
+    /**
+     * The table that displays task according to the user-defined rules.
+     */
     @FXML
     private TableView<Task> mainTaskList;
 
+    /**
+     * The text field that contains the rule that controls which tasks are seen.
+     */
     @FXML
     private TextField taskListDefinition;
 
+    /**
+     * Loads the tasks into the table for display.
+     */
     @FXML
     private void provideView()
     {
@@ -45,10 +54,6 @@ public class MainWindowController
 
         @SuppressWarnings("unchecked")
         TableColumn<Task, Boolean> checkMarks = (TableColumn<Task, Boolean>) mainTaskList.getColumns().get(0);
-        // TODO Fix this up. It's very hacky (and not functioning perfectly).
-        // Specifically, it messes up the first time that the list loads.
-        // Additionally, when you attempt to do a column-based resort, the checkboxes
-        // don't sync up with the new order.
         checkMarks.setCellFactory(column -> {
             CheckBoxTableCell<Task, Boolean> checkBox = new CheckBoxTableCell<>();
             BooleanProperty selected;
@@ -75,7 +80,7 @@ public class MainWindowController
         @SuppressWarnings("unchecked")
         TableColumn<Task, String> dueDates = (TableColumn<Task, String>) mainTaskList.getColumns().get(1);
         dueDates.setCellValueFactory(new PropertyValueFactory<>("dueString"));
-        dueDates.setEditable(false); // TODO Change this (for names as well) later so that users can alter tasks
+        dueDates.setEditable(false);
 
         // Names
         @SuppressWarnings("unchecked")
@@ -84,6 +89,9 @@ public class MainWindowController
         names.setEditable(false);
     }
 
+    /**
+     * Creates & configures window for the "add task" popup.
+     */
     @FXML
     private void viewAddTaskButtonClicked()
     {
@@ -103,6 +111,11 @@ public class MainWindowController
         addTaskPopup.showAndWait();
     }
 
+    /**
+     * If enter is pressed while typing into the taskListDefinition box, update the task listing.
+     *
+     * @param key The key pressed
+     */
     @FXML
     private void enterTyping(KeyEvent key)
     {
