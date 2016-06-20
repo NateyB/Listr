@@ -1,16 +1,19 @@
 package com.natebeckemeyer.projects.schedulrgui.graphics;
 
 
+import com.natebeckemeyer.projects.schedulrgui.core.Parser;
 import com.natebeckemeyer.projects.schedulrgui.core.Schedulr;
-import com.natebeckemeyer.projects.schedulrgui.task.Parser;
+import com.natebeckemeyer.projects.schedulrgui.task.Tag;
 import com.natebeckemeyer.projects.schedulrgui.task.Task;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -23,10 +26,23 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainWindowController
 {
+    /**
+     * The completion behavior column visibility checkbox
+     */
+    @FXML
+    private CheckBox completionBehaviorCheckbox;
+
+    /**
+     * The tags column visibility checkbox
+     */
+    @FXML
+    private CheckBox tagCheckbox;
+
     /**
      * The table that displays task according to the user-defined rules.
      */
@@ -38,6 +54,16 @@ public class MainWindowController
      */
     @FXML
     private TextField taskListDefinition;
+
+    /**
+     * This is the flag that tells provideView() whether or not to show the tag column.
+     */
+    private boolean tagColumnShowing;
+
+    /**
+     * This is the flag that tells provideView() whether or not to show the onCompletion behavior column.
+     */
+    private boolean onCompletionColumnShowing;
 
     /**
      * Loads the tasks into the table for display.
@@ -60,7 +86,8 @@ public class MainWindowController
             if (count.intValue() >= passed.size())
                 selected = new SimpleBooleanProperty();
             else
-                selected = new SimpleBooleanProperty(passed.get(count.getAndIncrement()).isCompleted());
+                selected = new SimpleBooleanProperty(
+                        mainTaskList.getItems().get(count.getAndIncrement()).isCompleted());
 
             checkBox.setSelectedStateCallback(callback -> selected);
             selected.addListener((observable, oldValue, newValue) -> {
@@ -87,6 +114,37 @@ public class MainWindowController
         TableColumn<Task, String> names = (TableColumn<Task, String>) mainTaskList.getColumns().get(2);
         names.setCellValueFactory(new PropertyValueFactory<>("name"));
         names.setEditable(false);
+
+        // Tags
+        @SuppressWarnings("unchecked")
+        TableColumn<Task, String> tags = (TableColumn<Task, String>) mainTaskList.getColumns().get(3);
+        if (tagColumnShowing)
+        {
+            tags.setCellValueFactory(task -> {
+                Set<Tag> theseTags = task.getValue().getTags();
+                String labels = "";
+                for (Tag current : theseTags)
+                    labels = String.format("%s%s ", labels, current.getName());
+
+                return new SimpleStringProperty(labels.trim());
+            });
+            tags.setEditable(false);
+        }
+        tags.setVisible(tagColumnShowing);
+
+        @SuppressWarnings("unchecked")
+        TableColumn<Task, String> completionBehaviors = (TableColumn<Task, String>) mainTaskList.getColumns().get(4);
+        if (onCompletionColumnShowing)
+        {
+            completionBehaviors.setCellValueFactory(
+                    task -> new SimpleStringProperty(task.getValue().getOnComplete().getName()));
+            completionBehaviors.setEditable(false);
+            completionBehaviors.setVisible(true);
+        } else
+        {
+            completionBehaviors.setVisible(false);
+        }
+        completionBehaviors.setVisible(onCompletionColumnShowing);
     }
 
     /**
@@ -121,5 +179,20 @@ public class MainWindowController
     {
         if (key.getCode() == KeyCode.ENTER)
             provideView();
+    }
+
+    @FXML
+    private void initialize()
+    {
+        tagCheckbox.setOnMouseClicked(event ->
+        {
+            tagColumnShowing = tagCheckbox.isSelected();
+            provideView();
+        });
+        completionBehaviorCheckbox.setOnMouseClicked(event ->
+        {
+            onCompletionColumnShowing = completionBehaviorCheckbox.isSelected();
+            provideView();
+        });
     }
 }

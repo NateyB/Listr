@@ -1,6 +1,9 @@
-package com.natebeckemeyer.projects.schedulrgui.task;
+package com.natebeckemeyer.projects.schedulrgui.core;
 
-import com.natebeckemeyer.projects.schedulrgui.core.Schedulr;
+import com.natebeckemeyer.projects.schedulrgui.task.OnCompletion;
+import com.natebeckemeyer.projects.schedulrgui.task.Rule;
+import com.natebeckemeyer.projects.schedulrgui.task.Tag;
+import com.natebeckemeyer.projects.schedulrgui.task.Task;
 import com.sun.istack.internal.Nullable;
 
 import java.io.File;
@@ -174,7 +177,7 @@ public final class Parser
 
     /**
      * Creates a rule based on the string input. + indicates set union, - indicates set difference, & indicates set
-     * intersection, and ! indicates set inverse. A future update will include an XOR (symmetric difference) symbol, $.
+     * intersection, ! indicates set inverse, and $ indicates symmetric difference (XOR).
      * The order of operations is simply right-associative; use parentheses to change the order of evaluation.
      *
      * @param input Input to parse.
@@ -239,6 +242,10 @@ public final class Parser
             } else if (val.startsWith("&"))
             {
                 return current.and(processInput(input.substring(getEndIndex(input, val)), subRules));
+            } else if (val.startsWith("$"))
+            {
+                Rule next = processInput(input.substring(getEndIndex(input, val)), subRules);
+                return current.or(next).and((current.and(next)).negate());
             } else if (val.matches("\\d+"))
             {
                 current = processInput(subRules.get(Integer.parseInt(val)), subRules);

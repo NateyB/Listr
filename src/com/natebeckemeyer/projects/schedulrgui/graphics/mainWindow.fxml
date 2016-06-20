@@ -2,22 +2,30 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="579.0" prefWidth="599.0" xmlns="http://javafx.com/javafx/8.0.65"
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="613.0" prefWidth="871.0" xmlns="http://javafx.com/javafx/8.0.65"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.natebeckemeyer.projects.schedulrgui.graphics.MainWindowController">
     <children>
-        <TableView fx:id="mainTaskList" editable="true" layoutX="-1.0" layoutY="53.0" prefHeight="526.0"
-                   prefWidth="600.0">
+        <TableView fx:id="mainTaskList" editable="true" layoutY="86.0" prefHeight="527.0" prefWidth="871.0">
             <columns>
-                <TableColumn prefWidth="79.0" text="Completed"/>
-                <TableColumn editable="false" minWidth="0.0" prefWidth="85.0" text="Date"/>
-                <TableColumn minWidth="0.0" prefWidth="435.0" text="Name"/>
+                <TableColumn prefWidth="84.0" text="Completed"/>
+                <TableColumn editable="false" minWidth="0.0" prefWidth="130.0" text="Date"/>
+                <TableColumn minWidth="0.0" prefWidth="367.0" text="Name"/>
+                <TableColumn prefWidth="184.0" text="Tags" visible="false"/>
+                <TableColumn prefWidth="75.0" text="Completion Behavior" visible="false"/>
             </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
         </TableView>
         <TextField fx:id="taskListDefinition" layoutX="97.0" layoutY="14.0" onKeyPressed="#enterTyping"
-                   prefHeight="27.0" prefWidth="441.0" promptText="Define rule here!"/>
-        <Button layoutX="545.0" layoutY="14.0" mnemonicParsing="false" onMousePressed="#provideView" text="View"/>
+                   prefHeight="27.0" prefWidth="700.0" promptText="Define rule here!"/>
+        <Button layoutX="809.0" layoutY="14.0" mnemonicParsing="false" onMousePressed="#provideView" text="View"/>
         <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#viewAddTaskButtonClicked"
                 text="Add Task"/>
+        <Label layoutX="20.0" layoutY="58.0" text="Show columns:"/>
+        <CheckBox fx:id="tagCheckbox" layoutX="124.0" layoutY="57.0" mnemonicParsing="false" text="Tags"/>
+        <CheckBox fx:id="completionBehaviorCheckbox" layoutX="201.0" layoutY="57.0" mnemonicParsing="false"
+                  text="Completion Behavior"/>
     </children>
 </AnchorPane>

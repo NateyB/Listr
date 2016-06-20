@@ -38,7 +38,7 @@ public class Task implements Comparable<Task>
     /**
      * Returns the OnCompletion object associated with this task
      */
-    OnCompletion getOnComplete()
+    public OnCompletion getOnComplete()
     {
         return onComplete;
     }
