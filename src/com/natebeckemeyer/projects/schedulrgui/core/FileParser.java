@@ -1,7 +1,6 @@
 package com.natebeckemeyer.projects.schedulrgui.core;
 
 import com.natebeckemeyer.projects.schedulrgui.task.OnCompletion;
-import com.natebeckemeyer.projects.schedulrgui.task.Rule;
 import com.natebeckemeyer.projects.schedulrgui.task.Tag;
 import com.natebeckemeyer.projects.schedulrgui.task.Task;
 import com.sun.istack.internal.Nullable;
@@ -15,7 +14,7 @@ import java.util.*;
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-05-14.
  */
-public final class Parser
+public final class FileParser
 {
 
     /**
@@ -26,7 +25,7 @@ public final class Parser
     /**
      * This constructor is private to disable instantiation.
      */
-    private Parser()
+    private FileParser()
     {
     }
 
@@ -163,100 +162,4 @@ public final class Parser
         return readTasksFromFile(source);
     }
 
-    /**
-     * Returns the index in the superstring at which the first substring ends
-     *
-     * @param sup The superstring
-     * @param sub The substring
-     * @return The index in the superstring at which the first substring ends
-     */
-    private static int getEndIndex(String sup, String sub)
-    {
-        return sup.indexOf(sub) + sub.length();
-    }
-
-    /**
-     * Creates a rule based on the string input. + indicates set union, - indicates set difference, & indicates set
-     * intersection, ! indicates set inverse, and $ indicates symmetric difference (XOR).
-     * The order of operations is simply right-associative; use parentheses to change the order of evaluation.
-     *
-     * @param input Input to parse.
-     * @return The filtering rule.
-     */
-    public static Rule processInput(String input)
-    {
-        ArrayList<String> subRules = new ArrayList<>();
-
-        input = input.replaceAll(" - ", " & !");
-
-        while (input.matches(".*\\(.*\\).*"))
-        {
-            int end = input.indexOf(")") + 1;
-            int begin = input.substring(0, end).lastIndexOf("(");
-
-            subRules.add(input.substring(begin + 1, end - 1));
-            input = String.format("%s%d%s", input.substring(0, begin), subRules.size() - 1, input.substring(end));
-        }
-
-        Rule result = processInput(input, subRules);
-        if (result == null)
-            return new Rule()
-            {
-                @Override public String getName()
-                {
-                    return "Default (none)";
-                }
-
-                @Override public boolean test(Task task)
-                {
-                    return false;
-                }
-            };
-        return result;
-    }
-
-    /**
-     * Performs the actual processing of the text describing the rule.
-     *
-     * @param input    The text (wherein nested parentheses have been replaced with indexes of rules in subRules)
-     * @param subRules The array containing the rules inside of parentheses
-     * @return The filtering rule.
-     */
-    private static Rule processInput(String input, ArrayList<String> subRules)
-    {
-        Scanner parser = new Scanner(input);
-        parser.useDelimiter(" ");
-
-        Rule current = null;
-        while (parser.hasNext())
-        {
-            String val = parser.next();
-
-            if (val.startsWith("!"))
-            {
-                current = processInput(val.substring(1), subRules).negate();
-                input = input.substring(getEndIndex(input, val));
-            } else if (val.startsWith("+"))
-            {
-                return current.or(processInput(input.substring(getEndIndex(input, val)), subRules));
-            } else if (val.startsWith("&"))
-            {
-                return current.and(processInput(input.substring(getEndIndex(input, val)), subRules));
-            } else if (val.startsWith("$"))
-            {
-                Rule next = processInput(input.substring(getEndIndex(input, val)), subRules);
-                return current.or(next).and((current.and(next)).negate());
-            } else if (val.matches("\\d+"))
-            {
-                current = processInput(subRules.get(Integer.parseInt(val)), subRules);
-                input = input.substring(getEndIndex(input, val));
-            } else
-            {
-                current = Schedulr.getRule(val);
-                input = input.substring(getEndIndex(input, val));
-            }
-        }
-
-        return current;
-    }
 }

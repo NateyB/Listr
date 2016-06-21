@@ -6,13 +6,13 @@ import java.util.function.Predicate;
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-04-28.
  */
-public interface Rule extends Predicate<Task>
+public abstract class Rule implements Predicate<Task>
 {
     /**
      * @return The name of the rule; this is both the name that will be displayed and used to identify the rule in the
      * mapping of all rules
      */
-    String getName();
+    public abstract String getName();
 
     /**
      * By default, performs a logical "and".
@@ -20,7 +20,7 @@ public interface Rule extends Predicate<Task>
      * @param other The rule with which to perform a logical and
      * @return A new rule that is the conjunction of this rule and the other rule.
      */
-    default Rule and(Rule other)
+    public final Rule and(Rule other)
     {
         Rule thisOne = this;
         Objects.requireNonNull(other);
@@ -49,7 +49,7 @@ public interface Rule extends Predicate<Task>
      * @param other The rule with which to perform a logical or
      * @return A new rule that is the disjunction of this rule and the other rule.
      */
-    default Rule or(Rule other)
+    public final Rule or(Rule other)
     {
         Rule thisOne = this;
         Objects.requireNonNull(other);
@@ -77,7 +77,7 @@ public interface Rule extends Predicate<Task>
      *
      * @return The inverse of this rule.
      */
-    default Rule negate()
+    public final Rule negate()
     {
         Rule thisOne = this;
         return new Rule()

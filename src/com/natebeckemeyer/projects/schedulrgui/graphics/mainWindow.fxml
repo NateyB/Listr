@@ -6,7 +6,8 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.natebeckemeyer.projects.schedulrgui.graphics.MainWindowController">
     <children>
-        <TableView fx:id="mainTaskList" editable="true" layoutY="86.0" prefHeight="527.0" prefWidth="871.0">
+        <TableView fx:id="mainTaskList" editable="true" layoutY="86.0" onKeyPressed="#deleteTask" prefHeight="527.0"
+                   prefWidth="871.0">
             <columns>
                 <TableColumn prefWidth="84.0" text="Completed"/>
                 <TableColumn editable="false" minWidth="0.0" prefWidth="130.0" text="Date"/>
@@ -20,12 +21,14 @@
         </TableView>
         <TextField fx:id="taskListDefinition" layoutX="97.0" layoutY="14.0" onKeyPressed="#enterTyping"
                    prefHeight="27.0" prefWidth="700.0" promptText="Define rule here!"/>
-        <Button layoutX="809.0" layoutY="14.0" mnemonicParsing="false" onMousePressed="#provideView" text="View"/>
+        <Button layoutX="809.0" layoutY="14.0" mnemonicParsing="false" onAction="#setAndDisplay" text="View"/>
         <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#viewAddTaskButtonClicked"
                 text="Add Task"/>
-        <Label layoutX="20.0" layoutY="58.0" text="Show columns:"/>
+        <Label layoutX="35.0" layoutY="58.0" text="Show"/>
         <CheckBox fx:id="tagCheckbox" layoutX="124.0" layoutY="57.0" mnemonicParsing="false" text="Tags"/>
-        <CheckBox fx:id="completionBehaviorCheckbox" layoutX="201.0" layoutY="57.0" mnemonicParsing="false"
+        <CheckBox fx:id="completionBehaviorCheckbox" layoutX="196.0" layoutY="57.0" mnemonicParsing="false"
                   text="Completion Behavior"/>
+        <CheckBox fx:id="showCompletedTasksCheckbox" layoutX="370.0" layoutY="57.0" mnemonicParsing="false"
+                  text="Completed Tasks"/>
     </children>
 </AnchorPane>

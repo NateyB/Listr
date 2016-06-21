@@ -33,7 +33,7 @@ public final class Schedulr
     // all of the options.
     static
     {
-        List<Rule> rules = Arrays.asList(new Today(), new Week());
+        List<Rule> rules = Arrays.asList(new Today(), new Week(), new Completed());
         rules.forEach(rule -> ruleMapping.put(rule.getName(), rule));
     }
 
@@ -70,6 +70,11 @@ public final class Schedulr
     public static List<Task> getTasksMatchingRule(Rule toCompare)
     {
         return tasks.stream().filter(toCompare).collect(Collectors.toList());
+    }
+
+    public static List<Task> getAllTasks()
+    {
+        return tasks.stream().collect(Collectors.toList());
     }
 
     /**

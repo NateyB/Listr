@@ -1,8 +1,9 @@
 package com.natebeckemeyer.projects.schedulrgui.graphics;
 
 
-import com.natebeckemeyer.projects.schedulrgui.core.Parser;
+import com.natebeckemeyer.projects.schedulrgui.core.DynamicRuleParser;
 import com.natebeckemeyer.projects.schedulrgui.core.Schedulr;
+import com.natebeckemeyer.projects.schedulrgui.task.Rule;
 import com.natebeckemeyer.projects.schedulrgui.task.Tag;
 import com.natebeckemeyer.projects.schedulrgui.task.Task;
 import javafx.beans.property.BooleanProperty;
@@ -28,6 +29,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class MainWindowController
 {
@@ -44,6 +46,12 @@ public class MainWindowController
     private CheckBox tagCheckbox;
 
     /**
+     * The checkbox determining whether to show completed tasks or not.
+     */
+    @FXML
+    private CheckBox showCompletedTasksCheckbox;
+
+    /**
      * The table that displays task according to the user-defined rules.
      */
     @FXML
@@ -56,23 +64,39 @@ public class MainWindowController
     private TextField taskListDefinition;
 
     /**
-     * This is the flag that tells provideView() whether or not to show the tag column.
+     * This is the flag that tells displayTasks() whether or not to show the tag column.
      */
     private boolean tagColumnShowing;
 
     /**
-     * This is the flag that tells provideView() whether or not to show the onCompletion behavior column.
+     * This is the flag that tells displayTasks() whether or not to show the onCompletion behavior column.
      */
     private boolean onCompletionColumnShowing;
 
     /**
+     * This is the flag that determines whether or not to show completed tasks in the listing.
+     */
+    private boolean showCompletedTasks;
+
+    /**
+     * This is the rule that's currently being displayed.
+     */
+    private Rule currentRule;
+
+    /**
      * Loads the tasks into the table for display.
      */
-    @FXML
-    private void provideView()
+    private void displayTasks()
     {
         AtomicInteger count = new AtomicInteger(0);
-        List<Task> passed = Schedulr.getTasksMatchingRule(Parser.processInput(taskListDefinition.getText()));
+        if (currentRule == null)
+            identifyCurrentRule();
+
+        List<Task> passed;
+        if (!showCompletedTasks)
+            passed = Schedulr.getTasksMatchingRule(currentRule.and(Schedulr.getRule("completed").negate()));
+        else
+            passed = Schedulr.getTasksMatchingRule(currentRule);
         passed.sort(null);
 
         ObservableList<Task> tasks = FXCollections.observableArrayList(passed);
@@ -95,7 +119,7 @@ public class MainWindowController
                 if (corresponding.isCompleted() != newValue)
                 {
                     corresponding.setCompleted(newValue);
-                    provideView();
+                    displayTasks();
                 }
             });
             return checkBox;
@@ -178,21 +202,53 @@ public class MainWindowController
     private void enterTyping(KeyEvent key)
     {
         if (key.getCode() == KeyCode.ENTER)
-            provideView();
+            setAndDisplay();
+    }
+
+    @FXML
+    private void setAndDisplay()
+    {
+        identifyCurrentRule();
+        displayTasks();
     }
 
     @FXML
     private void initialize()
     {
-        tagCheckbox.setOnMouseClicked(event ->
+        tagCheckbox.setOnAction(event ->
         {
             tagColumnShowing = tagCheckbox.isSelected();
-            provideView();
+            displayTasks();
         });
-        completionBehaviorCheckbox.setOnMouseClicked(event ->
+
+        completionBehaviorCheckbox.setOnAction(event ->
         {
             onCompletionColumnShowing = completionBehaviorCheckbox.isSelected();
-            provideView();
+            displayTasks();
         });
+
+        showCompletedTasksCheckbox.setOnAction(event ->
+        {
+            showCompletedTasks = showCompletedTasksCheckbox.isSelected();
+            displayTasks();
+        });
+    }
+
+    @FXML
+    private void deleteTask(KeyEvent key)
+    {
+        if (key.getCode() == KeyCode.DELETE || key.getCode() == KeyCode.BACK_SPACE)
+        {
+            List<Task> tasks = Schedulr.getAllTasks();
+            Task selected = mainTaskList.getSelectionModel().getSelectedItem();
+            tasks = tasks.stream().filter(task -> task != selected).collect(Collectors.toList());
+            Schedulr.setTasks(tasks);
+            displayTasks();
+        }
+    }
+
+    private void identifyCurrentRule()
+    {
+        currentRule = DynamicRuleParser.processInput(taskListDefinition.getText());
     }
 }

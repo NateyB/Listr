@@ -1,9 +1,6 @@
 package com.natebeckemeyer.projects.schedulrgui.task;
 
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-04-28.
@@ -240,6 +237,27 @@ public class Task implements Comparable<Task>
     public Task(String name, Calendar dueDate)
     {
         this(name, dueDate, new MarkCompleted());
+    }
+
+    /**
+     * Copies the instance fields of task {@code other} into a new task.
+     *
+     * @param other The task to copy.
+     */
+    public Task(Task other)
+    {
+        this.name = other.name;
+        this.due = new GregorianCalendar(other.getDueYear(), other.getDueMonth(), other.getDueDay());
+        this.completed = other.completed;
+        try
+        {
+            this.onComplete = other.getOnComplete().getClass().newInstance();
+        } catch (IllegalAccessException | InstantiationException e)
+        {
+            e.printStackTrace();
+            this.onComplete = new MarkCompleted();
+        }
+        this.tags = new HashSet<>(other.tags);
     }
 
     /**

@@ -5,7 +5,7 @@ import java.util.GregorianCalendar;
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-05-11.
  */
-public class Today implements Rule
+public class Today extends Rule
 {
     /**
      * Returns true if the task is due today or before today.

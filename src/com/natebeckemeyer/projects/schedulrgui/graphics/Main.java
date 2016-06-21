@@ -1,6 +1,6 @@
 package com.natebeckemeyer.projects.schedulrgui.graphics;
 
-import com.natebeckemeyer.projects.schedulrgui.core.Parser;
+import com.natebeckemeyer.projects.schedulrgui.core.FileParser;
 import com.natebeckemeyer.projects.schedulrgui.core.Schedulr;
 import com.natebeckemeyer.projects.schedulrgui.task.Rule;
 import com.natebeckemeyer.projects.schedulrgui.task.Task;
@@ -50,7 +50,7 @@ public class Main extends Application
     static
     {
         fileChooser.setTitle("Task File");
-        fileChooser.setInitialDirectory(new File("tasks"));
+        fileChooser.setInitialDirectory(new File("resources/tasks"));
     }
 
     /**
@@ -62,7 +62,7 @@ public class Main extends Application
         loadButton.onActionProperty().setValue(event -> {
             File taskFile = fileChooser.showOpenDialog(primary);
             if (taskFile != null)
-                Schedulr.setTasks(Parser.readTasksFromFile(taskFile));
+                Schedulr.setTasks(FileParser.readTasksFromFile(taskFile));
         });
         return loadButton;
     }
@@ -78,7 +78,7 @@ public class Main extends Application
             if (taskFile != null)
                 try
                 {
-                    Parser.saveTasksToFile(taskFile, Schedulr.getTasksMatchingRule(new Rule()
+                    FileParser.saveTasksToFile(taskFile, Schedulr.getTasksMatchingRule(new Rule()
                     {
                         @Override public String getName()
                         {

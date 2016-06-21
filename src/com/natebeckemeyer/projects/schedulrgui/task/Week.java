@@ -6,7 +6,7 @@ import java.util.GregorianCalendar;
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-06-08.
  */
-public class Week implements Rule
+public class Week extends Rule
 {
     @Override public String getName()
     {
