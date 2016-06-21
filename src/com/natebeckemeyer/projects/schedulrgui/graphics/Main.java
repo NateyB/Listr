@@ -1,7 +1,7 @@
 package com.natebeckemeyer.projects.schedulrgui.graphics;
 
-import com.natebeckemeyer.projects.schedulrgui.core.FileParser;
 import com.natebeckemeyer.projects.schedulrgui.core.Schedulr;
+import com.natebeckemeyer.projects.schedulrgui.task.FileParser;
 import com.natebeckemeyer.projects.schedulrgui.task.Rule;
 import com.natebeckemeyer.projects.schedulrgui.task.Task;
 import javafx.application.Application;

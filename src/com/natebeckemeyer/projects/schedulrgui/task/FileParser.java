@@ -1,8 +1,5 @@
-package com.natebeckemeyer.projects.schedulrgui.core;
+package com.natebeckemeyer.projects.schedulrgui.task;
 
-import com.natebeckemeyer.projects.schedulrgui.task.OnCompletion;
-import com.natebeckemeyer.projects.schedulrgui.task.Tag;
-import com.natebeckemeyer.projects.schedulrgui.task.Task;
 import com.sun.istack.internal.Nullable;
 
 import java.io.File;
@@ -125,7 +122,7 @@ public final class FileParser
                 Task toContribute = new Task(name, new GregorianCalendar(year, month, day), onCompletion);
                 toContribute.addTags(labels);
                 if (completed.startsWith("y"))
-                    toContribute.setCompleted(true);
+                    toContribute.completed = true;
                 tasks.add(toContribute);
             }
 
