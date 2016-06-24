@@ -3,8 +3,18 @@ package com.natebeckemeyer.projects.schedulrgui.core;
 import com.natebeckemeyer.projects.schedulrgui.task.Rule;
 import com.natebeckemeyer.projects.schedulrgui.task.Task;
 
+import javax.naming.OperationNotSupportedException;
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-06-19.
@@ -12,10 +22,81 @@ import java.util.Scanner;
 public final class DynamicRuleParser
 {
     /**
+     * The compiler that will be used to analyze by
+     */
+    private static JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+
+    /**
      * Disables instantiation, as the only uses of this class should be static API calls
      */
     private DynamicRuleParser()
     {
+    }
+
+    /**
+     * Given the name and function of a rule, writes the rule to a file, compiles the file, and then loads the rule from
+     * the file into memory. Additionally, this function places the file into Schedulr.
+     * This method was created so that users could define their own rules.
+     *
+     * @param name     The name of the rule. At any given point, each existing rule must have a unique name.
+     * @param function The function of the rule; the test that task needs to pass.
+     * @param imports  The imports that the test will need. Only the classpaths are needed; i.e., "java.io.File"
+     * @return The new rule.
+     */
+    public static Rule compileAndLoadRule(String name, String function, List<String> imports)
+    {
+        String className = String.format("%s%s", name.substring(0, 1).toUpperCase(), name.substring(1));
+        String fileName = String.format("%s%s%s.java", Config.userRulesLocation, Config.separator, className);
+
+        try (Scanner readBlankTask = new Scanner(
+                new File(String.format("%s%s%s", Config.corePrefix, Config.separator, "BlankTask.template")));
+             FileWriter writeNewTask = new FileWriter(fileName))
+        {
+            // Prepare the imports
+            StringBuilder importLines = new StringBuilder();
+            imports.add("com.natebeckemeyer.projects.schedulrgui.task.Rule");
+            imports.add("com.natebeckemeyer.projects.schedulrgui.task.Task");
+            for (String item : imports)
+                importLines.append(String.format("import %s;%n", item));
+
+            StringBuilder replacement = new StringBuilder();
+
+            while (readBlankTask.hasNextLine())
+            {
+                String line = readBlankTask.nextLine();
+                line = line.replaceAll(Pattern.quote("$$$IMPORTS$$$"), importLines.toString());
+                line = line.replaceAll(Pattern.quote("$$$CLASSNAME$$$"), className);
+                line = line.replaceAll(Pattern.quote("$$$NAME$$$"), name);
+                line = line.replaceAll(Pattern.quote("$$$TEST$$$"), function);
+                replacement.append(String.format("%s%n", line));
+            }
+            writeNewTask.write(replacement.toString());
+            writeNewTask.close();
+
+            int compilationResult = compiler.run(null, null, null,
+                    fileName);
+            if (compilationResult != 0)
+                throw new IllegalAccessException(String.format("Could not compile user-defined rule named %s", name));
+
+            URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(Config.userRulesLocation)
+                    .toURI().toURL()});
+            Class<?> ruleClass = classLoader.loadClass(className);
+            Object instantiation = ruleClass.newInstance();
+
+            if (instantiation instanceof Rule)
+            {
+                Rule userRule = (Rule) instantiation;
+                Schedulr.addRule(userRule);
+                return userRule;
+            } else
+                throw new OperationNotSupportedException("Attempted to load class that does not extend Rule.");
+
+        } catch (IOException | IllegalAccessException | ClassNotFoundException | InstantiationException |
+                OperationNotSupportedException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
@@ -59,7 +140,7 @@ public final class DynamicRuleParser
             {
                 @Override public String getName()
                 {
-                    return "Default (none)";
+                    return "Unnamed";
                 }
 
                 @Override public boolean test(Task task)

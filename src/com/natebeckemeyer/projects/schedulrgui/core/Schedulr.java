@@ -60,6 +60,11 @@ public final class Schedulr
         return returned;
     }
 
+    static void addRule(Rule rule)
+    {
+        ruleMapping.put(rule.getName(), rule);
+    }
+
     /**
      * Returns the list of tasks that pass a certain rule. This aim is acheived by creating a stream, filtering it,
      * and collecting the results into a list.

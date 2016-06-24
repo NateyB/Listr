@@ -1,0 +1,15 @@
+$$$IMPORTS$$$
+
+public class $$$CLASSNAME$$$ extends Rule
+{
+
+    @Override public String getName()
+    {
+        return "$$$NAME$$$";
+    }
+
+    @Override public boolean test(Task task)
+    {
+        $$$TEST$$$
+    }
+}

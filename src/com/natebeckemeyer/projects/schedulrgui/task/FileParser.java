@@ -17,7 +17,7 @@ public final class FileParser
     /**
      * The package prefix for where the OnCompletion items are located.
      */
-    private static final String prefix = "com.natebeckemeyer.projects.schedulrgui.task";
+    private static final String thisPrefix = "com.natebeckemeyer.projects.schedulrgui.task";
 
     /**
      * This constructor is private to disable instantiation.
@@ -108,7 +108,7 @@ public final class FileParser
 
                 try
                 {
-                    onCompletion = ((OnCompletion) Class.forName(String.format("%s.%s", prefix, console.next()))
+                    onCompletion = ((OnCompletion) Class.forName(String.format("%s.%s", thisPrefix, console.next()))
                             .newInstance());
                     onCompletion.loadFromString(console.next());
                 } catch (IllegalAccessException | InstantiationException | ClassNotFoundException e)

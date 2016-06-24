@@ -247,6 +247,24 @@ public class MainWindowController
         }
     }
 
+    @FXML
+    private void viewAddRuleButtonClicked()
+    {
+        Parent root = null;
+        try
+        {
+            root = FXMLLoader.load(getClass().getResource("addRulePopup.fxml"));
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        Stage addTaskPopup = Main.createNewStage(root);
+
+        addTaskPopup.setTitle("Add a Rule");
+        addTaskPopup.initModality(Modality.WINDOW_MODAL);
+        addTaskPopup.showAndWait();
+    }
+
     private void identifyCurrentRule()
     {
         currentRule = DynamicRuleParser.processInput(taskListDefinition.getText());
