@@ -123,8 +123,6 @@ public final class DynamicRuleParser
     {
         ArrayList<String> subRules = new ArrayList<>();
 
-        input = input.replaceAll(" - ", " & !");
-
         while (input.matches(".*\\(.*\\).*"))
         {
             int end = input.indexOf(")") + 1;
@@ -182,18 +180,22 @@ public final class DynamicRuleParser
             {
                 current = processInput(val.substring(1), subRules).negate();
                 input = input.substring(getEndIndex(input, val));
-            } else if (checkForOperation(val.trim()) != null)
-            {
-                return checkForOperation(val.trim()).performOperation(current,
-                        processInput(input.substring(getEndIndex(input, val)), subRules));
-            } else if (val.matches("\\d+"))
-            {
-                current = processInput(subRules.get(Integer.parseInt(val)), subRules);
-                input = input.substring(getEndIndex(input, val));
             } else
             {
-                current = Schedulr.getRule(val);
-                input = input.substring(getEndIndex(input, val));
+                RuleOperation operation = checkForOperation(val.trim());
+                if (operation != null)
+                {
+                    return operation.performOperation(current,
+                            processInput(input.substring(getEndIndex(input, val)), subRules));
+                } else if (val.matches("\\d+"))
+                {
+                    current = processInput(subRules.get(Integer.parseInt(val)), subRules);
+                    input = input.substring(getEndIndex(input, val));
+                } else
+                {
+                    current = Schedulr.getRule(val);
+                    input = input.substring(getEndIndex(input, val));
+                }
             }
         }
 

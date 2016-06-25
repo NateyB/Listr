@@ -1,7 +1,6 @@
 package com.natebeckemeyer.projects.schedulrgui.graphics;
 
 import com.natebeckemeyer.projects.schedulrgui.core.DynamicRuleParser;
-import com.natebeckemeyer.projects.schedulrgui.task.OnCompletion;
 import com.natebeckemeyer.projects.schedulrgui.task.Rule;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -59,6 +58,7 @@ public class AddRulePopupController
         }
 
         DynamicRuleParser.compileAndLoadRule(addRuleNameField.getText(), addRuleCodeField.getText(), importList);
+        MainWindowController.getInstance().updateRuleListing();
 
         ((Stage) addRuleChoiceBox.getScene().getWindow()).close();
     }
@@ -71,7 +71,7 @@ public class AddRulePopupController
     private void initialize()
     {
         String defaultVal = Rule.class.getSimpleName();
-        addRuleChoiceBox.setItems(FXCollections.observableArrayList(defaultVal, OnCompletion.class.getSimpleName()));
+        addRuleChoiceBox.setItems(FXCollections.observableArrayList(defaultVal, "Completion Behavior"));
         addRuleChoiceBox.setValue(defaultVal);
     }
 

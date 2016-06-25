@@ -14,10 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
@@ -33,6 +30,8 @@ import java.util.stream.Collectors;
 
 public class MainWindowController
 {
+    private static MainWindowController thisController;
+
     /**
      * The completion behavior column visibility checkbox
      */
@@ -64,6 +63,12 @@ public class MainWindowController
     private TextField taskListDefinition;
 
     /**
+     * The ListView that displays all of the available rules.
+     */
+    @FXML
+    private ListView<String> ruleListView;
+
+    /**
      * This is the flag that tells displayTasks() whether or not to show the tag column.
      */
     private boolean tagColumnShowing;
@@ -82,6 +87,11 @@ public class MainWindowController
      * This is the rule that's currently being displayed.
      */
     private Rule currentRule;
+
+    static MainWindowController getInstance()
+    {
+        return thisController;
+    }
 
     /**
      * Loads the tasks into the table for display.
@@ -177,13 +187,14 @@ public class MainWindowController
     @FXML
     private void viewAddTaskButtonClicked()
     {
-        Parent root = null;
+        Parent root;
         try
         {
             root = FXMLLoader.load(getClass().getResource("addTaskPopup.fxml"));
         } catch (IOException e)
         {
             e.printStackTrace();
+            return;
         }
         Stage addTaskPopup = Main.createNewStage(root);
 
@@ -215,6 +226,7 @@ public class MainWindowController
     @FXML
     private void initialize()
     {
+        thisController = this;
         tagCheckbox.setOnAction(event ->
         {
             tagColumnShowing = tagCheckbox.isSelected();
@@ -232,6 +244,9 @@ public class MainWindowController
             showCompletedTasks = showCompletedTasksCheckbox.isSelected();
             displayTasks();
         });
+
+        ruleListView.setEditable(false);
+        updateRuleListing();
     }
 
     @FXML
@@ -247,16 +262,22 @@ public class MainWindowController
         }
     }
 
+    void updateRuleListing()
+    {
+        ruleListView.setItems(FXCollections.observableArrayList(Schedulr.getRules().keySet()));
+    }
+
     @FXML
     private void viewAddRuleButtonClicked()
     {
-        Parent root = null;
+        Parent root;
         try
         {
             root = FXMLLoader.load(getClass().getResource("addRulePopup.fxml"));
         } catch (IOException e)
         {
             e.printStackTrace();
+            return;
         }
         Stage addTaskPopup = Main.createNewStage(root);
 

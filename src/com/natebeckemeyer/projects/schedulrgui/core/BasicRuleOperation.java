@@ -16,20 +16,27 @@ public enum BasicRuleOperation implements RuleOperation
                     return a.and(b);
                 }
             },
-    XOR("$")
-            {
-                @Override public Rule performOperation(Rule a, Rule b)
-                {
-                    return a.or(b).and((a.and(b)).negate());
-                }
-            },
     OR("+")
             {
                 @Override public Rule performOperation(Rule a, Rule b)
                 {
                     return a.or(b);
                 }
-            };
+            },
+    DIFFERENCE("-")
+            {
+                @Override public Rule performOperation(Rule a, Rule b)
+                {
+                    return a.and(b.negate());
+                }
+            },
+    SYMMETRICDIFFERENCE("$")
+            {
+                @Override public Rule performOperation(Rule a, Rule b)
+                {
+                    return a.or(b).and((a.and(b)).negate());
+                }
+            },;
 
     private static final HashMap<String, RuleOperation> mapping;
 
