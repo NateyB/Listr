@@ -2,8 +2,6 @@ package com.natebeckemeyer.projects.schedulrgui.graphics;
 
 import com.natebeckemeyer.projects.schedulrgui.core.Schedulr;
 import com.natebeckemeyer.projects.schedulrgui.task.FileParser;
-import com.natebeckemeyer.projects.schedulrgui.task.Rule;
-import com.natebeckemeyer.projects.schedulrgui.task.Task;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -78,18 +76,7 @@ public class Main extends Application
             if (taskFile != null)
                 try
                 {
-                    FileParser.saveTasksToFile(taskFile, Schedulr.getTasksMatchingRule(new Rule()
-                    {
-                        @Override public String getName()
-                        {
-                            return "All";
-                        }
-
-                        @Override public boolean test(Task task)
-                        {
-                            return true;
-                        }
-                    }));
+                    FileParser.saveTasksToFile(taskFile, Schedulr.getTasksMatchingRule(task -> true));
                 } catch (IOException e)
                 {
                     e.printStackTrace();

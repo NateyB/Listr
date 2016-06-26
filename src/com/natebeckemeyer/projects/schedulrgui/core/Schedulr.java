@@ -34,7 +34,7 @@ public final class Schedulr
     static
     {
         List<Rule> rules = Arrays.asList(new Today(), new Week(), new Completed());
-        rules.forEach(rule -> ruleMapping.put(rule.getName(), rule));
+        rules.forEach(rule -> ruleMapping.put(rule.toString(), rule));
     }
 
     /**
@@ -46,7 +46,7 @@ public final class Schedulr
      * Returns the rule corresponding to {@code name}.
      *
      * @param name The name of the rule to get (note that this should match exactly the value returned by the rule's
-     *             {@code getName} method.)
+     *             {@code toString} method.)
      * @return The rule corresponding to {@code name} (or null, if such a rule does not exist).
      */
     @Nullable
@@ -62,9 +62,12 @@ public final class Schedulr
 
     static void addRule(Rule rule)
     {
-        ruleMapping.put(rule.getName(), rule);
+        ruleMapping.put(rule.toString(), rule);
     }
 
+    /**
+     * @return The mapping of all rules inside of Schedulr.
+     */
     public static Map<String, Rule> getRules()
     {
         return ruleMapping;

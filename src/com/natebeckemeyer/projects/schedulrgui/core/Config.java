@@ -15,33 +15,68 @@ final public class Config
     }
 
     /**
-     * The file separator used in this system
+     * The file fileSeparator used in this system.
      */
-    public static final String separator = File.separator;
+    public static final String fileSeparator = File.separator;
+
+    /**
+     * The package fileSeparator used in this system.
+     */
+    public static final String packageSeparator = ".";
+
+    /**
+     * The unformatted prefix for the outermost package (where initial source code branching occurs).
+     */
+    private static final String thisLocation = "com%snatebeckemeyer%sprojects%sschedulrgui";
+
+    /**
+     * The file prefix for the outermost package (where initial source code branching occurs).
+     */
+    public static final String filePrefix = String.format(String.format("%s%s%s", "src", fileSeparator, thisLocation),
+            fileSeparator, fileSeparator, fileSeparator, fileSeparator);
 
     /**
      * The package prefix for the outermost package (where initial source code branching occurs).
      */
-    public static final String prefix = String.format("src%scom%snatebeckemeyer%sprojects%sschedulrgui", separator,
-            separator, separator, separator);
+    public static final String packagePrefix = String.format(thisLocation,
+            packageSeparator, packageSeparator, packageSeparator, packageSeparator);
+
+    /**
+     * The file prefix for the core package.
+     */
+    public static final String coreFilePrefix = String.format("%s%s%s", filePrefix, fileSeparator, "core");
 
     /**
      * The package prefix for the core package.
      */
-    public static final String corePrefix = String.format("%s%s%s", prefix, separator, "core");
+    public static final String corePackagePrefix = String.format("%s%s%s", packagePrefix, packageSeparator, "core");
+
+    /**
+     * The file prefix for the graphics package.
+     */
+    public static final String graphicsFilePrefix = String.format("%s%s%s", filePrefix, fileSeparator, "graphics");
 
     /**
      * The package prefix for the graphics package.
      */
-    public static final String graphicsPrefix = String.format("%s%s%s", prefix, separator, "graphics");
+    public static final String graphicsPackagePrefix = String.format("%s%s%s", packagePrefix, packageSeparator,
+            "graphics");
+
+    /**
+     * The file prefix for the task package.
+     */
+    public static final String taskFilePrefix = String.format("%s%s%s", filePrefix, fileSeparator, "task");
 
     /**
      * The package prefix for the task package.
      */
-    public static final String taskPrefix = String.format("%s%s%s", prefix, separator, "task");
+    public static final String taskPackagePrefix = String.format("%s%s%s", packagePrefix, packageSeparator, "task");
 
-    public static final String userRulesLocation = String.format("%s%s%s%s%s", "resources", separator,
-            "userdefinitions", separator, "userrules");
+    /**
+     * The location of the file that stores the user-defined rules.
+     */
+    public static final String userRulesFile = String.format("%s%s%s%s%s", "resources", fileSeparator,
+            "userdefinitions", fileSeparator, "userrules");
 
 
 }

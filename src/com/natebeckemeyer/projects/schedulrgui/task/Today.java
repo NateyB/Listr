@@ -5,7 +5,7 @@ import java.util.GregorianCalendar;
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-05-11.
  */
-public class Today extends Rule
+public class Today implements Rule
 {
     /**
      * Returns true if the task is due today or before today.
@@ -19,7 +19,7 @@ public class Today extends Rule
         return new GregorianCalendar().compareTo(task.getDueDate()) >= 0;
     }
 
-    @Override public String getName()
+    @Override public String toString()
     {
         return "today";
     }

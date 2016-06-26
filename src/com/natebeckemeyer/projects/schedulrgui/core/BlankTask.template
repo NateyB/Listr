@@ -1,9 +1,9 @@
 $$$IMPORTS$$$
 
-public class $$$CLASSNAME$$$ extends Rule
+public class $$$CLASSNAME$$$ implements Rule
 {
 
-    @Override public String getName()
+    @Override public String toString()
     {
         return "$$$NAME$$$";
     }

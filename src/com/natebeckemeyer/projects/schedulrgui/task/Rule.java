@@ -6,39 +6,28 @@ import java.util.function.Predicate;
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-04-28.
  */
-public abstract class Rule implements Predicate<Task>
+public interface Rule extends Predicate<Task>
 {
-    /**
-     * @return The name of the rule; this is both the name that will be displayed and used to identify the rule in the
-     * mapping of all rules
-     */
-    public abstract String getName();
-
     /**
      * By default, performs a logical "and".
      *
      * @param other The rule with which to perform a logical and
      * @return A new rule that is the conjunction of this rule and the other rule.
      */
-    public final Rule and(Rule other)
+    static Rule and(Rule first, Rule other)
     {
-        Rule thisOne = this;
+        Objects.requireNonNull(first);
         Objects.requireNonNull(other);
         return new Rule()
         {
-            @Override public String getName()
+            @Override public String toString()
             {
-                return String.format("(%s & %s)", thisOne.getName(), other.getName());
+                return String.format("(%s & %s)", first.toString(), other.toString());
             }
 
             @Override public boolean test(Task task)
             {
-                return thisOne.test(task) && other.test(task);
-            }
-
-            @Override public String toString()
-            {
-                return String.format("Composition: %s", getName());
+                return first.test(task) && other.test(task);
             }
         };
     }
@@ -49,25 +38,20 @@ public abstract class Rule implements Predicate<Task>
      * @param other The rule with which to perform a logical or
      * @return A new rule that is the disjunction of this rule and the other rule.
      */
-    public final Rule or(Rule other)
+    static Rule or(Rule first, Rule other)
     {
-        Rule thisOne = this;
+        Objects.requireNonNull(first);
         Objects.requireNonNull(other);
         return new Rule()
         {
-            @Override public String getName()
+            @Override public String toString()
             {
-                return String.format("(%s + %s)", thisOne.getName(), other.getName());
+                return String.format("(%s + %s)", first.toString(), other.toString());
             }
 
             @Override public boolean test(Task task)
             {
-                return thisOne.test(task) || other.test(task);
-            }
-
-            @Override public String toString()
-            {
-                return String.format("Composition: %s", getName());
+                return first.test(task) || other.test(task);
             }
         };
     }
@@ -77,24 +61,18 @@ public abstract class Rule implements Predicate<Task>
      *
      * @return The inverse of this rule.
      */
-    public final Rule negate()
+    static Rule negate(Rule first)
     {
-        Rule thisOne = this;
         return new Rule()
         {
-            @Override public String getName()
+            @Override public String toString()
             {
-                return String.format("!%s", thisOne.getName());
+                return String.format("!%s", first.toString());
             }
 
             @Override public boolean test(Task task)
             {
-                return !thisOne.test(task);
-            }
-
-            @Override public String toString()
-            {
-                return String.format("Composition: %s", getName());
+                return !first.test(task);
             }
         };
     }

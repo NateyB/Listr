@@ -1,5 +1,6 @@
 package com.natebeckemeyer.projects.schedulrgui.task;
 
+import com.natebeckemeyer.projects.schedulrgui.core.Config;
 import com.sun.istack.internal.Nullable;
 
 import java.io.File;
@@ -13,12 +14,6 @@ import java.util.*;
  */
 public final class FileParser
 {
-
-    /**
-     * The package prefix for where the OnCompletion items are located.
-     */
-    private static final String thisPrefix = "com.natebeckemeyer.projects.schedulrgui.task";
-
     /**
      * This constructor is private to disable instantiation.
      */
@@ -42,7 +37,7 @@ public final class FileParser
         {
             String labels = "";
             for (Tag tag : task.getTags())
-                labels = String.format("%s%s ", labels, tag.getName());
+                labels = String.format("%s%s ", labels, tag.toString());
 
             String onCompleteOut = task.getOnComplete().convertToString();
             if (onCompleteOut.isEmpty())
@@ -108,7 +103,8 @@ public final class FileParser
 
                 try
                 {
-                    onCompletion = ((OnCompletion) Class.forName(String.format("%s.%s", thisPrefix, console.next()))
+                    onCompletion = ((OnCompletion) Class.forName(
+                            String.format("%s.%s", Config.taskPackagePrefix, console.next()))
                             .newInstance());
                     onCompletion.loadFromString(console.next());
                 } catch (IllegalAccessException | InstantiationException | ClassNotFoundException e)

@@ -3,13 +3,13 @@ package com.natebeckemeyer.projects.schedulrgui.task;
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-06-20.
  */
-public class Completed extends Rule
+public class Completed implements Rule
 {
     /**
      * @return The name of the rule; this is both the name that will be displayed and used to identify the rule in the
      * mapping of all rules
      */
-    @Override public String getName()
+    @Override public String toString()
     {
         return "completed";
     }

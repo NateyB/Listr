@@ -7,7 +7,7 @@ import java.util.HashMap;
  * <p>
  * Tags should be obtained through the getTag method.
  */
-public class Tag extends Rule
+public class Tag implements Rule
 {
     /**
      * The mapping from the name to the tag for all used tags.
@@ -53,14 +53,6 @@ public class Tag extends Rule
      * @return A string of the format {@code "Tag: name of tag"}
      */
     public String toString()
-    {
-        return String.format("Tag: %s", getName());
-    }
-
-    /**
-     * @return The name of the tag
-     */
-    public String getName()
     {
         return name;
     }

@@ -46,16 +46,16 @@ public final class DynamicRuleParser
     public static Rule compileAndLoadRule(String name, String function, List<String> imports)
     {
         String className = String.format("%s%s", name.substring(0, 1).toUpperCase(), name.substring(1));
-        String fileName = String.format("%s%s%s.java", Config.userRulesLocation, Config.separator, className);
+        String fileName = String.format("%s%s%s.java", Config.userRulesFile, Config.fileSeparator, className);
 
         try (Scanner readBlankTask = new Scanner(
-                new File(String.format("%s%s%s", Config.corePrefix, Config.separator, "BlankTask.template")));
+                new File(String.format("%s%s%s", Config.coreFilePrefix, Config.fileSeparator, "BlankTask.template")));
              FileWriter writeNewTask = new FileWriter(fileName))
         {
             // Prepare the imports
             StringBuilder importLines = new StringBuilder();
-            imports.add("com.natebeckemeyer.projects.schedulrgui.task.Rule");
-            imports.add("com.natebeckemeyer.projects.schedulrgui.task.Task");
+            imports.add(String.format("%s%s%s", Config.taskPackagePrefix, Config.packageSeparator, "Rule"));
+            imports.add(String.format("%s%s%s", Config.taskPackagePrefix, Config.packageSeparator, "Task"));
             for (String item : imports)
                 importLines.append(String.format("import %s;%n", item));
 
@@ -78,7 +78,7 @@ public final class DynamicRuleParser
             if (compilationResult != 0)
                 throw new IllegalAccessException(String.format("Could not compile user-defined rule named %s", name));
 
-            URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(Config.userRulesLocation)
+            URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(Config.userRulesFile)
                     .toURI().toURL()});
             Class<?> ruleClass = classLoader.loadClass(className);
             Object instantiation = ruleClass.newInstance();
@@ -136,7 +136,7 @@ public final class DynamicRuleParser
         if (result == null)
             return new Rule()
             {
-                @Override public String getName()
+                @Override public String toString()
                 {
                     return "Unnamed";
                 }
@@ -178,7 +178,7 @@ public final class DynamicRuleParser
 
             if (val.startsWith("!"))
             {
-                current = processInput(val.substring(1), subRules).negate();
+                current = Rule.negate(processInput(val.substring(1), subRules));
                 input = input.substring(getEndIndex(input, val));
             } else
             {

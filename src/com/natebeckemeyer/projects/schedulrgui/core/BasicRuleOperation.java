@@ -13,28 +13,29 @@ public enum BasicRuleOperation implements RuleOperation
             {
                 @Override public Rule performOperation(Rule a, Rule b)
                 {
-                    return a.and(b);
+                    return Rule.and(a, b);
                 }
             },
     OR("+")
             {
                 @Override public Rule performOperation(Rule a, Rule b)
                 {
-                    return a.or(b);
+
+                    return Rule.or(a, b);
                 }
             },
     DIFFERENCE("-")
             {
                 @Override public Rule performOperation(Rule a, Rule b)
                 {
-                    return a.and(b.negate());
+                    return Rule.and(a, Rule.negate(b));
                 }
             },
     SYMMETRICDIFFERENCE("$")
             {
                 @Override public Rule performOperation(Rule a, Rule b)
                 {
-                    return a.or(b).and((a.and(b)).negate());
+                    return Rule.and(Rule.or(a, b), Rule.negate(Rule.and(a, b)));
                 }
             },;
 

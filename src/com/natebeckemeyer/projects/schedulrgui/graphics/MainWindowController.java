@@ -104,7 +104,7 @@ public class MainWindowController
 
         List<Task> passed;
         if (!showCompletedTasks)
-            passed = Schedulr.getTasksMatchingRule(currentRule.and(Schedulr.getRule("completed").negate()));
+            passed = Schedulr.getTasksMatchingRule(Rule.and(currentRule, Rule.negate(Schedulr.getRule("completed"))));
         else
             passed = Schedulr.getTasksMatchingRule(currentRule);
         passed.sort(null);
@@ -158,7 +158,7 @@ public class MainWindowController
                 Set<Tag> theseTags = task.getValue().getTags();
                 String labels = "";
                 for (Tag current : theseTags)
-                    labels = String.format("%s%s ", labels, current.getName());
+                    labels = String.format("%s%s ", labels, current.toString());
 
                 return new SimpleStringProperty(labels.trim());
             });
