@@ -1,7 +1,6 @@
 package com.natebeckemeyer.projects.schedulrgui.core;
 
 import com.natebeckemeyer.projects.schedulrgui.task.Rule;
-import com.natebeckemeyer.projects.schedulrgui.task.Task;
 
 import javax.naming.OperationNotSupportedException;
 import javax.tools.JavaCompiler;
@@ -134,18 +133,8 @@ public final class DynamicRuleParser
 
         Rule result = processInput(input, subRules);
         if (result == null)
-            return new Rule()
-            {
-                @Override public String toString()
-                {
-                    return "Unnamed";
-                }
+            return (task) -> false;
 
-                @Override public boolean test(Task task)
-                {
-                    return false;
-                }
-            };
         return result;
     }
 

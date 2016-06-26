@@ -34,7 +34,7 @@ public final class Schedulr
     static
     {
         List<Rule> rules = Arrays.asList(new Today(), new Week(), new Completed());
-        rules.forEach(rule -> ruleMapping.put(rule.toString(), rule));
+        setRules(rules);
     }
 
     /**
@@ -63,6 +63,17 @@ public final class Schedulr
     static void addRule(Rule rule)
     {
         ruleMapping.put(rule.toString(), rule);
+    }
+
+    private static void setRules(Collection<Rule> rules)
+    {
+        ruleMapping.clear();
+        rules.stream().forEach(rule -> ruleMapping.put(rule.toString(), rule));
+    }
+
+    public static void removeRule(Rule which)
+    {
+        ruleMapping.remove(which.toString());
     }
 
     /**

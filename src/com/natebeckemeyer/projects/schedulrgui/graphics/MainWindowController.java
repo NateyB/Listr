@@ -262,6 +262,18 @@ public class MainWindowController
         }
     }
 
+    @FXML
+    private void deleteRule(KeyEvent key)
+    {
+        if (key.getCode() == KeyCode.DELETE || key.getCode() == KeyCode.BACK_SPACE)
+        {
+            Rule selected = Schedulr.getRule(ruleListView.getSelectionModel().getSelectedItem());
+            Schedulr.removeRule(selected);
+            updateRuleListing();
+            setAndDisplay();
+        }
+    }
+
     void updateRuleListing()
     {
         ruleListView.setItems(FXCollections.observableArrayList(Schedulr.getRules().keySet()));
