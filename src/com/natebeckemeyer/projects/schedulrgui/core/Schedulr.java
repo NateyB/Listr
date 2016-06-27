@@ -114,9 +114,15 @@ public final class Schedulr
         rules.stream().forEach(rule -> ruleMapping.put(rule.toString(), rule));
     }
 
-    public static void removeRule(Rule which)
+    /**
+     * Removes a rule from Schedulr.
+     *
+     * @param which The name of the rule to remove
+     * @return true if the the mapping changed as a result of this call; false otherwise
+     */
+    public static boolean removeRule(String which)
     {
-        ruleMapping.remove(which.toString());
+        return ruleMapping.remove(which) != null;
     }
 
     private static void setCompletionBehaviors(Collection<Class<? extends CompletionBehavior>> completions)
@@ -125,9 +131,9 @@ public final class Schedulr
         completions.stream().forEach(behavior -> completionMapping.put(behavior.getSimpleName(), behavior));
     }
 
-    public static void removeCompletionBehavior(CompletionBehavior which)
+    public static boolean removeCompletionBehavior(String which)
     {
-        completionMapping.remove(which.getClass().getSimpleName());
+        return completionMapping.remove(which) != null;
     }
 
     /**

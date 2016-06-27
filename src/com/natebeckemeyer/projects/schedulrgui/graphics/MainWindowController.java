@@ -66,7 +66,7 @@ public class MainWindowController
      * The ListView that displays all of the available rules.
      */
     @FXML
-    private ListView<String> ruleListView;
+    private TreeView<String> behaviorTreeView;
 
     /**
      * This is the flag that tells displayTasks() whether or not to show the tag column.
@@ -87,6 +87,12 @@ public class MainWindowController
      * This is the rule that's currently being displayed.
      */
     private Rule currentRule;
+
+    private TreeItem<String> ruleNode;
+
+    private TreeItem<String> completionBehaviorNode;
+
+    private TreeItem<String> rootNode;
 
     static MainWindowController getInstance()
     {
@@ -245,8 +251,8 @@ public class MainWindowController
             displayTasks();
         });
 
-        ruleListView.setEditable(false);
-        updateRuleListing();
+        behaviorTreeView.setEditable(false);
+        updateSidebar();
     }
 
     @FXML
@@ -263,20 +269,40 @@ public class MainWindowController
     }
 
     @FXML
-    private void deleteRule(KeyEvent key)
+    private void deleteBehavior(KeyEvent key)
     {
         if (key.getCode() == KeyCode.DELETE || key.getCode() == KeyCode.BACK_SPACE)
         {
-            Rule selected = Schedulr.getRule(ruleListView.getSelectionModel().getSelectedItem());
-            Schedulr.removeRule(selected);
-            updateRuleListing();
-            setAndDisplay();
+            TreeItem<String> item = behaviorTreeView.getSelectionModel().getSelectedItem();
+            if (item != ruleNode && item != completionBehaviorNode && item != rootNode)
+            {
+                String selected = item.getValue();
+                if (Schedulr.removeRule(selected) || Schedulr.removeCompletionBehavior(selected))
+                {
+                    updateSidebar();
+                    setAndDisplay();
+                }
+            }
         }
     }
 
-    void updateRuleListing()
+    void updateSidebar()
     {
-        ruleListView.setItems(FXCollections.observableArrayList(Schedulr.getRuleNames()));
+        ruleNode = new TreeItem<>("Rules");
+        ruleNode.setExpanded(true);
+        for (String ruleName : Schedulr.getRuleNames())
+            ruleNode.getChildren().add(new TreeItem<>(ruleName));
+
+        completionBehaviorNode = new TreeItem<>("Completion Behaviors");
+        completionBehaviorNode.setExpanded(true);
+        for (String completionBehaviorName : Schedulr.getCompletionBehaviorNames())
+            completionBehaviorNode.getChildren().add(new TreeItem<>(completionBehaviorName));
+
+        rootNode = new TreeItem<>("Behaviors");
+        rootNode.getChildren().add(ruleNode);
+        rootNode.getChildren().add(completionBehaviorNode);
+
+        behaviorTreeView.setRoot(rootNode);
     }
 
     @FXML

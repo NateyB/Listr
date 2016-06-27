@@ -102,7 +102,7 @@ public class AddBehaviorPopupController
         DynamicRuleParser.compileAndLoadRule(addRuleNameField.getText(), implementationsList,
                 ruleExtendsField.getText(),
                 addRuleCodeField.getText(), importList);
-        MainWindowController.getInstance().updateRuleListing();
+        MainWindowController.getInstance().updateSidebar();
 
         ((Stage) addRuleCodeField.getScene().getWindow()).close();
     }
@@ -135,7 +135,7 @@ public class AddBehaviorPopupController
         DynamicRuleParser.compileAndLoadCompletionBehavior(addCompletionNameField.getText(), implementationsList,
                 completionExtendsField.getText(),
                 addCompletionCodeField.getText(), importList);
-        MainWindowController.getInstance().updateRuleListing();
+        MainWindowController.getInstance().updateSidebar();
 
         ((Stage) addRuleCodeField.getScene().getWindow()).close();
     }
