@@ -77,15 +77,30 @@ final public class Config
      */
     public static final String taskPackagePrefix = String.format("%s%s%s", packagePrefix, packageSeparator, "task");
 
+
+    public static final String userFile = String.format("%s%s%s", "resources", fileSeparator, "user");
+
     /**
      * The location of the file that stores the user-defined rules.
      */
-    public static final String userRulesFile = String.format("%s%s%s%s%s", "resources", fileSeparator,
+    public static final String userRulesFile = String.format("%s%s%s%s%s", userFile, fileSeparator,
             "userdefinitions", fileSeparator, "userrules");
 
 
-    public static final String userCompletionsFile = String.format("%s%s%s%s%s", "resources", fileSeparator,
+    public static final String userCompletionsFile = String.format("%s%s%s%s%s", userFile, fileSeparator,
             "userdefinitions", fileSeparator, "usercompletionbehaviors");
 
+    public static final String userTasksDirectory = String.format("%s%s%s", userFile, fileSeparator, "tasks");
+
+
+    static
+    {
+        File userRFiles = new File(userRulesFile);
+        userRFiles.mkdirs();
+
+
+        File userCFiles = new File(userCompletionsFile);
+        userCFiles.mkdirs();
+    }
 
 }

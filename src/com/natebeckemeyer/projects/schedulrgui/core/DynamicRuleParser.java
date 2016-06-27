@@ -165,7 +165,8 @@ public final class DynamicRuleParser
         try (URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(Config.userRulesFile).toURI().toURL()}))
         {
 
-            Class<?> ruleClass = classLoader.loadClass(className);
+            Class<?> ruleClass = classLoader.loadClass(
+                    className.substring(0, 1).toUpperCase() + className.substring(1));
             Object instantiation = ruleClass.newInstance();
 
             if (instantiation instanceof Rule)

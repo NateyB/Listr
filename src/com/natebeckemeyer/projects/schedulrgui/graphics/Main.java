@@ -1,5 +1,6 @@
 package com.natebeckemeyer.projects.schedulrgui.graphics;
 
+import com.natebeckemeyer.projects.schedulrgui.core.Config;
 import com.natebeckemeyer.projects.schedulrgui.core.Schedulr;
 import com.natebeckemeyer.projects.schedulrgui.task.FileParser;
 import javafx.application.Application;
@@ -47,8 +48,11 @@ public class Main extends Application
 
     static
     {
+        File defaultDirectory = new File(Config.userTasksDirectory);
+        defaultDirectory.mkdirs();
+
         fileChooser.setTitle("Task File");
-        fileChooser.setInitialDirectory(new File("resources/tasks"));
+        fileChooser.setInitialDirectory(defaultDirectory);
     }
 
     /**
