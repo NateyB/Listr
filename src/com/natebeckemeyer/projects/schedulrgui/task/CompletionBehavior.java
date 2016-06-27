@@ -5,16 +5,8 @@ import com.sun.istack.internal.NotNull;
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-04-28.
  */
-public interface OnCompletion
+public interface CompletionBehavior
 {
-
-    /**
-     * Returns the name of the completion behavior (to display to the user).
-     *
-     * @return The name of the completion behavior.
-     */
-    String getName();
-
     /**
      * Specifies behavior to markCompleted when a task is completed.
      */
@@ -33,7 +25,8 @@ public interface OnCompletion
     void loadFromString(String serialized);
 
     /**
-     * Serializes an OnCompletion object into a string. Note that the string <i>cannot</i> contain a pipe character.
+     * Serializes an CompletionBehavior object into a string. Note that the string <i>cannot</i> contain a pipe
+     * character.
      * Including the pipe character will result in an InvalidCharacterException.
      */
     @NotNull

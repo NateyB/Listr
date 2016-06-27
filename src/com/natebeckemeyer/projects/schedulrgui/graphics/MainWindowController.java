@@ -171,7 +171,7 @@ public class MainWindowController
         if (onCompletionColumnShowing)
         {
             completionBehaviors.setCellValueFactory(
-                    task -> new SimpleStringProperty(task.getValue().getOnComplete().getName()));
+                    task -> new SimpleStringProperty(task.getValue().getOnComplete().toString()));
             completionBehaviors.setEditable(false);
             completionBehaviors.setVisible(true);
         } else
@@ -276,7 +276,7 @@ public class MainWindowController
 
     void updateRuleListing()
     {
-        ruleListView.setItems(FXCollections.observableArrayList(Schedulr.getRules().keySet()));
+        ruleListView.setItems(FXCollections.observableArrayList(Schedulr.getRuleNames()));
     }
 
     @FXML
@@ -285,7 +285,7 @@ public class MainWindowController
         Parent root;
         try
         {
-            root = FXMLLoader.load(getClass().getResource("addRulePopup.fxml"));
+            root = FXMLLoader.load(getClass().getResource("addBehaviorPopup.fxml"));
         } catch (IOException e)
         {
             e.printStackTrace();

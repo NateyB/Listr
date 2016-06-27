@@ -6,9 +6,9 @@ package com.natebeckemeyer.projects.schedulrgui.task;
  * <p>
  * Created for Schedulr by @author Nate Beckemeyer on 2016-05-11.
  */
-public class VerboseCompleted implements OnCompletion
+public class VerboseCompleted implements CompletionBehavior
 {
-    @Override public String getName()
+    @Override public String toString()
     {
         return "Verbose";
     }
@@ -48,7 +48,8 @@ public class VerboseCompleted implements OnCompletion
     }
 
     /**
-     * Serializes an OnCompletion object into a string. Note that the string <i>cannot</i> contain a pipe character.
+     * Serializes an CompletionBehavior object into a string. Note that the string <i>cannot</i> contain a pipe
+     * character.
      * Including the pipe character will result in an InvalidCharacterException.
      */
     @Override public String convertToString()

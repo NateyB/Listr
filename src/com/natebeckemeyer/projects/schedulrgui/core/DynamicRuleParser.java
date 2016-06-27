@@ -1,5 +1,6 @@
 package com.natebeckemeyer.projects.schedulrgui.core;
 
+import com.natebeckemeyer.projects.schedulrgui.task.CompletionBehavior;
 import com.natebeckemeyer.projects.schedulrgui.task.Rule;
 
 import javax.naming.OperationNotSupportedException;
@@ -11,7 +12,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -32,53 +33,138 @@ public final class DynamicRuleParser
     {
     }
 
+
     /**
-     * Given the name and function of a rule, writes the rule to a file, compiles the file, and then loads the rule from
-     * the file into memory. Additionally, this function places the file into Schedulr.
+     * Given the name, function, and code of a behavior, writes the behavior to a file and compiles the file.
      * This method was created so that users could define their own rules.
      *
-     * @param name     The name of the rule. At any given point, each existing rule must have a unique name.
-     * @param function The function of the rule; the test that task needs to pass.
-     * @param imports  The imports that the test will need. Only the classpaths are needed; i.e., "java.io.File"
+     * @param name             The name of the rule. At any given point, each existing rule must have a unique name.
+     * @param implementationOf What (extra interfaces) this behavior implements.
+     * @param extensionOf      What class this behavior extends (if any).
+     * @param userCode         The code written by the user; in the case of a rule, only the test. In the case of a
+     *                         completion behavior, the whole class except the toString method.
+     * @param imports          The imports that the code will need. Only the classpaths are needed; i.e., "java.io.File"
+     * @param type             The type of behavior.
      * @return The new rule.
      */
-    public static Rule compileAndLoadRule(String name, String function, List<String> imports)
+    public static void compileBehavior(String name, Collection<String> implementationOf, String extensionOf,
+                                       String userCode, Collection<String> imports, Schedulr.Behavior type)
     {
-        String className = String.format("%s%s", name.substring(0, 1).toUpperCase(), name.substring(1));
-        String fileName = String.format("%s%s%s.java", Config.userRulesFile, Config.fileSeparator, className);
+        String className = name.substring(0, 1).toUpperCase() + name.substring(1);
+        String fileName;
+        switch (type)
+        {
+            case RULE:
+                fileName = Config.userRulesFile;
+                break;
 
-        try (Scanner readBlankTask = new Scanner(
-                new File(String.format("%s%s%s", Config.coreFilePrefix, Config.fileSeparator, "BlankTask.template")));
+            case COMPLETIONBEHAVIOR:
+                fileName = Config.userCompletionsFile;
+                break;
+
+            default:
+                System.err.printf("Could not locate appropriate directory for " + type + ". Using rule instead.");
+                fileName = Config.userRulesFile;
+                break;
+        }
+
+        fileName = fileName + Config.fileSeparator + className + ".java";
+
+        try (Scanner readTemplate = new Scanner(
+                new File(Config.coreFilePrefix + Config.fileSeparator + type + ".template"));
              FileWriter writeNewTask = new FileWriter(fileName))
         {
             // Prepare the imports
+            imports.add(Config.taskPackagePrefix + Config.packageSeparator + type);
+            imports.add(Config.taskPackagePrefix + Config.packageSeparator + "Task");
             StringBuilder importLines = new StringBuilder();
-            imports.add(String.format("%s%s%s", Config.taskPackagePrefix, Config.packageSeparator, "Rule"));
-            imports.add(String.format("%s%s%s", Config.taskPackagePrefix, Config.packageSeparator, "Task"));
             for (String item : imports)
-                importLines.append(String.format("import %s;%n", item));
-
-            StringBuilder replacement = new StringBuilder();
-
-            while (readBlankTask.hasNextLine())
             {
-                String line = readBlankTask.nextLine();
+                importLines.append("import ");
+                importLines.append(item);
+                importLines.append(";");
+                importLines.append(Config.lineSeparator);
+            }
+
+            // Prepare the implementations
+            StringBuilder implementations = new StringBuilder();
+            for (String implementation : implementationOf)
+            {
+                implementations.append(", ");
+                implementations.append(implementation);
+            }
+
+            // Prepare the extension
+            extensionOf = (extensionOf == null) ? "" : extensionOf;
+            if (!extensionOf.isEmpty())
+                extensionOf = "extends " + extensionOf;
+
+            // Do the actual parsing
+            StringBuilder replacement = new StringBuilder();
+            while (readTemplate.hasNextLine())
+            {
+                String line = readTemplate.nextLine();
                 line = line.replaceAll(Pattern.quote("$$$IMPORTS$$$"), importLines.toString());
                 line = line.replaceAll(Pattern.quote("$$$CLASSNAME$$$"), className);
+                line = line.replaceAll(Pattern.quote("$$$EXTENDS$$$"), extensionOf);
+                line = line.replaceAll(Pattern.quote("$$$IMPLEMENTATIONS$$$"), implementations.toString());
+
                 line = line.replaceAll(Pattern.quote("$$$NAME$$$"), name);
-                line = line.replaceAll(Pattern.quote("$$$TEST$$$"), function);
-                replacement.append(String.format("%s%n", line));
+                line = line.replaceAll(Pattern.quote("$$$CODE$$$"), userCode);
+
+
+                replacement.append(line);
+                replacement.append(Config.lineSeparator);
             }
             writeNewTask.write(replacement.toString());
             writeNewTask.close();
 
-            int compilationResult = compiler.run(null, null, null,
-                    fileName);
-            if (compilationResult != 0)
-                throw new IllegalAccessException(String.format("Could not compile user-defined rule named %s", name));
+            int compilationResult = compiler.run(null, null, null, fileName);
+            if (compilationResult != 0) // Unsuccessful compilation
+                throw new IllegalAccessException("Could not compile user-defined " + type + " named " + name);
 
-            URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(Config.userRulesFile)
-                    .toURI().toURL()});
+        } catch (IOException | IllegalAccessException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Compiles and loads a rule according to the compileBehavior and loadRule methods.
+     *
+     * @return The new rule.
+     */
+    public static Rule compileAndLoadRule(String name, Collection<String> implementationOf, String extensionOf,
+                                          String function, Collection<String> imports)
+    {
+        compileBehavior(name, implementationOf, extensionOf, function, imports, Schedulr.Behavior.RULE);
+        return loadRule(name);
+    }
+
+    /**
+     * Compiles and loads a completion behavior according to the compileBehavior and loadCompletionBehavior methods.
+     *
+     * @return The new rule.
+     */
+    public static CompletionBehavior compileAndLoadCompletionBehavior(String name, Collection<String> implementationOf,
+                                                                      String extensionOf, String function,
+                                                                      Collection<String> imports)
+    {
+        compileBehavior(name, implementationOf, extensionOf, function, imports, Schedulr.Behavior.COMPLETIONBEHAVIOR);
+        return loadCompletionBehavior(name);
+    }
+
+    /**
+     * Loads the rule of Rule "className" from the user-defined resources. It also adds this rule into Schedulr.
+     *
+     * @param className The name of the Rule to instantiate
+     * @return an object of Rule of name {@code className}
+     */
+    public static Rule loadRule(String className)
+    {
+        try (URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(Config.userRulesFile).toURI().toURL()}))
+        {
+
             Class<?> ruleClass = classLoader.loadClass(className);
             Object instantiation = ruleClass.newInstance();
 
@@ -88,10 +174,43 @@ public final class DynamicRuleParser
                 Schedulr.addRule(userRule);
                 return userRule;
             } else
-                throw new OperationNotSupportedException("Attempted to load class that does not extend Rule.");
+                throw new OperationNotSupportedException("Attempted to load class that does not implement Rule.");
 
-        } catch (IOException | IllegalAccessException | ClassNotFoundException | InstantiationException |
-                OperationNotSupportedException e)
+        } catch (IOException | OperationNotSupportedException | ClassNotFoundException |
+                InstantiationException | IllegalAccessException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Loads the behavior of CompletionBehavior {@code className} from the user-defined resources. Adds the class
+     * into the
+     * corresponding mapping in Schedulr.
+     *
+     * @param className The name of the CompletionBehavior to instantiate
+     * @return an object of CompletionBehavior of name {@code className}
+     */
+    public static CompletionBehavior loadCompletionBehavior(String className)
+    {
+        try (URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(Config.userCompletionsFile)
+                .toURI().toURL()}))
+        {
+            Class<?> completionBehavior = classLoader.loadClass(className);
+            Object instantiation = completionBehavior.newInstance();
+
+            if (instantiation instanceof CompletionBehavior)
+            {
+                CompletionBehavior result = (CompletionBehavior) instantiation;
+                Schedulr.addCompletionBehavior(result.getClass());
+                return result;
+            } else
+                throw new OperationNotSupportedException(
+                        "Attempted to load class that does not implement CompletionBehavior.");
+
+        } catch (IOException | OperationNotSupportedException | ClassNotFoundException | InstantiationException |
+                IllegalAccessException e)
         {
             e.printStackTrace();
             return null;

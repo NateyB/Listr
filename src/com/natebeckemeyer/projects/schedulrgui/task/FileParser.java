@@ -71,7 +71,7 @@ public final class FileParser
      *
      * @param sourceFile The file containing the tasks.
      * @return The priority queue containing the loaded tasks, or null if the file does not exist. Also null if the
-     * OnCompletion rule specified does not exist.
+     * CompletionBehavior rule specified does not exist.
      */
     public static PriorityQueue<Task> readTasksFromFile(File sourceFile)
     {
@@ -99,14 +99,14 @@ public final class FileParser
                 }
                 labelParser.close();
 
-                OnCompletion onCompletion;
+                CompletionBehavior completionBehavior;
 
                 try
                 {
-                    onCompletion = ((OnCompletion) Class.forName(
+                    completionBehavior = ((CompletionBehavior) Class.forName(
                             String.format("%s.%s", Config.taskPackagePrefix, console.next()))
                             .newInstance());
-                    onCompletion.loadFromString(console.next());
+                    completionBehavior.loadFromString(console.next());
                 } catch (IllegalAccessException | InstantiationException | ClassNotFoundException e)
                 {
                     e.printStackTrace();
@@ -115,7 +115,7 @@ public final class FileParser
                 }
 
                 String name = console.next();
-                Task toContribute = new Task(name, new GregorianCalendar(year, month, day), onCompletion);
+                Task toContribute = new Task(name, new GregorianCalendar(year, month, day), completionBehavior);
                 toContribute.addTags(labels);
                 if (completed.startsWith("y"))
                     toContribute.completed = true;

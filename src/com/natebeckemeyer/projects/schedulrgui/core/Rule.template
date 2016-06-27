@@ -1,6 +1,6 @@
 $$$IMPORTS$$$
 
-public class $$$CLASSNAME$$$ implements Rule
+public class $$$CLASSNAME$$$ $$$EXTENDS$$$ implements Rule$$$IMPLEMENTATIONS$$$
 {
 
     @Override public String toString()
@@ -10,6 +10,6 @@ public class $$$CLASSNAME$$$ implements Rule
 
     @Override public boolean test(Task task)
     {
-        $$$TEST$$$
+        $$$CODE$$$
     }
 }

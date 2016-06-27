@@ -5,7 +5,7 @@ package com.natebeckemeyer.projects.schedulrgui.task;
  * <p>
  * This class is the simple, default behavior for the completion of a task: It is marked as completed.
  */
-public class MarkCompleted implements OnCompletion
+public class MarkCompleted implements CompletionBehavior
 {
     public MarkCompleted()
     {
@@ -16,7 +16,7 @@ public class MarkCompleted implements OnCompletion
      *
      * @return The name of the completion behavior.
      */
-    @Override public String getName()
+    @Override public String toString()
     {
         return "Default";
     }
@@ -53,7 +53,8 @@ public class MarkCompleted implements OnCompletion
     }
 
     /**
-     * Serializes an OnCompletion object into a string. Note that the string <i>cannot</i> contain a pipe character.
+     * Serializes an CompletionBehavior object into a string. Note that the string <i>cannot</i> contain a pipe
+     * character.
      * Including the pipe character will result in an InvalidCharacterException.
      */
     @Override public String convertToString()

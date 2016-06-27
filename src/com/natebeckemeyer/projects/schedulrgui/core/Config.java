@@ -15,9 +15,14 @@ final public class Config
     }
 
     /**
-     * The file fileSeparator used in this system.
+     * The file separator used in this system.
      */
     public static final String fileSeparator = File.separator;
+
+    /**
+     * The line separator used in this system.
+     */
+    public static final String lineSeparator = System.lineSeparator();
 
     /**
      * The package fileSeparator used in this system.
@@ -77,6 +82,10 @@ final public class Config
      */
     public static final String userRulesFile = String.format("%s%s%s%s%s", "resources", fileSeparator,
             "userdefinitions", fileSeparator, "userrules");
+
+
+    public static final String userCompletionsFile = String.format("%s%s%s%s%s", "resources", fileSeparator,
+            "userdefinitions", fileSeparator, "usercompletionbehaviors");
 
 
 }

@@ -1,3 +1,3 @@
-yyyy|mm|dd|hasBeenCompleted|tag0Name tag1Name tag2Name|onCompletion name|onCompletion output|task name
+yyyy|mm|dd|hasBeenCompleted|tag0Name tag1Name tag2Name|completionBehavior name|completionBehavior output|task name
 2016|00|15|yes|household home-improvement|MarkCompleted| |Build garage
 2016|11|03|no|work|MarkCompleted| |File grant application

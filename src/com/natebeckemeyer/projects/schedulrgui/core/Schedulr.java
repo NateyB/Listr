@@ -1,7 +1,6 @@
 package com.natebeckemeyer.projects.schedulrgui.core;
 
 import com.natebeckemeyer.projects.schedulrgui.task.*;
-import com.sun.istack.internal.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,6 +27,11 @@ public final class Schedulr
      */
     private static final Map<String, Rule> ruleMapping = new HashMap<>();
 
+    /**
+     * The mapping from the display name to the class of the rules (so that a new instance can be instantiated).
+     */
+    private static final Map<String, Class<? extends CompletionBehavior>> completionMapping = new HashMap<>();
+
     // Place the rules into the ruleMapping
     // This static initializer allows me to hardcode in the package searching and initialization without storing
     // all of the options.
@@ -35,6 +39,10 @@ public final class Schedulr
     {
         List<Rule> rules = Arrays.asList(new Today(), new Week(), new Completed());
         setRules(rules);
+
+        List<Class<? extends CompletionBehavior>> completions = Arrays.asList(MarkCompleted.class,
+                VerboseCompleted.class);
+        setCompletionBehaviors(completions);
     }
 
     /**
@@ -49,7 +57,6 @@ public final class Schedulr
      *             {@code toString} method.)
      * @return The rule corresponding to {@code name} (or null, if such a rule does not exist).
      */
-    @Nullable
     public static Rule getRule(String name)
     {
         Rule returned = ruleMapping.get(name);
@@ -60,9 +67,45 @@ public final class Schedulr
         return returned;
     }
 
+    /**
+     * Gets the class of the completion behavior corresponding to {@code name}. If the class does not exist or cannot be
+     * instantiated, then an error message will be written and the default value (MarkCompleted) used instead.
+     *
+     * @param name The name of the completion behavior to get.
+     * @return An instance of the corresponding completion behavior.
+     */
+    public static CompletionBehavior getCompletionBehavior(String name)
+    {
+        Class<? extends CompletionBehavior> behavior = completionMapping.get(name);
+
+        try
+        {
+            return behavior.newInstance();
+        } catch (NullPointerException | InstantiationException | IllegalAccessException e)
+        {
+            System.err.printf("Could not locate completion behavior %s, or it is null. Using default instead.%n", name);
+            return new MarkCompleted();
+        }
+    }
+
+    public static Set<String> getCompletionBehaviorNames()
+    {
+        return completionMapping.keySet();
+    }
+
+    /**
+     * Adds a rule to the mapping from string names to rules in Schedulr.
+     *
+     * @param rule The rule to add into the mapping.
+     */
     static void addRule(Rule rule)
     {
         ruleMapping.put(rule.toString(), rule);
+    }
+
+    static void addCompletionBehavior(Class<? extends CompletionBehavior> behavior)
+    {
+        completionMapping.put(behavior.getSimpleName(), behavior);
     }
 
     private static void setRules(Collection<Rule> rules)
@@ -76,12 +119,23 @@ public final class Schedulr
         ruleMapping.remove(which.toString());
     }
 
+    private static void setCompletionBehaviors(Collection<Class<? extends CompletionBehavior>> completions)
+    {
+        completionMapping.clear();
+        completions.stream().forEach(behavior -> completionMapping.put(behavior.getSimpleName(), behavior));
+    }
+
+    public static void removeCompletionBehavior(CompletionBehavior which)
+    {
+        completionMapping.remove(which.getClass().getSimpleName());
+    }
+
     /**
      * @return The mapping of all rules inside of Schedulr.
      */
-    public static Map<String, Rule> getRules()
+    public static Set<String> getRuleNames()
     {
-        return ruleMapping;
+        return ruleMapping.keySet();
     }
 
     /**
@@ -93,6 +147,9 @@ public final class Schedulr
      */
     public static List<Task> getTasksMatchingRule(Rule toCompare)
     {
+        if (toCompare == null)
+            toCompare = (task) -> false;
+
         return tasks.stream().filter(toCompare).collect(Collectors.toList());
     }
 
@@ -153,6 +210,30 @@ public final class Schedulr
     public static boolean removeTasks(Collection<Task> toRemove)
     {
         return tasks.removeAll(toRemove);
+    }
+
+
+    public enum Behavior
+    {
+        RULE(Rule.class),
+        COMPLETIONBEHAVIOR(CompletionBehavior.class);
+
+        private Class thisClass;
+
+        Behavior(Class origin)
+        {
+            thisClass = origin;
+        }
+
+        public Class getValueClass()
+        {
+            return thisClass;
+        }
+
+        @Override public String toString()
+        {
+            return thisClass.getSimpleName();
+        }
     }
 
 }

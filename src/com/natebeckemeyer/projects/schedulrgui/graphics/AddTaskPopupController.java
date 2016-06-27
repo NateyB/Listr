@@ -1,14 +1,16 @@
 package com.natebeckemeyer.projects.schedulrgui.graphics;
 
 import com.natebeckemeyer.projects.schedulrgui.core.Schedulr;
-import com.natebeckemeyer.projects.schedulrgui.task.*;
+import com.natebeckemeyer.projects.schedulrgui.task.CompletionBehavior;
+import com.natebeckemeyer.projects.schedulrgui.task.MarkCompleted;
+import com.natebeckemeyer.projects.schedulrgui.task.Tag;
+import com.natebeckemeyer.projects.schedulrgui.task.Task;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 
 import java.time.LocalDate;
 import java.util.GregorianCalendar;
@@ -41,10 +43,10 @@ public class AddTaskPopupController
     private TextField addTaskLabelField;
 
     /**
-     * The ChoiceBox from which the user selects the OnCompletion behavior for the new task.
+     * The ChoiceBox from which the user selects the CompletionBehavior behavior for the new task.
      */
     @FXML
-    private ChoiceBox<OnCompletion> addTaskChoiceBox;
+    private ChoiceBox<String> addTaskChoiceBox;
 
     /**
      * Creates the Task from the population of the input parameters, and then inserts it into Schedulr's task listing.
@@ -54,7 +56,7 @@ public class AddTaskPopupController
     {
         String taskName = addTaskNameField.getText();
         String labelInput = addTaskLabelField.getText();
-        OnCompletion onCompletionValue = addTaskChoiceBox.getValue();
+        CompletionBehavior completionBehaviorValue = Schedulr.getCompletionBehavior(addTaskChoiceBox.getValue());
 
         LocalDate localDueDate = addTaskDueDatePicker.getValue();
         GregorianCalendar dueDate = new GregorianCalendar(localDueDate.getYear(),
@@ -67,7 +69,7 @@ public class AddTaskPopupController
             tagList.add(Tag.getTag(tagParser.next()));
         }
 
-        Task newTask = new Task(taskName, dueDate, onCompletionValue);
+        Task newTask = new Task(taskName, dueDate, completionBehaviorValue);
         newTask.setTags(tagList);
 
         Schedulr.addTask(newTask);
@@ -81,23 +83,8 @@ public class AddTaskPopupController
     @FXML
     private void initialize()
     {
-        MarkCompleted defaultVal = new MarkCompleted();
-        addTaskChoiceBox.setItems(FXCollections.observableArrayList(defaultVal, new VerboseCompleted()));
-        addTaskChoiceBox.setValue(defaultVal);
-        addTaskChoiceBox.converterProperty().setValue(new StringConverter<OnCompletion>()
-        {
-            @Override public String toString(OnCompletion behavior)
-            {
-                return behavior.getName();
-            }
-
-            @Override public OnCompletion fromString(String string)
-            {
-                throw new RuntimeException(
-                        "Attempted to instantiate OnCompletion from string. This operation is not supported.");
-            }
-        });
-
+        addTaskChoiceBox.setItems(FXCollections.observableArrayList(Schedulr.getCompletionBehaviorNames()));
+        addTaskChoiceBox.setValue(MarkCompleted.class.getSimpleName());
         addTaskDueDatePicker.setValue(LocalDate.now());
     }
 
