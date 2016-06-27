@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="613.0" prefWidth="999.0" xmlns="http://javafx.com/javafx/8.0.65"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.natebeckemeyer.projects.schedulrgui.graphics.MainWindowController">
+    <children>
+        <TableView fx:id="mainTaskList" editable="true" layoutX="128.0" layoutY="86.0" onKeyPressed="#deleteTask"
+                   prefHeight="527.0" prefWidth="871.0">
+            <columns>
+                <TableColumn prefWidth="84.0" text="Completed"/>
+                <TableColumn editable="false" minWidth="0.0" prefWidth="130.0" text="Date"/>
+                <TableColumn minWidth="0.0" prefWidth="367.0" text="Name"/>
+                <TableColumn prefWidth="184.0" text="Tags" visible="false"/>
+                <TableColumn prefWidth="75.0" text="Completion Behavior" visible="false"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+        </TableView>
+        <TextField fx:id="taskListDefinition" layoutX="225.0" layoutY="14.0" onKeyPressed="#enterTyping"
+                   prefHeight="27.0" prefWidth="702.0" promptText="Define rule here!"/>
+        <Button layoutX="937.0" layoutY="14.0" mnemonicParsing="false" onAction="#setAndDisplay" text="View"/>
+        <Button layoutX="142.0" layoutY="14.0" mnemonicParsing="false" onAction="#viewAddTaskButtonClicked"
+                text="Add Task"/>
+        <Label layoutX="163.0" layoutY="58.0" text="Show"/>
+        <CheckBox fx:id="tagCheckbox" layoutX="252.0" layoutY="57.0" mnemonicParsing="false" text="Tags"/>
+        <CheckBox fx:id="completionBehaviorCheckbox" layoutX="324.0" layoutY="57.0" mnemonicParsing="false"
+                  text="Completion Behavior"/>
+        <CheckBox fx:id="showCompletedTasksCheckbox" layoutX="498.0" layoutY="57.0" mnemonicParsing="false"
+                  text="Completed Tasks"/>
+        <Button layoutX="24.0" layoutY="53.0" mnemonicParsing="false" onAction="#viewAddRuleButtonClicked"
+                text="Add Rule"/>
+        <TreeView fx:id="behaviorTreeView" layoutX="10.0" layoutY="86.0" onKeyPressed="#deleteBehavior"
+                  prefHeight="527.0" prefWidth="103.0"/>
+    </children>
+</AnchorPane>
