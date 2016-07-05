@@ -1,7 +1,6 @@
 package com.natebeckemeyer.projects.schedulrgui.task;
 
 import com.natebeckemeyer.projects.schedulrgui.reference.ProjectPaths;
-import com.sun.istack.internal.Nullable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
