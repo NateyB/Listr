@@ -1,7 +1,5 @@
 package com.natebeckemeyer.projects.schedulrgui.task;
 
-import com.sun.istack.internal.NotNull;
-
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-04-28.
  */
@@ -19,8 +17,6 @@ public interface CompletionBehavior
 
     /**
      * Deserializes an object from a string. Note that the string <i>cannot</i> contain a pipe character.
-     *
-     * @return The new object containing the relevant fields.
      */
     void loadFromString(String serialized);
 
