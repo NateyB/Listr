@@ -3,6 +3,7 @@ package com.natebeckemeyer.projects.schedulrgui.graphics;
 
 import com.natebeckemeyer.projects.schedulrgui.core.DynamicRuleParser;
 import com.natebeckemeyer.projects.schedulrgui.core.Schedulr;
+import com.natebeckemeyer.projects.schedulrgui.reference.ProjectPaths;
 import com.natebeckemeyer.projects.schedulrgui.task.Rule;
 import com.natebeckemeyer.projects.schedulrgui.task.Tag;
 import com.natebeckemeyer.projects.schedulrgui.task.Task;
@@ -311,7 +312,8 @@ public class MainWindowController
         Parent root;
         try
         {
-            root = FXMLLoader.load(getClass().getResource("addBehaviorPopup.fxml"));
+            root = FXMLLoader.load(getClass()
+                    .getResource(ProjectPaths.fxmlDirectory + ProjectPaths.fileSeparator + "addBehaviorPopup.fxml"));
         } catch (IOException e)
         {
             e.printStackTrace();

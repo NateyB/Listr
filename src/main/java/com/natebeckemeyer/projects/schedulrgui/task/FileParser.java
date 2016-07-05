@@ -1,6 +1,6 @@
 package com.natebeckemeyer.projects.schedulrgui.task;
 
-import com.natebeckemeyer.projects.schedulrgui.core.Config;
+import com.natebeckemeyer.projects.schedulrgui.reference.ProjectPaths;
 import com.sun.istack.internal.Nullable;
 
 import java.io.File;
@@ -104,7 +104,7 @@ public final class FileParser
                 try
                 {
                     completionBehavior = ((CompletionBehavior) Class.forName(
-                            String.format("%s.%s", Config.taskPackagePrefix, console.next()))
+                            String.format("%s.%s", ProjectPaths.taskPackagePrefix, console.next()))
                             .newInstance());
                     completionBehavior.loadFromString(console.next());
                 } catch (IllegalAccessException | InstantiationException | ClassNotFoundException e)

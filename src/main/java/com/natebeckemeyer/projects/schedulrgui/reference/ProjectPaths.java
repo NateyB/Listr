@@ -1,16 +1,16 @@
-package com.natebeckemeyer.projects.schedulrgui.core;
+package com.natebeckemeyer.projects.schedulrgui.reference;
 
 import java.io.File;
 
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-06-23.
  */
-final public class Config
+final public class ProjectPaths
 {
     /**
      * Instantiation disabled.
      */
-    private Config()
+    private ProjectPaths()
     {
     }
 
@@ -37,8 +37,8 @@ final public class Config
     /**
      * The file prefix for the outermost package (where initial source code branching occurs).
      */
-    public static final String filePrefix = String.format(String.format("%s%s%s", "src", fileSeparator, thisLocation),
-            fileSeparator, fileSeparator, fileSeparator, fileSeparator);
+    public static final String filePrefix = String.format(thisLocation, fileSeparator, fileSeparator, fileSeparator,
+            fileSeparator);
 
     /**
      * The package prefix for the outermost package (where initial source code branching occurs).
@@ -77,21 +77,48 @@ final public class Config
      */
     public static final String taskPackagePrefix = String.format("%s%s%s", packagePrefix, packageSeparator, "task");
 
+    /**
+     * The directory where all resources are stored.
+     */
+    public static final String resourcesDirectory = "src" + fileSeparator + "main" + fileSeparator + "resources";
 
-    public static final String userFile = String.format("%s%s%s", "resources", fileSeparator, "user");
+    /**
+     * The directory containing the user resource files (those files which are user-specific).
+     */
+    public static final String userResources = resourcesDirectory + fileSeparator + "/user";
 
     /**
      * The location of the file that stores the user-defined rules.
      */
-    public static final String userRulesFile = String.format("%s%s%s%s%s", userFile, fileSeparator,
+    public static final String userRulesFile = String.format("%s%s%s%s%s", userResources, fileSeparator,
             "userdefinitions", fileSeparator, "userrules");
 
-
-    public static final String userCompletionsFile = String.format("%s%s%s%s%s", userFile, fileSeparator,
+    /**
+     * The directory that contains the user-defined completion behaviors.
+     */
+    public static final String userCompletionsFile = String.format("%s%s%s%s%s", userResources, fileSeparator,
             "userdefinitions", fileSeparator, "usercompletionbehaviors");
 
-    public static final String userTasksDirectory = String.format("%s%s%s", userFile, fileSeparator, "tasks");
+    /**
+     * The directory where the user tasks are stored.
+     */
+    public static final String userTasksDirectory = String.format("%s%s%s", userResources, fileSeparator, "tasks");
 
+    /**
+     * The directory containing the system resource files (those files which are native to Schedulr).
+     */
+    public static final String systemFile = resourcesDirectory + fileSeparator + "system";
+
+    /**
+     * The directory containing the FXML files.
+     */
+    public static final String fxmlDirectory = String.format("%s%s%s%s", fileSeparator, "system", fileSeparator,
+            "windows");
+
+    /**
+     * The directory containing the templates used to compile user-defined behaviors.
+     */
+    public static final String templateDirectory = String.format("%s%s%s", systemFile, fileSeparator, "templates");
 
     static
     {

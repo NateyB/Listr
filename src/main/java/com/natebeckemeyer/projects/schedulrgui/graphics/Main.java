@@ -1,7 +1,8 @@
 package com.natebeckemeyer.projects.schedulrgui.graphics;
 
-import com.natebeckemeyer.projects.schedulrgui.core.Config;
+import com.natebeckemeyer.projects.schedulrgui.core.DynamicRuleParser;
 import com.natebeckemeyer.projects.schedulrgui.core.Schedulr;
+import com.natebeckemeyer.projects.schedulrgui.reference.ProjectPaths;
 import com.natebeckemeyer.projects.schedulrgui.task.FileParser;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -48,8 +49,8 @@ public class Main extends Application
 
     static
     {
-        File defaultDirectory = new File(Config.userTasksDirectory);
-        defaultDirectory.mkdirs();
+        File defaultDirectory = new File(ProjectPaths.userTasksDirectory);
+        boolean exists = defaultDirectory.mkdirs();
 
         fileChooser.setTitle("Task File");
         fileChooser.setInitialDirectory(defaultDirectory);
@@ -142,7 +143,8 @@ public class Main extends Application
      */
     private Parent initializeMainWindow() throws IOException
     {
-        return FXMLLoader.load(getClass().getResource("mainWindow.fxml"));
+        String classpath = ProjectPaths.fxmlDirectory + ProjectPaths.fileSeparator + "mainWindow.fxml";
+        return FXMLLoader.load(this.getClass().getResource(classpath));
     }
 
     /**
@@ -192,6 +194,7 @@ public class Main extends Application
 
     public static void main(String[] args)
     {
+        DynamicRuleParser.compileAndLoadRule("all", new LinkedList<>(), "", "return true;", new LinkedList<>());
         launch(args);
     }
 }

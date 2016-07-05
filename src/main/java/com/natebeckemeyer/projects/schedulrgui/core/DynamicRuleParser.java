@@ -1,5 +1,6 @@
 package com.natebeckemeyer.projects.schedulrgui.core;
 
+import com.natebeckemeyer.projects.schedulrgui.reference.ProjectPaths;
 import com.natebeckemeyer.projects.schedulrgui.task.CompletionBehavior;
 import com.natebeckemeyer.projects.schedulrgui.task.Rule;
 
@@ -45,7 +46,6 @@ public final class DynamicRuleParser
      *                         completion behavior, the whole class except the toString method.
      * @param imports          The imports that the code will need. Only the classpaths are needed; i.e., "java.io.File"
      * @param type             The type of behavior.
-     * @return The new rule.
      */
     public static void compileBehavior(String name, Collection<String> implementationOf, String extensionOf,
                                        String userCode, Collection<String> imports, Schedulr.Behavior type)
@@ -55,35 +55,34 @@ public final class DynamicRuleParser
         switch (type)
         {
             case RULE:
-                fileName = Config.userRulesFile;
+                fileName = ProjectPaths.userRulesFile;
                 break;
 
             case COMPLETIONBEHAVIOR:
-                fileName = Config.userCompletionsFile;
+                fileName = ProjectPaths.userCompletionsFile;
                 break;
 
             default:
                 System.err.printf("Could not locate appropriate directory for " + type + ". Using rule instead.");
-                fileName = Config.userRulesFile;
+                fileName = ProjectPaths.userRulesFile;
                 break;
         }
 
-        fileName = fileName + Config.fileSeparator + className + ".java";
+        fileName = fileName + ProjectPaths.fileSeparator + className + ".java";
 
-        try (Scanner readTemplate = new Scanner(
-                new File(Config.coreFilePrefix + Config.fileSeparator + type + ".template"));
+        try (Scanner readTemplate = new Scanner(new File(ProjectPaths.templateDirectory + ProjectPaths.fileSeparator + type + ".template"));
              FileWriter writeNewTask = new FileWriter(fileName))
         {
             // Prepare the imports
-            imports.add(Config.taskPackagePrefix + Config.packageSeparator + type);
-            imports.add(Config.taskPackagePrefix + Config.packageSeparator + "Task");
+            imports.add(ProjectPaths.taskPackagePrefix + ProjectPaths.packageSeparator + type);
+            imports.add(ProjectPaths.taskPackagePrefix + ProjectPaths.packageSeparator + "Task");
             StringBuilder importLines = new StringBuilder();
             for (String item : imports)
             {
                 importLines.append("import ");
                 importLines.append(item);
                 importLines.append(";");
-                importLines.append(Config.lineSeparator);
+                importLines.append(ProjectPaths.lineSeparator);
             }
 
             // Prepare the implementations
@@ -114,7 +113,7 @@ public final class DynamicRuleParser
 
 
                 replacement.append(line);
-                replacement.append(Config.lineSeparator);
+                replacement.append(ProjectPaths.lineSeparator);
             }
             writeNewTask.write(replacement.toString());
             writeNewTask.close();
@@ -162,7 +161,8 @@ public final class DynamicRuleParser
      */
     public static Rule loadRule(String className)
     {
-        try (URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(Config.userRulesFile).toURI().toURL()}))
+        try (URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(ProjectPaths.userRulesFile)
+                .toURI().toURL()}))
         {
 
             Class<?> ruleClass = classLoader.loadClass(
@@ -195,7 +195,7 @@ public final class DynamicRuleParser
      */
     public static CompletionBehavior loadCompletionBehavior(String className)
     {
-        try (URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(Config.userCompletionsFile)
+        try (URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(ProjectPaths.userCompletionsFile)
                 .toURI().toURL()}))
         {
             Class<?> completionBehavior = classLoader.loadClass(className);

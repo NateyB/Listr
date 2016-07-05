@@ -6,6 +6,7 @@ import java.util.function.Predicate;
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-04-28.
  */
+@FunctionalInterface
 public interface Rule extends Predicate<Task>
 {
     /**
