@@ -139,7 +139,6 @@ public final class FileParser
      * @param filepath The filepath of the file where the tasks are located.
      * @return The priority queue containing the loaded tasks, or null if the file does not exist.
      */
-    @Nullable
     public static PriorityQueue<Task> readTasksFromFile(String filepath)
     {
         File source;

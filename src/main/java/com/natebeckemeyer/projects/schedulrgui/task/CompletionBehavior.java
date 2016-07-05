@@ -26,9 +26,8 @@ public interface CompletionBehavior
 
     /**
      * Serializes an CompletionBehavior object into a string. Note that the string <i>cannot</i> contain a pipe
-     * character.
+     * character. Must not return null.
      * Including the pipe character will result in an InvalidCharacterException.
      */
-    @NotNull
     String convertToString();
 }
