@@ -110,7 +110,7 @@ public class DatelessTask extends AbstractTask
      *
      * @param serialization The string containing the serialization of this task.
      */
-    @Override public void loadFromSerialzation(String serialization)
+    @Override public void loadFromSerialization(String serialization)
     {
 
         Scanner parser = new Scanner(serialization);

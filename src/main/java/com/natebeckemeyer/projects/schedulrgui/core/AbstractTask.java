@@ -96,7 +96,7 @@ public abstract class AbstractTask implements Comparable<AbstractTask>
      *
      * @param serialization The string containing the serialization of this task.
      */
-    public abstract void loadFromSerialzation(String serialization);
+    public abstract void loadFromSerialization(String serialization);
 
     /**
      * @return The set of tags associated with this object

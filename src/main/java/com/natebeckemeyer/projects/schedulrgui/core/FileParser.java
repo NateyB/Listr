@@ -100,7 +100,7 @@ public final class FileParser
                     return null;
                 }
 
-                task.loadFromSerialzation(nextLine.substring(taskType.length() + 1));
+                task.loadFromSerialization(nextLine.substring(taskType.length() + 1));
                 tasks.add(task);
 
                 console.close();

@@ -5,7 +5,8 @@ import com.natebeckemeyer.projects.schedulrgui.core.AbstractTask;
 import com.natebeckemeyer.projects.schedulrgui.core.DynamicBehaviorEngine;
 import com.natebeckemeyer.projects.schedulrgui.core.Rule;
 import com.natebeckemeyer.projects.schedulrgui.core.Schedulr;
-import com.natebeckemeyer.projects.schedulrgui.implementations.BasicRuleOperation;
+import com.natebeckemeyer.projects.schedulrgui.implementations.DatelessTask;
+import com.natebeckemeyer.projects.schedulrgui.implementations.SimpleTask;
 import com.natebeckemeyer.projects.schedulrgui.implementations.Tag;
 import com.natebeckemeyer.projects.schedulrgui.reference.ProjectPaths;
 import javafx.beans.property.BooleanProperty;
@@ -26,9 +27,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class MainWindowController
@@ -107,13 +108,12 @@ public class MainWindowController
      */
     private void displayTasks()
     {
-        AtomicInteger count = new AtomicInteger(0);
         if (currentRule == null)
             identifyCurrentRule();
 
         List<AbstractTask> passed;
         if (!showCompletedTasks)
-            passed = Schedulr.getTasksMatchingRule(BasicRuleOperation.DIFFERENCE.performOperation(currentRule, (Schedulr.getRule("completed"))));
+            passed = Schedulr.getTasksMatchingRule(Rule.and(currentRule, Rule.negate(Schedulr.getRule("completed"))));
         else
             passed = Schedulr.getTasksMatchingRule(currentRule);
         passed.sort(null);
@@ -121,10 +121,14 @@ public class MainWindowController
         ObservableList<AbstractTask> tasks = FXCollections.observableArrayList(passed);
         mainTaskList.setItems(tasks);
 
+        AtomicInteger count = new AtomicInteger(0);
         @SuppressWarnings("unchecked")
-        TableColumn<AbstractTask, Boolean> checkMarks = (TableColumn<AbstractTask, Boolean>) mainTaskList.getColumns().get(0);
+        TableColumn<AbstractTask, AbstractTask> checkMarks = (TableColumn<AbstractTask, AbstractTask>) mainTaskList
+                .getColumns()
+                .get(0);
+
         checkMarks.setCellFactory(column -> {
-            CheckBoxTableCell<AbstractTask, Boolean> checkBox = new CheckBoxTableCell<>();
+            CheckBoxTableCell<AbstractTask, AbstractTask> checkBox = new CheckBoxTableCell<>();
             BooleanProperty selected;
             if (count.intValue() >= passed.size())
                 selected = new SimpleBooleanProperty();
@@ -143,22 +147,11 @@ public class MainWindowController
             });
             return checkBox;
         });
-        checkMarks.setCellValueFactory(task -> new SimpleBooleanProperty(task.getValue().isCompleted()));
+        /*checkMarks.setCellFactory(CheckBoxTableCell.forTableColumn(checkMarks));
+        checkMarks.setCellValueFactory(new PropertyValueFactory<>("completed"));
         checkMarks.setEditable(true);
-
-        // Due dates
-        @SuppressWarnings("unchecked")
-        TableColumn<AbstractTask, String> dueDates = (TableColumn<AbstractTask, String>) mainTaskList.getColumns().get(1);
-        dueDates.setCellValueFactory(new PropertyValueFactory<>("dueString"));
-        dueDates.setEditable(false);
-
-        // Names
-        @SuppressWarnings("unchecked")
-        TableColumn<AbstractTask, String> names = (TableColumn<AbstractTask, String>) mainTaskList.getColumns().get(2);
-        names.setCellFactory(TextFieldTableCell.forTableColumn());
-        names.setCellValueFactory(new PropertyValueFactory<>("name"));
-        names.setOnEditCommit(event -> event.getRowValue().setName(event.getNewValue()));
-        //names.setEditable(false);
+        checkMarks.setCellFactory(item -> new CheckBoxTableCell());
+        checkMarks.setCellValueFactory(new PropertyValueFactory<>("completed"));*/
 
         // Tags
         @SuppressWarnings("unchecked")
@@ -178,7 +171,8 @@ public class MainWindowController
         tags.setVisible(tagColumnShowing);
 
         @SuppressWarnings("unchecked")
-        TableColumn<AbstractTask, String> completionBehaviors = (TableColumn<AbstractTask, String>) mainTaskList.getColumns().get(4);
+        TableColumn<AbstractTask, String> completionBehaviors = (TableColumn<AbstractTask, String>) mainTaskList
+                .getColumns().get(4);
         if (onCompletionColumnShowing)
         {
             completionBehaviors.setCellValueFactory(
@@ -201,7 +195,8 @@ public class MainWindowController
         Parent root;
         try
         {
-            root = FXMLLoader.load(getClass().getResource(ProjectPaths.fxmlDirectory + ProjectPaths.fileSeparator + "addTaskPopup.fxml"));
+            root = FXMLLoader.load(getClass()
+                    .getResource(ProjectPaths.fxmlDirectory + ProjectPaths.fileSeparator + "addTaskPopup.fxml"));
         } catch (IOException e)
         {
             e.printStackTrace();
@@ -259,10 +254,66 @@ public class MainWindowController
         behaviorTreeView.setEditable(false);
         updateSidebar();
 
+        // Due dates
+        @SuppressWarnings("unchecked")
+        TableColumn<AbstractTask, String> dueDates = (TableColumn<AbstractTask, String>) mainTaskList.getColumns().get(
+                1);
+        dueDates.setCellFactory(TextFieldTableCell.forTableColumn());
+        dueDates.setCellValueFactory(new PropertyValueFactory<>("dueString"));
+        dueDates.setOnEditCommit(event -> {
+                    AbstractTask task = event.getRowValue();
+                    try
+                    {
+                        Scanner parser = new Scanner(event.getNewValue());
+                        if (parser.hasNext(Pattern.quote("Eventually")))
+                        {
+                            if (task instanceof SimpleTask)
+                            {
+                                Schedulr.removeTask(task);
+                                Schedulr.addTask(new DatelessTask(task));
+                            }
+                        } else
+                        {
+                            AbstractTask newTask;
+                            if (task instanceof DatelessTask)
+                            {
+                                newTask = new SimpleTask(task);
+                            } else
+                                newTask = task;
 
+                            parser.useDelimiter(Pattern.quote("-"));
+
+                            int year = parser.nextInt();
+                            int month = parser.nextInt();
+                            int day_of_month = parser.nextInt();
+
+                            newTask.getDueDate().set(Calendar.YEAR, year);
+                            newTask.getDueDate().set(Calendar.MONTH, month - 1);
+                            newTask.getDueDate().set(Calendar.DAY_OF_MONTH, day_of_month);
+
+                            Schedulr.removeTask(task);
+                            Schedulr.addTask(newTask);
+                        }
+                    } catch (NoSuchElementException e)
+                    {
+                        System.err.println("Formatting of date is incorrect in user attempt to edit task " +
+                                task.getName() + "date graphically.");
+                    } catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                    displayTasks();
+                }
+        );
+        dueDates.setEditable(true);
+
+        // Names
         @SuppressWarnings("unchecked")
         TableColumn<AbstractTask, String> names = (TableColumn<AbstractTask, String>) mainTaskList.getColumns().get(2);
+        names.setCellFactory(TextFieldTableCell.forTableColumn());
         names.setCellValueFactory(new PropertyValueFactory<>("name"));
+        names.setOnEditCommit(event -> event.getRowValue().setName(event.getNewValue()));
+
     }
 
     @FXML

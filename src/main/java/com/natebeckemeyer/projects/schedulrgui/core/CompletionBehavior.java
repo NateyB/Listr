@@ -6,7 +6,7 @@ package com.natebeckemeyer.projects.schedulrgui.core;
 public abstract class CompletionBehavior
 {
     /**
-     * Sets the completed tag in
+     * Sets the completed tag in {@code task} to {@code completed} without invoking the task's completion method.
      */
     final protected void setCompleted(AbstractTask task, boolean completed)
     {
