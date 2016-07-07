@@ -1,8 +1,6 @@
 package com.natebeckemeyer.projects.schedulrgui.core;
 
 import com.natebeckemeyer.projects.schedulrgui.implementations.BasicRuleOperation;
-import com.natebeckemeyer.projects.schedulrgui.implementations.Rule;
-import com.natebeckemeyer.projects.schedulrgui.implementations.SimpleTask;
 import com.natebeckemeyer.projects.schedulrgui.reference.ProjectPaths;
 
 import javax.naming.OperationNotSupportedException;
@@ -21,7 +19,7 @@ import java.util.regex.Pattern;
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-06-19.
  */
-public final class DynamicRuleParser
+public final class DynamicBehaviorEngine
 {
     /**
      * The compiler that will be used to analyze by
@@ -31,7 +29,7 @@ public final class DynamicRuleParser
     /**
      * Disables instantiation, as the only uses of this class should be static API calls
      */
-    private DynamicRuleParser()
+    private DynamicBehaviorEngine()
     {
     }
 
@@ -81,8 +79,9 @@ public final class DynamicRuleParser
              FileWriter writeNewTask = new FileWriter(fileLocation.getCanonicalFile()))
         {
             // Prepare the imports
-            imports.add(ProjectPaths.taskPackagePrefix + ProjectPaths.packageSeparator + type);
-            imports.add(ProjectPaths.taskPackagePrefix + ProjectPaths.packageSeparator + SimpleTask.class.getSimpleName());
+            imports.add(ProjectPaths.corePackagePrefix + ProjectPaths.packageSeparator + type);
+            imports.add(ProjectPaths.corePackagePrefix + ProjectPaths.packageSeparator +
+                    AbstractTask.class.getSimpleName());
             StringBuilder importLines = new StringBuilder();
             for (String item : imports)
             {
@@ -195,16 +194,15 @@ public final class DynamicRuleParser
 
     /**
      * Loads the behavior of CompletionBehavior {@code className} from the user-defined resources. Adds the class
-     * into the
-     * corresponding mapping in Schedulr.
+     * into the corresponding mapping in Schedulr.
      *
      * @param className The name of the CompletionBehavior to instantiate
      * @return an object of CompletionBehavior of name {@code className}
      */
     public static CompletionBehavior loadCompletionBehavior(String className)
     {
-        try (URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(ProjectPaths.userCompletionsFile)
-                .toURI().toURL()}))
+        try (URLClassLoader classLoader = new URLClassLoader(new URL[]{ProjectPaths.getFile(
+                ProjectPaths.userCompletionsFile).toURI().toURL()}))
         {
             Class<?> completionBehavior = classLoader.loadClass(className);
             Object instantiation = completionBehavior.newInstance();

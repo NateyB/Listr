@@ -1,6 +1,6 @@
 package com.natebeckemeyer.projects.schedulrgui.graphics;
 
-import com.natebeckemeyer.projects.schedulrgui.core.DynamicRuleParser;
+import com.natebeckemeyer.projects.schedulrgui.core.DynamicBehaviorEngine;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -57,12 +57,6 @@ public class AddBehaviorPopupController
     private TextField completionImplementsField;
 
     /**
-     * The TextField object in which users specify the class that this rule extends.
-     */
-    @FXML
-    private TextField completionExtendsField;
-
-    /**
      * The TextField object which users use to specify imports (separated by spaces).
      */
     @FXML
@@ -99,7 +93,7 @@ public class AddBehaviorPopupController
         }
         implementationsParser.close();
 
-        DynamicRuleParser.compileAndLoadRule(addRuleNameField.getText(), implementationsList,
+        DynamicBehaviorEngine.compileAndLoadRule(addRuleNameField.getText(), implementationsList,
                 ruleExtendsField.getText(),
                 addRuleCodeField.getText(), importList);
         MainWindowController.getInstance().updateSidebar();
@@ -132,9 +126,8 @@ public class AddBehaviorPopupController
         }
         implementationsParser.close();
 
-        DynamicRuleParser.compileAndLoadCompletionBehavior(addCompletionNameField.getText(), implementationsList,
-                completionExtendsField.getText(),
-                addCompletionCodeField.getText(), importList);
+        DynamicBehaviorEngine.compileAndLoadCompletionBehavior(addCompletionNameField.getText(), implementationsList,
+                null, addCompletionCodeField.getText(), importList);
         MainWindowController.getInstance().updateSidebar();
 
         ((Stage) addRuleCodeField.getScene().getWindow()).close();

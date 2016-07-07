@@ -78,7 +78,7 @@ final public class ProjectPaths
     /**
      * The package prefix for the implementations package.
      */
-    public static final String taskPackagePrefix = String.format("%s%s%s", packagePrefix, packageSeparator, "implementations");
+    public static final String implementationsPackagePrefix = String.format("%s%s%s", packagePrefix, packageSeparator, "implementations");
 
     /**
      * The root directory for resources.

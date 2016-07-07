@@ -1,7 +1,5 @@
 package com.natebeckemeyer.projects.schedulrgui.core;
 
-import com.natebeckemeyer.projects.schedulrgui.implementations.Rule;
-
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-06-20.
  * <p>
@@ -10,7 +8,7 @@ import com.natebeckemeyer.projects.schedulrgui.implementations.Rule;
 public interface RuleOperation
 {
     /**
-     * Performs an operation creates a rule from two old ones. And, or, xor--these are some simple possibilities.
+     * Performs an operation that creates a rule from two old ones. And, or, xor--these are some simple possibilities.
      *
      * @param a
      * @param b

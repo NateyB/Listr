@@ -1,6 +1,4 @@
-package com.natebeckemeyer.projects.schedulrgui.implementations;
-
-import com.natebeckemeyer.projects.schedulrgui.core.AbstractTask;
+package com.natebeckemeyer.projects.schedulrgui.core;
 
 import java.util.Objects;
 import java.util.function.Predicate;

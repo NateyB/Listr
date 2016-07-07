@@ -1,6 +1,7 @@
 package com.natebeckemeyer.projects.schedulrgui.implementations;
 
 import com.natebeckemeyer.projects.schedulrgui.core.AbstractTask;
+import com.natebeckemeyer.projects.schedulrgui.core.Rule;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;

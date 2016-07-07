@@ -1,6 +1,7 @@
 package com.natebeckemeyer.projects.schedulrgui.implementations;
 
 import com.natebeckemeyer.projects.schedulrgui.core.AbstractTask;
+import com.natebeckemeyer.projects.schedulrgui.core.Rule;
 
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-06-20.

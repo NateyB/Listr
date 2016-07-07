@@ -2,10 +2,10 @@ package com.natebeckemeyer.projects.schedulrgui.graphics;
 
 
 import com.natebeckemeyer.projects.schedulrgui.core.AbstractTask;
-import com.natebeckemeyer.projects.schedulrgui.core.DynamicRuleParser;
+import com.natebeckemeyer.projects.schedulrgui.core.DynamicBehaviorEngine;
+import com.natebeckemeyer.projects.schedulrgui.core.Rule;
 import com.natebeckemeyer.projects.schedulrgui.core.Schedulr;
 import com.natebeckemeyer.projects.schedulrgui.implementations.BasicRuleOperation;
-import com.natebeckemeyer.projects.schedulrgui.implementations.Rule;
 import com.natebeckemeyer.projects.schedulrgui.implementations.Tag;
 import com.natebeckemeyer.projects.schedulrgui.reference.ProjectPaths;
 import javafx.beans.property.BooleanProperty;
@@ -329,6 +329,6 @@ public class MainWindowController
 
     private void identifyCurrentRule()
     {
-        currentRule = DynamicRuleParser.processInput(taskListDefinition.getText());
+        currentRule = DynamicBehaviorEngine.processInput(taskListDefinition.getText());
     }
 }

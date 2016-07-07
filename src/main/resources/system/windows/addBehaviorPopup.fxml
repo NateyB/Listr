@@ -5,9 +5,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="639.0"
-            prefWidth="522.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.natebeckemeyer.projects.schedulrgui.graphics.AddBehaviorPopupController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="639.0" prefWidth="522.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.natebeckemeyer.projects.schedulrgui.graphics.AddBehaviorPopupController">
     <children>
         <TabPane layoutX="2.0" layoutY="-2.0" prefHeight="639.0" prefWidth="522.0" tabClosingPolicy="UNAVAILABLE">
             <tabs>
@@ -15,36 +13,28 @@
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="693.0" prefWidth="522.0">
                             <children>
-                                <Button layoutX="270.0" layoutY="565.0" mnemonicParsing="false"
-                                        onAction="#addRuleButtonClicked" text="Add Rule"/>
-                                <TextField fx:id="addRuleNameField" layoutX="122.0" layoutY="14.0" prefHeight="27.0"
-                                           prefWidth="370.0" promptText="overdue"/>
-                                <TextField fx:id="addRuleImportField" layoutX="122.0" layoutY="525.0" prefHeight="27.0"
-                                           prefWidth="370.0" promptText="java.util.GregorianCalendar java.io.*"/>
-                                <Label layoutX="14.0" layoutY="19.0" text="Rule Name:"/>
-                                <Label layoutX="14.0" layoutY="136.0" prefHeight="17.0" prefWidth="34.0" text="Test:"/>
-                                <Label layoutX="15.0" layoutY="530.0" text="Imports:"/>
-                                <TextField fx:id="ruleImplementsField" layoutX="123.0" layoutY="101.0" prefHeight="27.0"
-                                           prefWidth="370.0" promptText="Predicate"/>
-                                <TextArea fx:id="addRuleCodeField" layoutX="123.0" layoutY="153.0" prefHeight="347.0"
-                                          prefWidth="370.0"
-                                          promptText="return new GregorianCalendar().compareTo(task.getDueDate()) &gt; 0;">
+                                <Button layoutX="270.0" layoutY="565.0" mnemonicParsing="false" onAction="#addRuleButtonClicked" text="Add Rule" />
+                                <TextField fx:id="addRuleNameField" layoutX="122.0" layoutY="14.0" prefHeight="27.0" prefWidth="370.0" promptText="overdue" />
+                                <TextField fx:id="addRuleImportField" layoutX="122.0" layoutY="525.0" prefHeight="27.0" prefWidth="370.0" promptText="java.util.GregorianCalendar java.io.*" />
+                                <Label layoutX="14.0" layoutY="19.0" text="Rule Name:" />
+                                <Label layoutX="14.0" layoutY="136.0" prefHeight="17.0" prefWidth="34.0" text="Test:" />
+                                <Label layoutX="15.0" layoutY="530.0" text="Imports:" />
+                                <TextField fx:id="ruleImplementsField" layoutX="123.0" layoutY="101.0" prefHeight="27.0" prefWidth="370.0" promptText="Predicate" />
+                                <TextArea fx:id="addRuleCodeField" layoutX="123.0" layoutY="153.0" prefHeight="347.0" prefWidth="370.0" promptText="return new GregorianCalendar().compareTo(task.getDueDate()) &gt; 0;">
                                     <font>
-                                        <Font size="11.0"/>
+                                        <Font size="11.0" />
                                     </font>
                                 </TextArea>
-                                <ImageView fitHeight="17.0" fitWidth="96.0" layoutX="48.0" layoutY="136.0"
-                                           pickOnBounds="true" preserveRatio="true">
+                                <ImageView fitHeight="17.0" fitWidth="96.0" layoutX="48.0" layoutY="136.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@../images/taskWithArrow.png"/>
+                                        <Image url="@../images/taskWithArrow.png" />
                                     </image>
                                 </ImageView>
-                                <Label layoutX="104.0" layoutY="136.0" text="{"/>
-                                <Label layoutX="106.0" layoutY="500.0" text="}"/>
-                                <Label layoutX="11.0" layoutY="106.0" text="Implements:"/>
-                                <TextField fx:id="ruleExtendsField" layoutX="123.0" layoutY="58.0" prefHeight="27.0"
-                                           prefWidth="370.0" promptText="Tag"/>
-                                <Label layoutX="14.0" layoutY="63.0" text="Extends:"/>
+                                <Label layoutX="104.0" layoutY="136.0" text="{" />
+                                <Label layoutX="106.0" layoutY="500.0" text="}" />
+                                <Label layoutX="11.0" layoutY="106.0" text="Implements:" />
+                                <TextField fx:id="ruleExtendsField" layoutX="123.0" layoutY="58.0" prefHeight="27.0" prefWidth="370.0" promptText="Tag" />
+                                <Label layoutX="14.0" layoutY="63.0" text="Extends:" />
                             </children>
                         </AnchorPane>
                     </content>
@@ -53,24 +43,15 @@
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="17.0" prefWidth="522.0">
                             <children>
-                                <TextField fx:id="addCompletionNameField" layoutX="122.0" layoutY="14.0"
-                                           prefHeight="27.0" prefWidth="369.0" promptText="RecurWeekly"/>
-                                <Label layoutX="12.0" layoutY="19.0" text="Behavior Name:"/>
-                                <Button layoutX="220.0" layoutY="565.0" mnemonicParsing="false"
-                                        onAction="#addCompletionButtonClicked" text="Add Completion Behavior"/>
-                                <Label layoutX="14.0" layoutY="129.0" prefHeight="20.0" prefWidth="38.0" text="Code:"/>
-                                <TextArea fx:id="addCompletionCodeField" layoutX="122.0" layoutY="129.0"
-                                          prefHeight="388.0" prefWidth="370.0" promptText="Task nextTask;"/>
-                                <TextField fx:id="addCompletionImportField" layoutX="122.0" layoutY="529.0"
-                                           prefHeight="27.0" prefWidth="370.0"
-                                           promptText="java.util.GregorianCalendar java.io.*"/>
-                                <Label layoutX="7.0" layoutY="534.0" text="Imports:"/>
-                                <TextField fx:id="completionImplementsField" layoutX="122.0" layoutY="93.0"
-                                           prefHeight="27.0" prefWidth="370.0" promptText="Predicate"/>
-                                <Label layoutX="14.0" layoutY="98.0" text="Implements:"/>
-                                <TextField fx:id="completionExtendsField" layoutX="122.0" layoutY="51.0"
-                                           prefHeight="27.0" prefWidth="370.0" promptText="Tag"/>
-                                <Label layoutX="14.0" layoutY="56.0" text="Extends:"/>
+                                <TextField fx:id="addCompletionNameField" layoutX="122.0" layoutY="14.0" prefHeight="27.0" prefWidth="369.0" promptText="RecurWeekly" />
+                                <Label layoutX="12.0" layoutY="19.0" text="Behavior Name:" />
+                                <Button layoutX="220.0" layoutY="565.0" mnemonicParsing="false" onAction="#addCompletionButtonClicked" text="Add Completion Behavior" />
+                                <Label layoutX="14.0" layoutY="89.0" prefHeight="20.0" prefWidth="38.0" text="Code:" />
+                                <TextArea fx:id="addCompletionCodeField" layoutX="122.0" layoutY="89.0" prefHeight="428.0" prefWidth="370.0" promptText="Task nextTask;" />
+                                <TextField fx:id="addCompletionImportField" layoutX="122.0" layoutY="529.0" prefHeight="27.0" prefWidth="370.0" promptText="java.util.GregorianCalendar java.io.*" />
+                                <Label layoutX="7.0" layoutY="534.0" text="Imports:" />
+                                <TextField fx:id="completionImplementsField" layoutX="122.0" layoutY="51.0" prefHeight="27.0" prefWidth="370.0" promptText="Predicate" />
+                                <Label layoutX="14.0" layoutY="56.0" text="Implements:" />
                             </children>
                         </AnchorPane>
                     </content>

@@ -1,5 +1,6 @@
 package com.natebeckemeyer.projects.schedulrgui.implementations;
 
+import com.natebeckemeyer.projects.schedulrgui.core.Rule;
 import com.natebeckemeyer.projects.schedulrgui.core.RuleOperation;
 
 import java.util.HashMap;
