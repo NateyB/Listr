@@ -51,6 +51,11 @@ public abstract class AbstractTask implements Comparable<AbstractTask>
         return name;
     }
 
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
     /**
      * @return Whether or not this implementations has been completed
      */

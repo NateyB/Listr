@@ -19,6 +19,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
@@ -154,8 +155,10 @@ public class MainWindowController
         // Names
         @SuppressWarnings("unchecked")
         TableColumn<AbstractTask, String> names = (TableColumn<AbstractTask, String>) mainTaskList.getColumns().get(2);
+        names.setCellFactory(TextFieldTableCell.forTableColumn());
         names.setCellValueFactory(new PropertyValueFactory<>("name"));
-        names.setEditable(false);
+        names.setOnEditCommit(event -> event.getRowValue().setName(event.getNewValue()));
+        //names.setEditable(false);
 
         // Tags
         @SuppressWarnings("unchecked")
@@ -255,6 +258,11 @@ public class MainWindowController
 
         behaviorTreeView.setEditable(false);
         updateSidebar();
+
+
+        @SuppressWarnings("unchecked")
+        TableColumn<AbstractTask, String> names = (TableColumn<AbstractTask, String>) mainTaskList.getColumns().get(2);
+        names.setCellValueFactory(new PropertyValueFactory<>("name"));
     }
 
     @FXML
