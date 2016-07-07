@@ -56,7 +56,7 @@ public final class Schedulr
                 VerboseCompleted.class);
         setCompletionBehaviors(completions);
 
-        List<Class<? extends AbstractTask>> tasks = Arrays.asList(SimpleTask.class);
+        List<Class<? extends AbstractTask>> tasks = Arrays.asList(SimpleTask.class, DatelessTask.class);
         for (Class<? extends AbstractTask> task : tasks)
             taskTypeMapping.put(task.getSimpleName(), task);
     }
