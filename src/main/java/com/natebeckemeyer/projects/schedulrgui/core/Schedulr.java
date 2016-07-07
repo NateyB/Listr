@@ -1,6 +1,7 @@
 package com.natebeckemeyer.projects.schedulrgui.core;
 
-import com.natebeckemeyer.projects.schedulrgui.task.*;
+import com.natebeckemeyer.projects.schedulrgui.implementations.*;
+import com.natebeckemeyer.projects.schedulrgui.reference.Defaults;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -11,7 +12,8 @@ import java.util.stream.Collectors;
  * This class functions as the engine of the to-do app. It handles rules, their ruleMapping, and controls which tasks
  * will be displayed, etc.
  * <p>
- * A static initialization block places all of the rules included in the task package into the ruleMapping.
+ * A static initialization block places all of the behaviors included in the implementations package into the
+ * ruleMapping.
  */
 public final class Schedulr
 {
@@ -23,14 +25,24 @@ public final class Schedulr
     }
 
     /**
-     * The mapping from the display name to the object of the rules (so that only one instance of each is made).
+     * The mapping from the display name to the objects of the rules (so that only one instance of each is made).
      */
     private static final Map<String, Rule> ruleMapping = new HashMap<>();
 
     /**
-     * The mapping from the display name to the class of the rules (so that a new instance can be instantiated).
+     * The mapping from the display name to the classes of the rules (so that a new instance can be instantiated).
      */
     private static final Map<String, Class<? extends CompletionBehavior>> completionMapping = new HashMap<>();
+
+    /**
+     * The mapping from the task type names to the classes of the types (so that a new instance can be instantiated).
+     */
+    private static final Map<String, Class<? extends AbstractTask>> taskTypeMapping = new HashMap<>();
+
+    /**
+     * The tasks that Schedulr is currently handling.
+     */
+    private static PriorityQueue<AbstractTask> tasks = new PriorityQueue<>();
 
     // Place the rules into the ruleMapping
     // This static initializer allows me to hardcode in the package searching and initialization without storing
@@ -40,15 +52,19 @@ public final class Schedulr
         List<Rule> rules = Arrays.asList(new Today(), new Week(), new Completed());
         setRules(rules);
 
-        List<Class<? extends CompletionBehavior>> completions = Arrays.asList(MarkCompleted.class,
+        List<Class<? extends CompletionBehavior>> completions = Arrays.asList(SimpleCompleted.class,
                 VerboseCompleted.class);
         setCompletionBehaviors(completions);
+
+        List<Class<? extends AbstractTask>> tasks = Arrays.asList(SimpleTask.class);
+        for (Class<? extends AbstractTask> task : tasks)
+            taskTypeMapping.put(task.getSimpleName(), task);
     }
 
-    /**
-     * The tasks that Schedulr is currently handling.
-     */
-    private static PriorityQueue<Task> tasks = new PriorityQueue<>();
+    static Class<? extends AbstractTask> getTaskOfType(String name)
+    {
+        return taskTypeMapping.get(name);
+    }
 
     /**
      * Returns the rule corresponding to {@code name}.
@@ -69,7 +85,8 @@ public final class Schedulr
 
     /**
      * Gets the class of the completion behavior corresponding to {@code name}. If the class does not exist or cannot be
-     * instantiated, then an error message will be written and the default value (MarkCompleted) used instead.
+     * instantiated, then an error message will be written and the default value (see
+     * {@link com.natebeckemeyer.projects.schedulrgui.reference.Defaults}) used instead.
      *
      * @param name The name of the completion behavior to get.
      * @return An instance of the corresponding completion behavior.
@@ -84,7 +101,7 @@ public final class Schedulr
         } catch (NullPointerException | InstantiationException | IllegalAccessException e)
         {
             System.err.printf("Could not locate completion behavior %s, or it is null. Using default instead.%n", name);
-            return new MarkCompleted();
+            return Defaults.getDefaultCompletionBehavior();
         }
     }
 
@@ -151,7 +168,7 @@ public final class Schedulr
      * @param toCompare The rule to test tasks against
      * @return The list of tasks that match the rule.
      */
-    public static List<Task> getTasksMatchingRule(Rule toCompare)
+    public static List<AbstractTask> getTasksMatchingRule(Rule toCompare)
     {
         if (toCompare == null)
             toCompare = (task) -> false;
@@ -159,7 +176,7 @@ public final class Schedulr
         return tasks.stream().filter(toCompare).collect(Collectors.toList());
     }
 
-    public static List<Task> getAllTasks()
+    public static List<AbstractTask> getAllTasks()
     {
         return tasks.stream().collect(Collectors.toList());
     }
@@ -169,18 +186,18 @@ public final class Schedulr
      *
      * @param taskList The list of tasks to assign to be handled.
      */
-    public static void setTasks(Collection<Task> taskList)
+    public static void setTasks(Collection<AbstractTask> taskList)
     {
         tasks = new PriorityQueue<>(taskList);
     }
 
     /**
-     * Inserts the task into Schedulr's {@code tasks}.
+     * Inserts the implementations into Schedulr's {@code tasks}.
      *
-     * @param toAdd The task to add.
+     * @param toAdd The implementations to add.
      * @return True if {@code tasks} is changed as a result of this call.
      */
-    public static boolean addTask(Task toAdd)
+    public static boolean addTask(AbstractTask toAdd)
     {
         return tasks.add(toAdd);
     }
@@ -191,18 +208,18 @@ public final class Schedulr
      * @param taskList The taskList to add to Schedulr's {@code tasks}.
      * @return True if {@code tasks} is changed as a result of this call.
      */
-    public static boolean addTasks(Collection<Task> taskList)
+    public static boolean addTasks(Collection<AbstractTask> taskList)
     {
         return tasks.addAll(taskList);
     }
 
     /**
-     * Removes the task {@code toRemove} from the Schedulr's {@code tasks}.
+     * Removes the implementations {@code toRemove} from the Schedulr's {@code tasks}.
      *
-     * @param toRemove The task to remove from Schedulr's {@code tasks}.
-     * @return True if the task was removed.
+     * @param toRemove The implementations to remove from Schedulr's {@code tasks}.
+     * @return True if the implementations was removed.
      */
-    public static boolean removeTask(Task toRemove)
+    public static boolean removeTask(AbstractTask toRemove)
     {
         return tasks.remove(toRemove);
     }
@@ -213,7 +230,7 @@ public final class Schedulr
      * @param toRemove The tasks to remove from Schedulr's {@code tasks}.
      * @return True if {@code tasks} was changed as a result of this call.
      */
-    public static boolean removeTasks(Collection<Task> toRemove)
+    public static boolean removeTasks(Collection<AbstractTask> toRemove)
     {
         return tasks.removeAll(toRemove);
     }

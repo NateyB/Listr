@@ -1,6 +1,9 @@
 package com.natebeckemeyer.projects.schedulrgui.reference;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-06-23.
@@ -68,57 +71,61 @@ final public class ProjectPaths
             "graphics");
 
     /**
-     * The file prefix for the task package.
+     * The file prefix for the implementations package.
      */
-    public static final String taskFilePrefix = String.format("%s%s%s", filePrefix, fileSeparator, "task");
+    public static final String taskFilePrefix = String.format("%s%s%s", filePrefix, fileSeparator, "implementations");
 
     /**
-     * The package prefix for the task package.
+     * The package prefix for the implementations package.
      */
-    public static final String taskPackagePrefix = String.format("%s%s%s", packagePrefix, packageSeparator, "task");
+    public static final String taskPackagePrefix = String.format("%s%s%s", packagePrefix, packageSeparator, "implementations");
 
     /**
-     * The directory where all resources are stored.
+     * The root directory for resources.
      */
-    public static final String resourcesDirectory = "src" + fileSeparator + "main" + fileSeparator + "resources";
+    public static final String resourcesPrefix = getResourcesPrefix();
+
+    private static String getResourcesPrefix()
+    {
+        return "";
+    }
 
     /**
      * The directory containing the user resource files (those files which are user-specific).
      */
-    public static final String userResources = resourcesDirectory + fileSeparator + "/user";
+    public static final String userResources = "user";
 
     /**
      * The location of the file that stores the user-defined rules.
      */
-    public static final String userRulesFile = String.format("%s%s%s%s%s", userResources, fileSeparator,
-            "userdefinitions", fileSeparator, "userrules");
+    public static final String userRulesFile =
+            userResources + fileSeparator + "userdefinitions" + fileSeparator + "userrules";
 
     /**
      * The directory that contains the user-defined completion behaviors.
      */
-    public static final String userCompletionsFile = String.format("%s%s%s%s%s", userResources, fileSeparator,
-            "userdefinitions", fileSeparator, "usercompletionbehaviors");
+    public static final String userCompletionsFile =
+            userResources + fileSeparator + "userdefinitions" + fileSeparator + "usercompletionbehaviors";
 
     /**
      * The directory where the user tasks are stored.
      */
-    public static final String userTasksDirectory = String.format("%s%s%s", userResources, fileSeparator, "tasks");
+    public static final String userTasksDirectory = userResources + fileSeparator + "tasks";
 
     /**
      * The directory containing the system resource files (those files which are native to Schedulr).
      */
-    public static final String systemFile = resourcesDirectory + fileSeparator + "system";
+    public static final String systemFile = resourcesPrefix + fileSeparator + "system";
 
     /**
      * The directory containing the FXML files.
      */
-    public static final String fxmlDirectory = String.format("%s%s%s%s", fileSeparator, "system", fileSeparator,
-            "windows");
+    public static final String fxmlDirectory = systemFile + fileSeparator + "windows";
 
     /**
      * The directory containing the templates used to compile user-defined behaviors.
      */
-    public static final String templateDirectory = String.format("%s%s%s", systemFile, fileSeparator, "templates");
+    public static final String templateDirectory = systemFile + fileSeparator + "templates";
 
     static
     {
@@ -128,6 +135,41 @@ final public class ProjectPaths
 
         File userCFiles = new File(userCompletionsFile);
         userCFiles.mkdirs();
+    }
+
+    public static File getFile(String path)
+    {
+        try
+        {
+            URL resource = getResource(path);
+            if (resource != null)
+                return new File(resource.toURI());
+            else
+                return new File(path);
+
+        } catch (URISyntaxException e)
+        {
+            e.printStackTrace();
+        }
+
+        try
+        {
+            File current = new File(path);
+            current.mkdirs();
+            if (!current.exists())
+                current.createNewFile();
+
+            return current;
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static URL getResource(String path)
+    {
+        return ProjectPaths.class.getResource(path);
     }
 
 }

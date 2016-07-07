@@ -1,8 +1,9 @@
 package com.natebeckemeyer.projects.schedulrgui.core;
 
+import com.natebeckemeyer.projects.schedulrgui.implementations.BasicRuleOperation;
+import com.natebeckemeyer.projects.schedulrgui.implementations.Rule;
+import com.natebeckemeyer.projects.schedulrgui.implementations.SimpleTask;
 import com.natebeckemeyer.projects.schedulrgui.reference.ProjectPaths;
-import com.natebeckemeyer.projects.schedulrgui.task.CompletionBehavior;
-import com.natebeckemeyer.projects.schedulrgui.task.Rule;
 
 import javax.naming.OperationNotSupportedException;
 import javax.tools.JavaCompiler;
@@ -68,14 +69,20 @@ public final class DynamicRuleParser
                 break;
         }
 
+        new File(fileName).mkdirs();
+
         fileName = fileName + ProjectPaths.fileSeparator + className + ".java";
 
-        try (Scanner readTemplate = new Scanner(new File(ProjectPaths.templateDirectory + ProjectPaths.fileSeparator + type + ".template"));
-             FileWriter writeNewTask = new FileWriter(fileName))
+        File fileLocation = ProjectPaths.getFile(fileName);
+        File templateLocation = ProjectPaths.getFile(
+                ProjectPaths.templateDirectory + ProjectPaths.fileSeparator + type + ".template");
+
+        try (Scanner readTemplate = new Scanner(templateLocation);
+             FileWriter writeNewTask = new FileWriter(fileLocation.getCanonicalFile()))
         {
             // Prepare the imports
             imports.add(ProjectPaths.taskPackagePrefix + ProjectPaths.packageSeparator + type);
-            imports.add(ProjectPaths.taskPackagePrefix + ProjectPaths.packageSeparator + "Task");
+            imports.add(ProjectPaths.taskPackagePrefix + ProjectPaths.packageSeparator + SimpleTask.class.getSimpleName());
             StringBuilder importLines = new StringBuilder();
             for (String item : imports)
             {
@@ -115,10 +122,12 @@ public final class DynamicRuleParser
                 replacement.append(line);
                 replacement.append(ProjectPaths.lineSeparator);
             }
+
+            // Write the file
             writeNewTask.write(replacement.toString());
             writeNewTask.close();
 
-            int compilationResult = compiler.run(null, null, null, fileName);
+            int compilationResult = compiler.run(null, null, null, fileLocation.getCanonicalPath());
             if (compilationResult != 0) // Unsuccessful compilation
                 throw new IllegalAccessException("Could not compile user-defined " + type + " named " + name);
 
@@ -161,12 +170,11 @@ public final class DynamicRuleParser
      */
     public static Rule loadRule(String className)
     {
-        try (URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(ProjectPaths.userRulesFile)
-                .toURI().toURL()}))
+        try (URLClassLoader classLoader = new URLClassLoader(
+                new URL[]{ProjectPaths.getFile(ProjectPaths.userRulesFile).toURI().toURL()}))
         {
-
-            Class<?> ruleClass = classLoader.loadClass(
-                    className.substring(0, 1).toUpperCase() + className.substring(1));
+            String usedName = className.substring(0, 1).toUpperCase() + className.substring(1);
+            Class<?> ruleClass = classLoader.loadClass(usedName);
             Object instantiation = ruleClass.newInstance();
 
             if (instantiation instanceof Rule)

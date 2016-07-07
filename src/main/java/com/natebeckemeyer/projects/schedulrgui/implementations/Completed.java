@@ -1,4 +1,6 @@
-package com.natebeckemeyer.projects.schedulrgui.task;
+package com.natebeckemeyer.projects.schedulrgui.implementations;
+
+import com.natebeckemeyer.projects.schedulrgui.core.AbstractTask;
 
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-06-20.
@@ -21,7 +23,7 @@ public class Completed implements Rule
      * @return {@code true} if the input argument matches the predicate,
      * otherwise {@code false}
      */
-    @Override public boolean test(Task task)
+    @Override public boolean test(AbstractTask task)
     {
         return task.isCompleted();
     }

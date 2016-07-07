@@ -1,10 +1,10 @@
 package com.natebeckemeyer.projects.schedulrgui.graphics;
 
+import com.natebeckemeyer.projects.schedulrgui.core.CompletionBehavior;
 import com.natebeckemeyer.projects.schedulrgui.core.Schedulr;
-import com.natebeckemeyer.projects.schedulrgui.task.CompletionBehavior;
-import com.natebeckemeyer.projects.schedulrgui.task.MarkCompleted;
-import com.natebeckemeyer.projects.schedulrgui.task.Tag;
-import com.natebeckemeyer.projects.schedulrgui.task.Task;
+import com.natebeckemeyer.projects.schedulrgui.implementations.SimpleTask;
+import com.natebeckemeyer.projects.schedulrgui.implementations.Tag;
+import com.natebeckemeyer.projects.schedulrgui.reference.Defaults;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
@@ -20,7 +20,7 @@ import java.util.Scanner;
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-06-09.
  * <p>
- * This is the controller for the "add task" window.
+ * This is the controller for the "add implementations" window.
  */
 public class AddTaskPopupController
 {
@@ -31,7 +31,7 @@ public class AddTaskPopupController
     private DatePicker addTaskDueDatePicker;
 
     /**
-     * The TextField object which users use to name the task.
+     * The TextField object which users use to name the implementations.
      */
     @FXML
     private TextField addTaskNameField;
@@ -43,13 +43,14 @@ public class AddTaskPopupController
     private TextField addTaskLabelField;
 
     /**
-     * The ChoiceBox from which the user selects the CompletionBehavior behavior for the new task.
+     * The ChoiceBox from which the user selects the CompletionBehavior behavior for the new implementations.
      */
     @FXML
     private ChoiceBox<String> addTaskChoiceBox;
 
     /**
-     * Creates the Task from the population of the input parameters, and then inserts it into Schedulr's task listing.
+     * Creates the SimpleTask from the population of the input parameters, and then inserts it into Schedulr's
+     * implementations listing.
      */
     @FXML
     private void addTaskButtonClicked()
@@ -58,18 +59,18 @@ public class AddTaskPopupController
         String labelInput = addTaskLabelField.getText();
         CompletionBehavior completionBehaviorValue = Schedulr.getCompletionBehavior(addTaskChoiceBox.getValue());
 
+        GregorianCalendar dueDate = null;
         LocalDate localDueDate = addTaskDueDatePicker.getValue();
-        GregorianCalendar dueDate = new GregorianCalendar(localDueDate.getYear(),
-                localDueDate.getMonth().getValue() - 1, localDueDate.getDayOfMonth());
+        if (localDueDate != null)
+            dueDate = new GregorianCalendar(localDueDate.getYear(),
+                    localDueDate.getMonth().getValue() - 1, localDueDate.getDayOfMonth());
 
         Scanner tagParser = new Scanner(labelInput);
         LinkedList<Tag> tagList = new LinkedList<>();
         while (tagParser.hasNext())
-        {
             tagList.add(Tag.getTag(tagParser.next()));
-        }
 
-        Task newTask = new Task(taskName, dueDate, completionBehaviorValue);
+        SimpleTask newTask = new SimpleTask(taskName, dueDate, completionBehaviorValue);
         newTask.setTags(tagList);
 
         Schedulr.addTask(newTask);
@@ -84,8 +85,7 @@ public class AddTaskPopupController
     private void initialize()
     {
         addTaskChoiceBox.setItems(FXCollections.observableArrayList(Schedulr.getCompletionBehaviorNames()));
-        addTaskChoiceBox.setValue(MarkCompleted.class.getSimpleName());
-        addTaskDueDatePicker.setValue(LocalDate.now());
+        addTaskChoiceBox.setValue(Defaults.getDefaultCompletionBehavior().toString());
     }
 
 }

@@ -1,4 +1,6 @@
-package com.natebeckemeyer.projects.schedulrgui.task;
+package com.natebeckemeyer.projects.schedulrgui.implementations;
+
+import com.natebeckemeyer.projects.schedulrgui.core.AbstractTask;
 
 import java.util.GregorianCalendar;
 
@@ -14,7 +16,7 @@ public class Today implements Rule
      * @return {@code true} if the task is due before tomorrow,
      * otherwise {@code false}
      */
-    @Override public boolean test(Task task)
+    @Override public boolean test(AbstractTask task)
     {
         return new GregorianCalendar().compareTo(task.getDueDate()) >= 0;
     }

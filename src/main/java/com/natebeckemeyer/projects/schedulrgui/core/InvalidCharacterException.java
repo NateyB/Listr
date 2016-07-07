@@ -1,4 +1,4 @@
-package com.natebeckemeyer.projects.schedulrgui.task;
+package com.natebeckemeyer.projects.schedulrgui.core;
 
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-05-27.

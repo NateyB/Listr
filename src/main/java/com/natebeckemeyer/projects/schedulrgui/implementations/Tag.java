@@ -1,4 +1,6 @@
-package com.natebeckemeyer.projects.schedulrgui.task;
+package com.natebeckemeyer.projects.schedulrgui.implementations;
+
+import com.natebeckemeyer.projects.schedulrgui.core.AbstractTask;
 
 import java.util.HashMap;
 
@@ -63,7 +65,7 @@ public class Tag implements Rule
      * @param task The task to test
      * @return True if the task contains the tag; else, false
      */
-    @Override public boolean test(Task task)
+    @Override public boolean test(AbstractTask task)
     {
         return task.contains(this);
     }

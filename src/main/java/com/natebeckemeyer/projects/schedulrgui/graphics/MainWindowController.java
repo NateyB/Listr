@@ -1,12 +1,13 @@
 package com.natebeckemeyer.projects.schedulrgui.graphics;
 
 
+import com.natebeckemeyer.projects.schedulrgui.core.AbstractTask;
 import com.natebeckemeyer.projects.schedulrgui.core.DynamicRuleParser;
 import com.natebeckemeyer.projects.schedulrgui.core.Schedulr;
+import com.natebeckemeyer.projects.schedulrgui.implementations.BasicRuleOperation;
+import com.natebeckemeyer.projects.schedulrgui.implementations.Rule;
+import com.natebeckemeyer.projects.schedulrgui.implementations.Tag;
 import com.natebeckemeyer.projects.schedulrgui.reference.ProjectPaths;
-import com.natebeckemeyer.projects.schedulrgui.task.Rule;
-import com.natebeckemeyer.projects.schedulrgui.task.Tag;
-import com.natebeckemeyer.projects.schedulrgui.task.Task;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -52,10 +53,10 @@ public class MainWindowController
     private CheckBox showCompletedTasksCheckbox;
 
     /**
-     * The table that displays task according to the user-defined rules.
+     * The table that displays implementations according to the user-defined rules.
      */
     @FXML
-    private TableView<Task> mainTaskList;
+    private TableView<AbstractTask> mainTaskList;
 
     /**
      * The text field that contains the rule that controls which tasks are seen.
@@ -109,20 +110,20 @@ public class MainWindowController
         if (currentRule == null)
             identifyCurrentRule();
 
-        List<Task> passed;
+        List<AbstractTask> passed;
         if (!showCompletedTasks)
-            passed = Schedulr.getTasksMatchingRule(Rule.and(currentRule, Rule.negate(Schedulr.getRule("completed"))));
+            passed = Schedulr.getTasksMatchingRule(BasicRuleOperation.DIFFERENCE.performOperation(currentRule, (Schedulr.getRule("completed"))));
         else
             passed = Schedulr.getTasksMatchingRule(currentRule);
         passed.sort(null);
 
-        ObservableList<Task> tasks = FXCollections.observableArrayList(passed);
+        ObservableList<AbstractTask> tasks = FXCollections.observableArrayList(passed);
         mainTaskList.setItems(tasks);
 
         @SuppressWarnings("unchecked")
-        TableColumn<Task, Boolean> checkMarks = (TableColumn<Task, Boolean>) mainTaskList.getColumns().get(0);
+        TableColumn<AbstractTask, Boolean> checkMarks = (TableColumn<AbstractTask, Boolean>) mainTaskList.getColumns().get(0);
         checkMarks.setCellFactory(column -> {
-            CheckBoxTableCell<Task, Boolean> checkBox = new CheckBoxTableCell<>();
+            CheckBoxTableCell<AbstractTask, Boolean> checkBox = new CheckBoxTableCell<>();
             BooleanProperty selected;
             if (count.intValue() >= passed.size())
                 selected = new SimpleBooleanProperty();
@@ -132,7 +133,7 @@ public class MainWindowController
 
             checkBox.setSelectedStateCallback(callback -> selected);
             selected.addListener((observable, oldValue, newValue) -> {
-                Task corresponding = mainTaskList.getItems().get(checkBox.getIndex());
+                AbstractTask corresponding = mainTaskList.getItems().get(checkBox.getIndex());
                 if (corresponding.isCompleted() != newValue)
                 {
                     corresponding.setCompleted(newValue);
@@ -146,19 +147,19 @@ public class MainWindowController
 
         // Due dates
         @SuppressWarnings("unchecked")
-        TableColumn<Task, String> dueDates = (TableColumn<Task, String>) mainTaskList.getColumns().get(1);
+        TableColumn<AbstractTask, String> dueDates = (TableColumn<AbstractTask, String>) mainTaskList.getColumns().get(1);
         dueDates.setCellValueFactory(new PropertyValueFactory<>("dueString"));
         dueDates.setEditable(false);
 
         // Names
         @SuppressWarnings("unchecked")
-        TableColumn<Task, String> names = (TableColumn<Task, String>) mainTaskList.getColumns().get(2);
+        TableColumn<AbstractTask, String> names = (TableColumn<AbstractTask, String>) mainTaskList.getColumns().get(2);
         names.setCellValueFactory(new PropertyValueFactory<>("name"));
         names.setEditable(false);
 
         // Tags
         @SuppressWarnings("unchecked")
-        TableColumn<Task, String> tags = (TableColumn<Task, String>) mainTaskList.getColumns().get(3);
+        TableColumn<AbstractTask, String> tags = (TableColumn<AbstractTask, String>) mainTaskList.getColumns().get(3);
         if (tagColumnShowing)
         {
             tags.setCellValueFactory(task -> {
@@ -174,7 +175,7 @@ public class MainWindowController
         tags.setVisible(tagColumnShowing);
 
         @SuppressWarnings("unchecked")
-        TableColumn<Task, String> completionBehaviors = (TableColumn<Task, String>) mainTaskList.getColumns().get(4);
+        TableColumn<AbstractTask, String> completionBehaviors = (TableColumn<AbstractTask, String>) mainTaskList.getColumns().get(4);
         if (onCompletionColumnShowing)
         {
             completionBehaviors.setCellValueFactory(
@@ -189,7 +190,7 @@ public class MainWindowController
     }
 
     /**
-     * Creates & configures window for the "add task" popup.
+     * Creates & configures window for the "add rules" popup.
      */
     @FXML
     private void viewAddTaskButtonClicked()
@@ -197,7 +198,7 @@ public class MainWindowController
         Parent root;
         try
         {
-            root = FXMLLoader.load(getClass().getResource("addTaskPopup.fxml"));
+            root = FXMLLoader.load(getClass().getResource(ProjectPaths.fxmlDirectory + ProjectPaths.fileSeparator + "addTaskPopup.fxml"));
         } catch (IOException e)
         {
             e.printStackTrace();
@@ -212,7 +213,7 @@ public class MainWindowController
     }
 
     /**
-     * If enter is pressed while typing into the taskListDefinition box, update the task listing.
+     * If enter is pressed while typing into the taskListDefinition box, update the implementations listing.
      *
      * @param key The key pressed
      */
@@ -261,8 +262,8 @@ public class MainWindowController
     {
         if (key.getCode() == KeyCode.DELETE || key.getCode() == KeyCode.BACK_SPACE)
         {
-            List<Task> tasks = Schedulr.getAllTasks();
-            Task selected = mainTaskList.getSelectionModel().getSelectedItem();
+            List<AbstractTask> tasks = Schedulr.getAllTasks();
+            AbstractTask selected = mainTaskList.getSelectionModel().getSelectedItem();
             tasks = tasks.stream().filter(task -> task != selected).collect(Collectors.toList());
             Schedulr.setTasks(tasks);
             displayTasks();

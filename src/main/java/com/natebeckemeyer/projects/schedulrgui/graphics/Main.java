@@ -1,9 +1,8 @@
 package com.natebeckemeyer.projects.schedulrgui.graphics;
 
-import com.natebeckemeyer.projects.schedulrgui.core.DynamicRuleParser;
+import com.natebeckemeyer.projects.schedulrgui.core.FileParser;
 import com.natebeckemeyer.projects.schedulrgui.core.Schedulr;
 import com.natebeckemeyer.projects.schedulrgui.reference.ProjectPaths;
-import com.natebeckemeyer.projects.schedulrgui.task.FileParser;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -49,8 +48,8 @@ public class Main extends Application
 
     static
     {
-        File defaultDirectory = new File(ProjectPaths.userTasksDirectory);
-        boolean exists = defaultDirectory.mkdirs();
+        File defaultDirectory = ProjectPaths.getFile(ProjectPaths.userTasksDirectory);
+        defaultDirectory.mkdirs();
 
         fileChooser.setTitle("Task File");
         fileChooser.setInitialDirectory(defaultDirectory);
@@ -194,7 +193,6 @@ public class Main extends Application
 
     public static void main(String[] args)
     {
-        DynamicRuleParser.compileAndLoadRule("all", new LinkedList<>(), "", "return true;", new LinkedList<>());
         launch(args);
     }
 }

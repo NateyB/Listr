@@ -1,4 +1,6 @@
-package com.natebeckemeyer.projects.schedulrgui.task;
+package com.natebeckemeyer.projects.schedulrgui.implementations;
+
+import com.natebeckemeyer.projects.schedulrgui.core.AbstractTask;
 
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -7,7 +9,7 @@ import java.util.function.Predicate;
  * Created for Schedulr by @author Nate Beckemeyer on 2016-04-28.
  */
 @FunctionalInterface
-public interface Rule extends Predicate<Task>
+public interface Rule extends Predicate<AbstractTask>
 {
     /**
      * By default, performs a logical "and".
@@ -26,7 +28,7 @@ public interface Rule extends Predicate<Task>
                 return String.format("(%s & %s)", first.toString(), other.toString());
             }
 
-            @Override public boolean test(Task task)
+            @Override public boolean test(AbstractTask task)
             {
                 return first.test(task) && other.test(task);
             }
@@ -50,7 +52,7 @@ public interface Rule extends Predicate<Task>
                 return String.format("(%s + %s)", first.toString(), other.toString());
             }
 
-            @Override public boolean test(Task task)
+            @Override public boolean test(AbstractTask task)
             {
                 return first.test(task) || other.test(task);
             }
@@ -71,7 +73,7 @@ public interface Rule extends Predicate<Task>
                 return String.format("!%s", first.toString());
             }
 
-            @Override public boolean test(Task task)
+            @Override public boolean test(AbstractTask task)
             {
                 return !first.test(task);
             }

@@ -1,6 +1,6 @@
 package com.natebeckemeyer.projects.schedulrgui.core;
 
-import com.natebeckemeyer.projects.schedulrgui.task.Rule;
+import com.natebeckemeyer.projects.schedulrgui.implementations.Rule;
 
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-06-20.

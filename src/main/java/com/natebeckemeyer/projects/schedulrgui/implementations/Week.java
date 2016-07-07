@@ -1,4 +1,6 @@
-package com.natebeckemeyer.projects.schedulrgui.task;
+package com.natebeckemeyer.projects.schedulrgui.implementations;
+
+import com.natebeckemeyer.projects.schedulrgui.core.AbstractTask;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -20,7 +22,7 @@ public class Week implements Rule
      * @return {@code true} if the task is due before the end of the week,
      * otherwise {@code false}
      */
-    @Override public boolean test(Task task)
+    @Override public boolean test(AbstractTask task)
     {
         Calendar nextWeek = new GregorianCalendar();
         nextWeek.add(Calendar.WEEK_OF_YEAR, 1);

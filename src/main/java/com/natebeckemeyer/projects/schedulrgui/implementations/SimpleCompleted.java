@@ -1,13 +1,16 @@
-package com.natebeckemeyer.projects.schedulrgui.task;
+package com.natebeckemeyer.projects.schedulrgui.implementations;
+
+import com.natebeckemeyer.projects.schedulrgui.core.AbstractTask;
+import com.natebeckemeyer.projects.schedulrgui.core.CompletionBehavior;
 
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-05-02.
  * <p>
- * This class is the simple, default behavior for the completion of a task: It is marked as completed.
+ * This class is the simple, default behavior for the completion of a implementations: It is marked as completed.
  */
-public class MarkCompleted implements CompletionBehavior
+public class SimpleCompleted extends CompletionBehavior
 {
-    public MarkCompleted()
+    public SimpleCompleted()
     {
     }
 
@@ -21,24 +24,17 @@ public class MarkCompleted implements CompletionBehavior
         return "Default";
     }
 
-    /**
-     * Specifies behavior to markCompleted when a task is completed.
-     *
-     * @param completed
-     */
-    @Override public void markCompleted(Task completed)
-    {
-        completed.completed = true;
-    }
 
     /**
-     * Specifies behavior to mark a task uncompleted
+     * Only if the user wishes to change the implementations's completion flag, change the implementations's completion flag.
      *
-     * @param uncompleted
+     * @param task      The implementations whose completion value the user has changed.
+     * @param completed The boolean value the user wants to set the completion to. This may or may not be different
      */
-    @Override public void markUncompleted(Task uncompleted)
+    @Override public void markCompletion(AbstractTask task, boolean completed)
     {
-        uncompleted.completed = false;
+        if (completed != task.isCompleted())
+            super.setCompleted(task, completed);
     }
 
     /**
@@ -59,6 +55,6 @@ public class MarkCompleted implements CompletionBehavior
      */
     @Override public String convertToString()
     {
-        return "";
+        return null;
     }
 }
