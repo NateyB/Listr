@@ -1,7 +1,9 @@
 package com.natebeckemeyer.projects.schedulrgui.graphics;
 
+import com.natebeckemeyer.projects.schedulrgui.core.AbstractTask;
 import com.natebeckemeyer.projects.schedulrgui.core.CompletionBehavior;
 import com.natebeckemeyer.projects.schedulrgui.core.Schedulr;
+import com.natebeckemeyer.projects.schedulrgui.implementations.DatelessTask;
 import com.natebeckemeyer.projects.schedulrgui.implementations.SimpleTask;
 import com.natebeckemeyer.projects.schedulrgui.implementations.Tag;
 import com.natebeckemeyer.projects.schedulrgui.reference.Defaults;
@@ -70,7 +72,12 @@ public class AddTaskPopupController
         while (tagParser.hasNext())
             tagList.add(Tag.getTag(tagParser.next()));
 
-        SimpleTask newTask = new SimpleTask(taskName, dueDate, completionBehaviorValue);
+        AbstractTask newTask;
+        if (dueDate == null)
+            newTask = new DatelessTask(taskName, null, completionBehaviorValue);
+        else
+            newTask = new SimpleTask(taskName, dueDate, completionBehaviorValue);
+
         newTask.setTags(tagList);
 
         Schedulr.addTask(newTask);
@@ -85,7 +92,7 @@ public class AddTaskPopupController
     private void initialize()
     {
         addTaskChoiceBox.setItems(FXCollections.observableArrayList(Schedulr.getCompletionBehaviorNames()));
-        addTaskChoiceBox.setValue(Defaults.getDefaultCompletionBehavior().toString());
+        addTaskChoiceBox.setValue(Defaults.getDefaultCompletionBehavior().getClass().getSimpleName());
     }
 
 }

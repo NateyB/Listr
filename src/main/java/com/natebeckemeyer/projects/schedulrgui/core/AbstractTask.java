@@ -74,8 +74,6 @@ public abstract class AbstractTask implements Comparable<AbstractTask>
 
     /**
      * Provides a formatted string representing the implementations (for console display).
-     *
-     * @return Returns a string of the format {@code yyyy-mm-dd: name of implementations}
      */
     public abstract String toString();
 
@@ -165,7 +163,7 @@ public abstract class AbstractTask implements Comparable<AbstractTask>
 
 
     /**
-     * Marks the implementations as completed or uncompleted.
+     * Marks the task as completed or uncompleted, according to its completion behavior.
      */
     public void setCompleted(boolean completed)
     {
@@ -208,8 +206,9 @@ public abstract class AbstractTask implements Comparable<AbstractTask>
     {
         this.name = other.getName();
         Calendar dueDate = other.getDueDate();
-        this.due = new GregorianCalendar(dueDate.get(Calendar.YEAR), dueDate.get(Calendar.MONTH),
-                dueDate.get(Calendar.DAY_OF_MONTH));
+        if (dueDate != null)
+            this.due = new GregorianCalendar(dueDate.get(Calendar.YEAR), dueDate.get(Calendar.MONTH),
+                    dueDate.get(Calendar.DAY_OF_MONTH));
         this.completed = other.isCompleted();
         try
         {
