@@ -26,10 +26,10 @@ public class VerboseCompleted extends CompletionBehavior
     {
         if (task.isCompleted() != completed)
         {
-            super.setCompleted(task, completed);
-            System.out.printf("<<Marked the completion flag for task %s as %b.%n>>", task.getName(), completed);
+            setCompleted(task, completed);
+            System.out.printf("<<Marked the completion flag for task \"%s\" as %b.>>%n", task.getName(), completed);
         } else
-            System.out.printf("<<Completion for task %s remains at value %b.%n>>", task.getName(), completed);
+            System.out.printf("<<Completion for task \"%s\" remains at value %b.>>%n", task.getName(), completed);
     }
 
     /**

@@ -156,33 +156,11 @@ public class MainWindowController
         // Tags
         @SuppressWarnings("unchecked")
         TableColumn<AbstractTask, String> tags = (TableColumn<AbstractTask, String>) mainTaskList.getColumns().get(3);
-        if (tagColumnShowing)
-        {
-            tags.setCellValueFactory(task -> {
-                Set<Tag> theseTags = task.getValue().getTags();
-                String labels = "";
-                for (Tag current : theseTags)
-                    labels = String.format("%s%s ", labels, current.toString());
-
-                return new SimpleStringProperty(labels.trim());
-            });
-            tags.setEditable(false);
-        }
         tags.setVisible(tagColumnShowing);
 
         @SuppressWarnings("unchecked")
         TableColumn<AbstractTask, String> completionBehaviors = (TableColumn<AbstractTask, String>) mainTaskList
                 .getColumns().get(4);
-        if (onCompletionColumnShowing)
-        {
-            completionBehaviors.setCellValueFactory(
-                    task -> new SimpleStringProperty(task.getValue().getOnComplete().toString()));
-            completionBehaviors.setEditable(false);
-            completionBehaviors.setVisible(true);
-        } else
-        {
-            completionBehaviors.setVisible(false);
-        }
         completionBehaviors.setVisible(onCompletionColumnShowing);
     }
 
@@ -254,6 +232,22 @@ public class MainWindowController
         behaviorTreeView.setEditable(false);
         updateSidebar();
 
+
+        initializeDueDatesColumn();
+        initializeNamesColumn();
+        initializeTagsColumn();
+        initializeCompletionBehaviorsColumn();
+    }
+
+    /**
+     * Sets the due date factories to the getDueString method in the {@link AbstractTask}s. Allows due dates to be
+     * updated.
+     * If the task is a {@link SimpleTask} and the user changes its due date to "Eventually," then a new DatelessTask
+     * is created which has the same other properties. Conversely, if a {@link DatelessTask} is given a concrete due
+     * date, then a SimpleTask is created with the specified due date, and all other properties the same.
+     */
+    private void initializeDueDatesColumn()
+    {
         // Due dates
         @SuppressWarnings("unchecked")
         TableColumn<AbstractTask, String> dueDates = (TableColumn<AbstractTask, String>) mainTaskList.getColumns().get(
@@ -297,7 +291,7 @@ public class MainWindowController
                     } catch (NoSuchElementException e)
                     {
                         System.err.println("Formatting of date is incorrect in user attempt to edit task " +
-                                task.getName() + "date graphically.");
+                                task.getName() + " date graphically.");
                     } catch (Exception e)
                     {
                         e.printStackTrace();
@@ -305,15 +299,75 @@ public class MainWindowController
                     displayTasks();
                 }
         );
-        dueDates.setEditable(true);
+    }
 
-        // Names
+    /**
+     * Ties the "names" in the column to those in the corresponding {@link AbstractTask}s.
+     */
+    private void initializeNamesColumn()
+    {
         @SuppressWarnings("unchecked")
         TableColumn<AbstractTask, String> names = (TableColumn<AbstractTask, String>) mainTaskList.getColumns().get(2);
         names.setCellFactory(TextFieldTableCell.forTableColumn());
         names.setCellValueFactory(new PropertyValueFactory<>("name"));
         names.setOnEditCommit(event -> event.getRowValue().setName(event.getNewValue()));
+        displayTasks();
+    }
 
+    /**
+     * Initializes the tags column in the table view.
+     * Specifically, it sets the
+     * <pre>
+     *  * cellFactory
+     *  * cellValueFactory
+     *  * onEditCommit handler
+     * </pre>
+     */
+    private void initializeTagsColumn()
+    {
+        @SuppressWarnings("unchecked")
+        TableColumn<AbstractTask, String> tags = (TableColumn<AbstractTask, String>) mainTaskList.getColumns().get(3);
+        tags.setCellFactory(TextFieldTableCell.forTableColumn());
+        tags.setCellValueFactory(task -> {
+            Set<Tag> theseTags = task.getValue().getTags();
+            String labels = "";
+            for (Tag current : theseTags)
+                labels = String.format("%s%s ", labels, current.toString());
+
+            return new SimpleStringProperty(labels.trim());
+        });
+        tags.setOnEditCommit(event -> {
+            AbstractTask task = event.getRowValue();
+            try (Scanner parser = new Scanner(event.getNewValue()))
+            {
+                List<Tag> labels = new LinkedList<>();
+                while (parser.hasNext())
+                    labels.add(Tag.getTag(parser.next()));
+
+                task.setTags(labels);
+            } catch (NoSuchElementException e)
+            {
+                System.err.println("Formatting of tags in graphical edit of user task " +
+                        event.getRowValue().getName() + " is incorrect.");
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            displayTasks();
+        });
+    }
+
+    private void initializeCompletionBehaviorsColumn()
+    {
+        @SuppressWarnings("unchecked")
+        TableColumn<AbstractTask, String> completionBehaviors = (TableColumn<AbstractTask, String>) mainTaskList
+                .getColumns().get(4);
+        completionBehaviors.setCellFactory(TextFieldTableCell.forTableColumn());
+        completionBehaviors.setCellValueFactory(
+                task -> new SimpleStringProperty(task.getValue().getOnComplete().getSimpleName()));
+        completionBehaviors.setOnEditCommit(
+                event -> event.getRowValue().setOnComplete(Schedulr.getCompletionBehavior(event.getNewValue())));
+        displayTasks();
     }
 
     @FXML

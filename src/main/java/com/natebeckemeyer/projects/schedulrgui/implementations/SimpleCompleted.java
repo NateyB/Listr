@@ -34,7 +34,7 @@ public class SimpleCompleted extends CompletionBehavior
     @Override public void markCompletion(AbstractTask task, boolean completed)
     {
         if (completed != task.isCompleted())
-            super.setCompleted(task, completed);
+            setCompleted(task, completed);
     }
 
     /**

@@ -43,6 +43,17 @@ public abstract class AbstractTask implements Comparable<AbstractTask>
         return onComplete.getClass();
     }
 
+
+    /**
+     * Sets the completion behavior of this task.
+     *
+     * @param behavior The new completion behavior for the task to implement.
+     */
+    public void setOnComplete(CompletionBehavior behavior)
+    {
+        this.onComplete = behavior;
+    }
+
     /**
      * @return The name of the implementations
      */
@@ -172,7 +183,7 @@ public abstract class AbstractTask implements Comparable<AbstractTask>
      */
     public void setCompleted(boolean completed)
     {
-        onComplete.setCompleted(this, completed);
+        onComplete.markCompletion(this, completed);
     }
 
     /**
