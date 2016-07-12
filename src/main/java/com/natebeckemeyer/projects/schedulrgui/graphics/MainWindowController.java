@@ -364,7 +364,7 @@ public class MainWindowController
                 .getColumns().get(4);
         completionBehaviors.setCellFactory(TextFieldTableCell.forTableColumn());
         completionBehaviors.setCellValueFactory(
-                task -> new SimpleStringProperty(task.getValue().getOnComplete().getSimpleName()));
+                task -> new SimpleStringProperty(task.getValue().getOnComplete().getClass().getSimpleName()));
         completionBehaviors.setOnEditCommit(
                 event -> event.getRowValue().setOnComplete(Schedulr.getCompletionBehavior(event.getNewValue())));
         displayTasks();

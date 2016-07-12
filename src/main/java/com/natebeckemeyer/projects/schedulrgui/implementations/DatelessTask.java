@@ -102,7 +102,7 @@ public class DatelessTask extends AbstractTask
             onCompleteOut = " ";
 
         return String.format("%b|%s|%s|%s|%s", isCompleted(), tags.toString().trim(),
-                getOnComplete().getSimpleName(), onCompleteOut, getName());
+                getOnComplete().getClass().getSimpleName(), onCompleteOut, getName());
     }
 
     /**

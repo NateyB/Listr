@@ -57,4 +57,18 @@ public class SimpleCompleted extends CompletionBehavior
     {
         return null;
     }
+
+    /**
+     * This method will be called when a task is to be copied. Therefore, if the behavior must have separate
+     * fields for the copied task, then this method should return a new instance of the behavior; furthermore, those
+     * fields are to be initialized to their current values, rather than their default values, then those values most
+     * also be copied over.
+     *
+     * @return The initialized, copied behavior
+     */
+    @Override protected CompletionBehavior copy()
+    {
+        return new SimpleCompleted();
+    }
+
 }

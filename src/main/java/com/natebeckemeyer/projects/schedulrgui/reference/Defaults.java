@@ -8,7 +8,7 @@ import com.natebeckemeyer.projects.schedulrgui.implementations.SimpleTask;
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-07-06.
  */
-public class Defaults
+public final class Defaults
 {
     /**
      * Disable instantiation.

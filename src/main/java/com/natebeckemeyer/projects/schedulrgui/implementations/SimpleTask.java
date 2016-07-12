@@ -111,7 +111,7 @@ public class SimpleTask extends AbstractTask
 
         return String.format("%04d|%02d|%02d|%b|%s|%s|%s|%s",
                 getDueYear(), getDueMonth(), getDueDay(), isCompleted(),
-                tags.toString().trim(), getOnComplete().getSimpleName(), onCompleteOut, getName());
+                tags.toString().trim(), getOnComplete().getClass().getSimpleName(), onCompleteOut, getName());
     }
 
     /**

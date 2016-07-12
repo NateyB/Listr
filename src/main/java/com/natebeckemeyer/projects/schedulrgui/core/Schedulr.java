@@ -236,10 +236,13 @@ public final class Schedulr
     }
 
 
-    public enum Behavior
+    /**
+     * The types of behaviors that are possible: Rules and CompletionBehaviors.
+     */
+    enum Behavior
     {
         RULE(Rule.class),
-        COMPLETIONBEHAVIOR(CompletionBehavior.class);
+        COMPLETION(CompletionBehavior.class);
 
         private Class thisClass;
 

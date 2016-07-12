@@ -1,7 +1,6 @@
 package com.natebeckemeyer.projects.schedulrgui.core;
 
 import com.natebeckemeyer.projects.schedulrgui.implementations.Tag;
-import com.natebeckemeyer.projects.schedulrgui.reference.Defaults;
 
 import java.util.*;
 
@@ -36,13 +35,12 @@ public abstract class AbstractTask implements Comparable<AbstractTask>
     private Set<Tag> tags = new HashSet<>();
 
     /**
-     * Returns the CompletionBehavior object associated with this implementations
+     * Returns a copy of the CompletionBehavior object associated with this implementations
      */
-    public Class<? extends CompletionBehavior> getOnComplete()
+    public CompletionBehavior getOnComplete()
     {
-        return onComplete.getClass();
+        return onComplete.copy();
     }
-
 
     /**
      * Sets the completion behavior of this task.
@@ -226,15 +224,8 @@ public abstract class AbstractTask implements Comparable<AbstractTask>
             this.due = new GregorianCalendar(dueDate.get(Calendar.YEAR), dueDate.get(Calendar.MONTH),
                     dueDate.get(Calendar.DAY_OF_MONTH));
         this.completed = other.isCompleted();
-        try
-        {
-            this.onComplete = other.getOnComplete().newInstance();
-        } catch (IllegalAccessException | InstantiationException e)
-        {
-            e.printStackTrace();
-            this.onComplete = Defaults.getDefaultCompletionBehavior();
-        }
-        this.tags = new HashSet<>(other.tags);
+        this.onComplete = other.getOnComplete().copy();
+        this.tags = new HashSet<>(other.getTags());
     }
 
     /**

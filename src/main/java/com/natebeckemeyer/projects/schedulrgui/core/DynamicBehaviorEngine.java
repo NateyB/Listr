@@ -57,7 +57,7 @@ public final class DynamicBehaviorEngine
                 fileName = ProjectPaths.userRulesFile;
                 break;
 
-            case COMPLETIONBEHAVIOR:
+            case COMPLETION:
                 fileName = ProjectPaths.userCompletionsFile;
                 break;
 
@@ -157,7 +157,7 @@ public final class DynamicBehaviorEngine
                                                                       String extensionOf, String function,
                                                                       Collection<String> imports)
     {
-        compileBehavior(name, implementationOf, extensionOf, function, imports, Schedulr.Behavior.COMPLETIONBEHAVIOR);
+        compileBehavior(name, implementationOf, extensionOf, function, imports, Schedulr.Behavior.COMPLETION);
         return loadCompletionBehavior(name);
     }
 
