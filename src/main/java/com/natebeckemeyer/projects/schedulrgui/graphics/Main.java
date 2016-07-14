@@ -41,7 +41,7 @@ public class Main extends Application
     /**
      * @return The application-wide menu bar
      */
-    public static MenuBar getMenuBar()
+    static MenuBar getMenuBar()
     {
         return nativeMenuBar;
     }
@@ -61,7 +61,8 @@ public class Main extends Application
     private static MenuItem initializeLoadButton()
     {
         MenuItem loadButton = new MenuItem("Load");
-        loadButton.onActionProperty().setValue(event -> {
+        loadButton.onActionProperty().setValue(event ->
+        {
             File taskFile = fileChooser.showOpenDialog(primary);
             if (taskFile != null)
                 Schedulr.setTasks(FileParser.readTasksFromFile(taskFile));
@@ -75,7 +76,8 @@ public class Main extends Application
     private static MenuItem initializeSaveButton()
     {
         MenuItem saveButton = new MenuItem("Save");
-        saveButton.onActionProperty().setValue(event -> {
+        saveButton.onActionProperty().setValue(event ->
+        {
             File taskFile = fileChooser.showSaveDialog(primary);
             if (taskFile != null)
                 try
@@ -173,7 +175,7 @@ public class Main extends Application
      * @param elements Nodes to include in the stage.
      * @return The new stage
      */
-    public static Stage createNewStage(Node... elements)
+    static Stage createNewStage(Node... elements)
     {
         Stage thisStage = new Stage();
 

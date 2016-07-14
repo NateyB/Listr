@@ -59,6 +59,8 @@ public final class Schedulr
         List<Class<? extends AbstractTask>> tasks = Arrays.asList(SimpleTask.class, DatelessTask.class);
         for (Class<? extends AbstractTask> task : tasks)
             taskTypeMapping.put(task.getSimpleName(), task);
+
+        FileParser.defaultLoad();
     }
 
     static Class<? extends AbstractTask> getTaskOfType(String name)
@@ -128,7 +130,7 @@ public final class Schedulr
     private static void setRules(Collection<Rule> rules)
     {
         ruleMapping.clear();
-        rules.stream().forEach(rule -> ruleMapping.put(rule.toString(), rule));
+        rules.forEach(rule -> ruleMapping.put(rule.toString(), rule));
     }
 
     /**
@@ -145,7 +147,7 @@ public final class Schedulr
     private static void setCompletionBehaviors(Collection<Class<? extends CompletionBehavior>> completions)
     {
         completionMapping.clear();
-        completions.stream().forEach(behavior -> completionMapping.put(behavior.getSimpleName(), behavior));
+        completions.forEach(behavior -> completionMapping.put(behavior.getSimpleName(), behavior));
     }
 
     public static boolean removeCompletionBehavior(String which)
@@ -199,7 +201,9 @@ public final class Schedulr
      */
     public static boolean addTask(AbstractTask toAdd)
     {
-        return tasks.add(toAdd);
+        boolean result = tasks.add(toAdd);
+        FileParser.defaultSave(tasks);
+        return result;
     }
 
     /**
@@ -210,7 +214,9 @@ public final class Schedulr
      */
     public static boolean addTasks(Collection<AbstractTask> taskList)
     {
-        return tasks.addAll(taskList);
+        boolean result = tasks.addAll(taskList);
+        FileParser.defaultSave(tasks);
+        return result;
     }
 
     /**
@@ -221,7 +227,9 @@ public final class Schedulr
      */
     public static boolean removeTask(AbstractTask toRemove)
     {
-        return tasks.remove(toRemove);
+        boolean result = tasks.remove(toRemove);
+        FileParser.defaultSave(tasks);
+        return result;
     }
 
     /**
@@ -232,7 +240,9 @@ public final class Schedulr
      */
     public static boolean removeTasks(Collection<AbstractTask> toRemove)
     {
-        return tasks.removeAll(toRemove);
+        boolean result = tasks.removeAll(toRemove);
+        FileParser.defaultSave(tasks);
+        return result;
     }
 
 

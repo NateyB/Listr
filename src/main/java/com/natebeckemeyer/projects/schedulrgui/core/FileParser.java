@@ -1,5 +1,6 @@
 package com.natebeckemeyer.projects.schedulrgui.core;
 
+import com.natebeckemeyer.projects.schedulrgui.reference.Defaults;
 import com.natebeckemeyer.projects.schedulrgui.reference.ProjectPaths;
 
 import java.io.File;
@@ -22,6 +23,8 @@ public final class FileParser
     private FileParser()
     {
     }
+
+    private static File currentFile = null;
 
     /**
      * Given a path to a file, writes the tasks provided to that file.
@@ -59,6 +62,36 @@ public final class FileParser
         saveTasksToFile(new File(sourceFile), tasks);
     }
 
+    static boolean defaultSave(Collection<AbstractTask> tasks)
+    {
+        if (Defaults.getAutoSaveAll())
+        {
+            try
+            {
+                saveTasksToFile(currentFile != null ? currentFile : new File(Defaults.getDefaultSaveFile()), tasks);
+                return true;
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    static boolean defaultLoad()
+    {
+        if (Defaults.getAutoLoadDefault())
+        {
+            PriorityQueue<AbstractTask> tasks = readTasksFromFile(Defaults.getDefaultSaveFile());
+            if (tasks != null)
+            {
+                Schedulr.addTasks(tasks);
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Given a file, reads in tasks.
      *
@@ -68,6 +101,7 @@ public final class FileParser
      */
     public static PriorityQueue<AbstractTask> readTasksFromFile(File sourceFile)
     {
+        currentFile = sourceFile;
         PriorityQueue<AbstractTask> tasks = new PriorityQueue<>();
 
         try (Scanner parser = new Scanner(sourceFile))

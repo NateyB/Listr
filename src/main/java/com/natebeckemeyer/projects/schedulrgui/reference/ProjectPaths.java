@@ -118,6 +118,11 @@ final public class ProjectPaths
     public static final String systemFile = resourcesPrefix + fileSeparator + "system";
 
     /**
+     * The resource directory containing the samples.
+     */
+    public static final String sampleResources = resourcesPrefix + fileSeparator + "samples";
+
+    /**
      * The directory containing the FXML files.
      */
     public static final String fxmlDirectory = systemFile + fileSeparator + "windows";
