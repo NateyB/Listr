@@ -10,6 +10,9 @@ import java.util.HashMap;
  */
 public enum BasicRuleOperation implements RuleOperation
 {
+    /**
+     * Performs a logical "and" on two {@link Rule Rules}.
+     */
     AND("&")
             {
                 @Override public Rule performOperation(Rule a, Rule b)
@@ -17,6 +20,9 @@ public enum BasicRuleOperation implements RuleOperation
                     return Rule.and(a, b);
                 }
             },
+    /**
+     * Performs a logical "or" on two {@link Rule Rules}.
+     */
     OR("+")
             {
                 @Override public Rule performOperation(Rule a, Rule b)
@@ -25,6 +31,10 @@ public enum BasicRuleOperation implements RuleOperation
                     return Rule.or(a, b);
                 }
             },
+
+    /**
+     * Performs a logical subtraction on two {@link Rule Rules} — that is, '{@code rule a & !(rule b)}'.
+     */
     DIFFERENCE("-")
             {
                 @Override public Rule performOperation(Rule a, Rule b)
@@ -32,6 +42,11 @@ public enum BasicRuleOperation implements RuleOperation
                     return Rule.and(a, Rule.negate(b));
                 }
             },
+
+    /**
+     * Performs a symmetric difference operation (XOR) on two {@link Rule Rules} — that is, '{@code (rule a + rule b)
+     * - (rule a & rule b)}'.
+     */
     SYMMETRICDIFFERENCE("$")
             {
                 @Override public Rule performOperation(Rule a, Rule b)

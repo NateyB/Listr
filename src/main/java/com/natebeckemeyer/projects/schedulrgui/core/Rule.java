@@ -10,9 +10,10 @@ import java.util.function.Predicate;
 public interface Rule extends Predicate<AbstractTask>
 {
     /**
-     * By default, performs a logical "and".
+     * Performs a logical "and".
      *
-     * @param other The rule with which to perform a logical and
+     * @param first The first rule forming the binary logical "and"
+     * @param other The second rule forming the binary logical "and"
      * @return A new rule that is the conjunction of this rule and the other rule.
      */
     static Rule and(Rule first, Rule other)
@@ -34,9 +35,10 @@ public interface Rule extends Predicate<AbstractTask>
     }
 
     /**
-     * By default, performs a logical "or".
+     * Performs a logical "or".
      *
-     * @param other The rule with which to perform a logical or
+     * @param first The first rule forming the binary logical "or"
+     * @param other The second rule forming the binary logical "or"
      * @return A new rule that is the disjunction of this rule and the other rule.
      */
     static Rule or(Rule first, Rule other)
@@ -58,7 +60,7 @@ public interface Rule extends Predicate<AbstractTask>
     }
 
     /**
-     * By default, performs a logical negation.
+     * Performs a logical negation.
      *
      * @return The inverse of this rule.
      */

@@ -3,7 +3,7 @@ package com.natebeckemeyer.projects.schedulrgui.core;
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-06-20.
  * <p>
- * This interface is intended to be extended exclusively by Enum types. It's used in text-to-Rule parsing.
+ * This interface is intended to be extended exclusively by {@link Enum} types. It's used in text-to-Rule parsing.
  */
 public interface RuleOperation
 {

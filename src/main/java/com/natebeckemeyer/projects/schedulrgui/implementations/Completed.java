@@ -5,6 +5,8 @@ import com.natebeckemeyer.projects.schedulrgui.core.Rule;
 
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-06-20.
+ * <p>
+ * This {@link Rule} returns true for all predicates for which {@link AbstractTask#isCompleted()} returns true.
  */
 public class Completed implements Rule
 {

@@ -18,16 +18,20 @@ import java.util.regex.Pattern;
 
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-06-19.
+ * <p>
+ * This class handles dynamically created behaviors; specifically, the {@link Rule rules} and
+ * {@link CompletionBehavior completion behaviors} provided by the user. The rules include the rule that the user
+ * specifies when attempting to view subsets of the tasks currently loaded into {@link Schedulr}.
  */
 public final class DynamicBehaviorEngine
 {
     /**
-     * The compiler that will be used to analyze by
+     * The compiler that will be used to compile user-provided {@link Rule}s and {@link CompletionBehavior}s.
      */
     private static JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 
     /**
-     * Disables instantiation, as the only uses of this class should be static API calls
+     * Disables instantiation, as the only uses of this class should be static API calls.
      */
     private DynamicBehaviorEngine()
     {
@@ -100,8 +104,9 @@ public final class DynamicBehaviorEngine
             }
 
             // Prepare the extension
-            extensionOf = (extensionOf == null) ? "" : extensionOf;
-            if (!extensionOf.isEmpty())
+            if (extensionOf == null)
+                extensionOf = "";
+            else if (!extensionOf.isEmpty())
                 extensionOf = "extends " + extensionOf;
 
             // Do the actual parsing
@@ -137,7 +142,8 @@ public final class DynamicBehaviorEngine
     }
 
     /**
-     * Compiles and loads a rule according to the compileBehavior and loadRule methods.
+     * Compiles and loads a rule according to the {@link DynamicBehaviorEngine#compileBehavior} and
+     * {@link DynamicBehaviorEngine#loadRule} methods.
      *
      * @return The new rule.
      */
@@ -149,9 +155,10 @@ public final class DynamicBehaviorEngine
     }
 
     /**
-     * Compiles and loads a completion behavior according to the compileBehavior and loadCompletionBehavior methods.
+     * Compiles and loads a completion behavior according to the  {@link DynamicBehaviorEngine#compileBehavior} and
+     * {@link DynamicBehaviorEngine#loadCompletionBehavior(String)} methods
      *
-     * @return The new rule.
+     * @return The new completion behavior.
      */
     public static CompletionBehavior compileAndLoadCompletionBehavior(String name, Collection<String> implementationOf,
                                                                       String extensionOf, String function,
@@ -193,7 +200,8 @@ public final class DynamicBehaviorEngine
     }
 
     /**
-     * Loads the behavior of CompletionBehavior {@code className} from the user-defined resources. Adds the class
+     * Loads the behavior of {@link CompletionBehavior} {@code className} from the user-defined resources. Adds the
+     * class
      * into the corresponding mapping in Schedulr.
      *
      * @param className The name of the CompletionBehavior to instantiate
@@ -237,9 +245,9 @@ public final class DynamicBehaviorEngine
     }
 
     /**
-     * Creates a rule based on the string input. + indicates set union, - indicates set difference, & indicates set
-     * intersection, ! indicates set inverse, and $ indicates symmetric difference (XOR).
-     * The order of operations is simply right-associative; use parentheses to change the order of evaluation.
+     * Creates a rule based on the string input. See {@link BasicRuleOperation} for descriptions of the default
+     * operations. Note that the order of operations is simply right-associative; use parentheses to change the order
+     * of evaluation.
      *
      * @param input Input to parse.
      * @return The filtering rule.
@@ -264,14 +272,28 @@ public final class DynamicBehaviorEngine
         return result;
     }
 
-    private static RuleOperation checkForOperation(String start)
+    /**
+     * Tries to match the string {@code name} to the representation of a {@link BasicRuleOperation}.
+     *
+     * @param name The identifier of the operation to perform.
+     * @return The BasicRuleOperation, or null if none exists.
+     */
+    private static RuleOperation checkForOperation(String name)
     {
-        return checkForOperation(start, BasicRuleOperation.class);
+        return checkForOperation(name, BasicRuleOperation.class);
     }
 
-    private static <T extends Enum<T> & RuleOperation> RuleOperation checkForOperation(String start, Class<T> ruleset)
+    /**
+     * Performs the operation corresponding to {@code name} in {@code ruleset}.
+     *
+     * @param name    The identifier of the operation to perform
+     * @param ruleset The class identifying the {@link Enum enum} {@link RuleOperation ruleset} to match operations.
+     * @param <T>     An enum extending {@link RuleOperation}.
+     * @return The {@link RuleOperation}, or null if none exists.
+     */
+    private static <T extends Enum<T> & RuleOperation> RuleOperation checkForOperation(String name, Class<T> ruleset)
     {
-        return ruleset.getEnumConstants().length > 0 ? ruleset.getEnumConstants()[0].lookup(start) : null;
+        return ruleset.getEnumConstants().length > 0 ? ruleset.getEnumConstants()[0].lookup(name) : null;
     }
 
     /**

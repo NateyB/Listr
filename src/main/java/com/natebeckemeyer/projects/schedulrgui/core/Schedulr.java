@@ -42,7 +42,7 @@ public final class Schedulr
     /**
      * The tasks that Schedulr is currently handling.
      */
-    private static PriorityQueue<AbstractTask> tasks = new PriorityQueue<>();
+    private static LinkedList<AbstractTask> tasks = new LinkedList<>();
 
     // Place the rules into the ruleMapping
     // This static initializer allows me to hardcode in the package searching and initialization without storing
@@ -63,6 +63,12 @@ public final class Schedulr
         FileParser.defaultLoad();
     }
 
+    /**
+     * Given the simple name of a subclass of {@link AbstractTask}, returns the actual corresponding class value.
+     *
+     * @param name The class name of the {@link AbstractTask} to return.
+     * @return The corresponding class value, as an extension of {@link AbstractTask}.
+     */
     static Class<? extends AbstractTask> getTaskOfType(String name)
     {
         return taskTypeMapping.get(name);
@@ -88,7 +94,7 @@ public final class Schedulr
     /**
      * Gets the class of the completion behavior corresponding to {@code name}. If the class does not exist or cannot be
      * instantiated, then an error message will be written and the default value (see
-     * {@link com.natebeckemeyer.projects.schedulrgui.reference.Defaults}) used instead.
+     * {@link Defaults#getDefaultCompletionBehavior()}) used instead.
      *
      * @param name The name of the completion behavior to get.
      * @return An instance of the corresponding completion behavior.
@@ -107,6 +113,9 @@ public final class Schedulr
         }
     }
 
+    /**
+     * @return A set of strings of names of completion behavior classes which are known to {@link Schedulr}.
+     */
     public static Set<String> getCompletionBehaviorNames()
     {
         return completionMapping.keySet();
@@ -122,11 +131,17 @@ public final class Schedulr
         ruleMapping.put(rule.toString(), rule);
     }
 
+    /**
+     * @param behavior The completion behavior to insert into the mapping.
+     */
     static void addCompletionBehavior(Class<? extends CompletionBehavior> behavior)
     {
         completionMapping.put(behavior.getSimpleName(), behavior);
     }
 
+    /**
+     * @param rules Sets the rules known to Schedulr, populating {@link Schedulr#ruleMapping}.
+     */
     private static void setRules(Collection<Rule> rules)
     {
         ruleMapping.clear();
@@ -134,7 +149,7 @@ public final class Schedulr
     }
 
     /**
-     * Removes a rule from Schedulr.
+     * Removes a rule from Schedulr. This call is a security hole and will be removed in a future update.
      *
      * @param which The name of the rule to remove
      * @return true if the the mapping changed as a result of this call; false otherwise
@@ -144,19 +159,31 @@ public final class Schedulr
         return ruleMapping.remove(which) != null;
     }
 
+    /**
+     * Populates the completion behavior mapping, {@link Schedulr#completionMapping}, with the parameter completions.
+     *
+     * @param completions The collection of classes to place into the completion behavior mapping.
+     */
     private static void setCompletionBehaviors(Collection<Class<? extends CompletionBehavior>> completions)
     {
         completionMapping.clear();
         completions.forEach(behavior -> completionMapping.put(behavior.getSimpleName(), behavior));
     }
 
+    /**
+     * Removes a completion behavior from the {@link Schedulr#completionMapping}. Note that this call is a security hole
+     * and will be removed in a future update.
+     *
+     * @param which The simple name of the class to remove from the mapping.
+     * @return true if the mapping changed as a result of this call, false otherwise.
+     */
     public static boolean removeCompletionBehavior(String which)
     {
         return completionMapping.remove(which) != null;
     }
 
     /**
-     * @return The mapping of all rules inside of Schedulr.
+     * @return The names of all rules known to {@link Schedulr}.
      */
     public static Set<String> getRuleNames()
     {
@@ -178,6 +205,9 @@ public final class Schedulr
         return tasks.stream().filter(toCompare).collect(Collectors.toList());
     }
 
+    /**
+     * @return All tasks inside of {@link Schedulr}.
+     */
     public static List<AbstractTask> getAllTasks()
     {
         return tasks.stream().collect(Collectors.toList());
@@ -190,11 +220,11 @@ public final class Schedulr
      */
     public static void setTasks(Collection<AbstractTask> taskList)
     {
-        tasks = new PriorityQueue<>(taskList);
+        tasks = new LinkedList<>(taskList);
     }
 
     /**
-     * Inserts the implementations into Schedulr's {@code tasks}.
+     * Inserts the implementations into the Schedulr's task list.
      *
      * @param toAdd The implementations to add.
      * @return True if {@code tasks} is changed as a result of this call.
@@ -247,13 +277,22 @@ public final class Schedulr
 
 
     /**
-     * The types of behaviors that are possible: Rules and CompletionBehaviors.
+     * The types of behaviors that are possible: {@link Rule} and {@link CompletionBehavior}.
      */
     enum Behavior
     {
+        /**
+         * Represents the {@link Rule} class.
+         */
         RULE(Rule.class),
+        /**
+         * Represents the {@link CompletionBehavior} class.
+         */
         COMPLETION(CompletionBehavior.class);
 
+        /**
+         * The actual class object to which each enum refers.
+         */
         private Class thisClass;
 
         Behavior(Class origin)
@@ -261,11 +300,17 @@ public final class Schedulr
             thisClass = origin;
         }
 
+        /**
+         * @return The class value of each enum.
+         */
         public Class getValueClass()
         {
             return thisClass;
         }
 
+        /**
+         * @return The name of each class object.
+         */
         @Override public String toString()
         {
             return thisClass.getSimpleName();

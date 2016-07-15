@@ -14,6 +14,8 @@ import java.util.regex.Pattern;
 
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-05-14.
+ * <p>
+ * This class contains static methods to load and save tasks from and to a file.
  */
 public final class FileParser
 {
@@ -24,6 +26,10 @@ public final class FileParser
     {
     }
 
+    /**
+     * The File from which the current tasks are loaded. This is the file to which tasks will be auto-saved, if the
+     * flag {@link Defaults#autoSaveAll} is {@code true}.
+     */
     private static File currentFile = null;
 
     /**
@@ -62,13 +68,21 @@ public final class FileParser
         saveTasksToFile(new File(sourceFile), tasks);
     }
 
+    /**
+     * If {@link Defaults#getAutoSaveAll()} returns {@code true}, then saves tasks to the file from which the tasks
+     * were loaded, or, if that file does not exist, to the file specified by the
+     * path {@link Defaults#getDefaultTaskFile()}.
+     *
+     * @param tasks The tasks to save.
+     * @return {@code true} if the tasks were saved successfully; {@code false} otherwise.
+     */
     static boolean defaultSave(Collection<AbstractTask> tasks)
     {
         if (Defaults.getAutoSaveAll())
         {
             try
             {
-                saveTasksToFile(currentFile != null ? currentFile : new File(Defaults.getDefaultSaveFile()), tasks);
+                saveTasksToFile(currentFile != null ? currentFile : new File(Defaults.getDefaultTaskFile()), tasks);
                 return true;
             } catch (IOException e)
             {
@@ -78,11 +92,17 @@ public final class FileParser
         return false;
     }
 
+    /**
+     * If {@link Defaults#getAutoLoadDefault()} returns {@code true}, then loads tasks automatically on startup from
+     * the file specified by the path {@link Defaults#getDefaultTaskFile()}.
+     *
+     * @return {@code true} if the tasks were loaded successfully, {@code false} otherwise.
+     */
     static boolean defaultLoad()
     {
         if (Defaults.getAutoLoadDefault())
         {
-            PriorityQueue<AbstractTask> tasks = readTasksFromFile(Defaults.getDefaultSaveFile());
+            LinkedList<AbstractTask> tasks = readTasksFromFile(Defaults.getDefaultTaskFile());
             if (tasks != null)
             {
                 Schedulr.addTasks(tasks);
@@ -96,13 +116,12 @@ public final class FileParser
      * Given a file, reads in tasks.
      *
      * @param sourceFile The file containing the tasks.
-     * @return The priority queue containing the loaded tasks, or null if the file does not exist. Also null if the
-     * CompletionBehavior rule specified does not exist.
+     * @return The list containing the loaded tasks, or null if the file does not exist.
      */
-    public static PriorityQueue<AbstractTask> readTasksFromFile(File sourceFile)
+    public static LinkedList<AbstractTask> readTasksFromFile(File sourceFile)
     {
         currentFile = sourceFile;
-        PriorityQueue<AbstractTask> tasks = new PriorityQueue<>();
+        LinkedList<AbstractTask> tasks = new LinkedList<>();
 
         try (Scanner parser = new Scanner(sourceFile))
         {
@@ -155,7 +174,7 @@ public final class FileParser
      * @param filepath The filepath of the file where the tasks are located.
      * @return The priority queue containing the loaded tasks, or null if the file does not exist.
      */
-    public static PriorityQueue<AbstractTask> readTasksFromFile(String filepath)
+    public static LinkedList<AbstractTask> readTasksFromFile(String filepath)
     {
         File source;
         try

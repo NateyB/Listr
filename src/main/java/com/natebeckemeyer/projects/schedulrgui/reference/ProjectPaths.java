@@ -7,6 +7,9 @@ import java.net.URL;
 
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-06-23.
+ * <p>
+ * This class contains many static final strings that refer to locations of important files used by the application.
+ * It is a convenience class for locating (and updating the location of) files.
  */
 final public class ProjectPaths
 {
@@ -78,7 +81,8 @@ final public class ProjectPaths
     /**
      * The package prefix for the implementations package.
      */
-    public static final String implementationsPackagePrefix = String.format("%s%s%s", packagePrefix, packageSeparator, "implementations");
+    public static final String implementationsPackagePrefix = String.format("%s%s%s", packagePrefix, packageSeparator,
+            "implementations");
 
     /**
      * The root directory for resources.
@@ -142,6 +146,13 @@ final public class ProjectPaths
         userCFiles.mkdirs();
     }
 
+    /**
+     * This method first tries to load the file as a resource from the path; if that attempt is unsuccessful, then it
+     * tries to load the file from the actual path, making directories as needed. If that operation fails, returns null.
+     *
+     * @param path The path of the file to open.
+     * @return The file if found or created, null otherwise.
+     */
     public static File getFile(String path)
     {
         try
@@ -172,6 +183,12 @@ final public class ProjectPaths
         return null;
     }
 
+    /**
+     * Attempts to load a resource using this class's {@link ClassLoader}.
+     *
+     * @param path The path of the resource to load.
+     * @return The resource.
+     */
     private static URL getResource(String path)
     {
         return ProjectPaths.class.getResource(path);

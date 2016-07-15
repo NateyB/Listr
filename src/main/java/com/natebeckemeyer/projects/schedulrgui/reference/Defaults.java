@@ -15,19 +15,31 @@ import java.util.Properties;
 
 /**
  * Created for Schedulr by @author Nate Beckemeyer on 2016-07-06.
+ * <p>
+ * This class contains many static methods for identifying appropriate default behaviors. Information about user
+ * preferences is managed here. This class is not instantiable.
+ * </p>
  */
 public final class Defaults
 {
     /**
-     * Disable instantiation.
+     * Disables instantiation.
      */
     private Defaults()
     {
     }
 
+    /**
+     * This interface serves as a way to enable lambda expressions to define what to do with the value of a key-value
+     * pair. That is, this interface provides a unified, syntactically concise way for to initialize the
+     * {@link Defaults#handlers} mapping in {@link Defaults#initializeHandlers()}.
+     */
     @FunctionalInterface
     private interface PropertyLoader
     {
+        /**
+         * @param value
+         */
         void load(String value);
     }
 
@@ -51,18 +63,27 @@ public final class Defaults
      */
     private static Class<? extends CompletionBehavior> completionBehavior;
 
-
+    /**
+     * @return Whether to autosave tasks to the files that they're loaded from (or the default) when the task listing
+     * updates.
+     */
     public static boolean getAutoSaveAll()
     {
         return autoSaveAll;
     }
 
+    /**
+     * @return Whether to load the default task file on startup.
+     */
     public static boolean getAutoLoadDefault()
     {
         return autoLoadDefault;
     }
 
-
+    /**
+     * @return The default completion behavior as specified by user preferences, or an instance of
+     * {@link SimpleCompleted} if that behavior could not be loaded for any reason.
+     */
     public static CompletionBehavior getDefaultCompletionBehavior()
     {
         try
@@ -70,27 +91,40 @@ public final class Defaults
             return completionBehavior.newInstance();
         } catch (InstantiationException | IllegalAccessException | NullPointerException e)
         {
-            e.printStackTrace();
+            System.err.println("Error loading completion behavior '" + completionBehavior.getSimpleName() + "' from " +
+                    "Defaults. Returning a " + SimpleCompleted.class.getSimpleName() + " object instead.");
             return new SimpleCompleted();
         }
     }
 
-
-    public static String getDefaultSaveFile()
+    /**
+     * @return The path of the default file from which tasks should be stored/loaded on startup.
+     */
+    public static String getDefaultTaskFile()
     {
         return defaultAutoFile;
     }
 
-
+    /**
+     * @return The default class task to use.
+     */
     public static Class<? extends AbstractTask> getDefaultTask()
     {
         return SimpleTask.class;
     }
 
-
+    /**
+     * The mapping from {@link Properties} keys to what to do with them.
+     */
     private static HashMap<String, PropertyLoader> handlers = new HashMap<>();
 
-
+    /**
+     * The function that loads the user preferences. If the user has not defined a preference for a specific
+     * {@link Properties} key, then the system default is used.
+     * <p>
+     * A static initializer calls the private methods {@link Defaults#initializeHandlers()} and
+     * {@link Defaults#initializePreferences()} to populate the relevant data fields.
+     */
     private static void initializePreferences()
     {
         Properties userProperties = new Properties();
@@ -115,6 +149,7 @@ public final class Defaults
             e.printStackTrace();
         }
 
+        // Perform operations on each key-value pair.
         Enumeration<?> enumeration = systemProperties.propertyNames();
         for (String key; enumeration.hasMoreElements(); )
         {
@@ -132,7 +167,10 @@ public final class Defaults
     }
 
     /**
-     * Places the handlers into the hashmap.
+     * Places the handlers for values of keys into the {@link Defaults#handlers} mapping.
+     * <p>
+     * A static initializer calls the private methods {@link Defaults#initializeHandlers()} and
+     * {@link Defaults#initializePreferences()} to populate the relevant data fields.
      */
     private static void initializeHandlers()
     {
