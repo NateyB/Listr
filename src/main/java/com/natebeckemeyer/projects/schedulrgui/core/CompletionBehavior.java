@@ -11,6 +11,7 @@ public abstract class CompletionBehavior
     protected static void setCompleted(AbstractTask task, boolean completed)
     {
         task.completed = completed;
+        FileParser.defaultSave(Schedulr.getAllTasks());
     }
 
     /**
