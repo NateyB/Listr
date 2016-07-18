@@ -1,7 +1,7 @@
-package com.natebeckemeyer.projects.schedulrgui.core;
+package com.natebeckemeyer.projects.listrgui.core;
 
-import com.natebeckemeyer.projects.schedulrgui.reference.Defaults;
-import com.natebeckemeyer.projects.schedulrgui.reference.ProjectPaths;
+import com.natebeckemeyer.projects.listrgui.reference.Defaults;
+import com.natebeckemeyer.projects.listrgui.reference.ProjectPaths;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 /**
- * Created for Schedulr by @author Nate Beckemeyer on 2016-05-14.
+ * Created for Listr by @author Nate Beckemeyer on 2016-05-14.
  * <p>
  * This class contains static methods to load and save tasks from and to a file.
  */
@@ -105,7 +105,7 @@ public final class FileParser
             LinkedList<AbstractTask> tasks = readTasksFromFile(Defaults.getDefaultTaskFile());
             if (tasks != null)
             {
-                Schedulr.addTasks(tasks);
+                Listr.addTasks(tasks);
                 return true;
             }
         }
@@ -137,7 +137,7 @@ public final class FileParser
                 console.useDelimiter(Pattern.quote("|"));
 
                 String taskType = console.next();
-                Class<? extends AbstractTask> taskClass = Schedulr.getTaskOfType(taskType);
+                Class<? extends AbstractTask> taskClass = Listr.getTaskOfType(taskType);
                 AbstractTask task;
 
                 try

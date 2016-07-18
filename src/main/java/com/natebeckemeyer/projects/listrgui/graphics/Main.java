@@ -1,8 +1,8 @@
-package com.natebeckemeyer.projects.schedulrgui.graphics;
+package com.natebeckemeyer.projects.listrgui.graphics;
 
-import com.natebeckemeyer.projects.schedulrgui.core.FileParser;
-import com.natebeckemeyer.projects.schedulrgui.core.Schedulr;
-import com.natebeckemeyer.projects.schedulrgui.reference.ProjectPaths;
+import com.natebeckemeyer.projects.listrgui.core.FileParser;
+import com.natebeckemeyer.projects.listrgui.core.Listr;
+import com.natebeckemeyer.projects.listrgui.reference.ProjectPaths;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -65,7 +65,7 @@ public class Main extends Application
         {
             File taskFile = fileChooser.showOpenDialog(primary);
             if (taskFile != null)
-                Schedulr.setTasks(FileParser.readTasksFromFile(taskFile));
+                Listr.setTasks(FileParser.readTasksFromFile(taskFile));
         });
         return loadButton;
     }
@@ -82,7 +82,7 @@ public class Main extends Application
             if (taskFile != null)
                 try
                 {
-                    FileParser.saveTasksToFile(taskFile, Schedulr.getTasksMatchingRule(task -> true));
+                    FileParser.saveTasksToFile(taskFile, Listr.getTasksMatchingRule(task -> true));
                 } catch (IOException e)
                 {
                     e.printStackTrace();
@@ -163,7 +163,7 @@ public class Main extends Application
         Group root = new Group();
         root.getChildren().addAll(getMenuBar(), mainWindow);
 
-        primaryStage.setTitle("Schedulr");
+        primaryStage.setTitle("Listr");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
         primary = primaryStage;

@@ -1,13 +1,13 @@
-package com.natebeckemeyer.projects.schedulrgui.core;
+package com.natebeckemeyer.projects.listrgui.core;
 
-import com.natebeckemeyer.projects.schedulrgui.implementations.*;
-import com.natebeckemeyer.projects.schedulrgui.reference.Defaults;
+import com.natebeckemeyer.projects.listrgui.implementations.*;
+import com.natebeckemeyer.projects.listrgui.reference.Defaults;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Created for Schedulr by @author Nate Beckemeyer on 2016-04-28.
+ * Created for Listr by @author Nate Beckemeyer on 2016-04-28.
  * <p>
  * This class functions as the engine of the to-do app. It handles rules, their ruleMapping, and controls which tasks
  * will be displayed, etc.
@@ -15,12 +15,12 @@ import java.util.stream.Collectors;
  * A static initialization block places all of the behaviors included in the implementations package into the
  * ruleMapping.
  */
-public final class Schedulr
+public final class Listr
 {
     /**
      * Disables instantiation (as this class was coded as a static reference class, not designed to be inherited from).
      */
-    private Schedulr()
+    private Listr()
     {
     }
 
@@ -40,7 +40,7 @@ public final class Schedulr
     private static final Map<String, Class<? extends AbstractTask>> taskTypeMapping = new HashMap<>();
 
     /**
-     * The tasks that Schedulr is currently handling.
+     * The tasks that Listr is currently handling.
      */
     private static LinkedList<AbstractTask> tasks = new LinkedList<>();
 
@@ -114,7 +114,7 @@ public final class Schedulr
     }
 
     /**
-     * @return A set of strings of names of completion behavior classes which are known to {@link Schedulr}.
+     * @return A set of strings of names of completion behavior classes which are known to {@link Listr}.
      */
     public static Set<String> getCompletionBehaviorNames()
     {
@@ -122,7 +122,7 @@ public final class Schedulr
     }
 
     /**
-     * Adds a rule to the mapping from string names to rules in Schedulr.
+     * Adds a rule to the mapping from string names to rules in Listr.
      *
      * @param rule The rule to add into the mapping.
      */
@@ -140,7 +140,7 @@ public final class Schedulr
     }
 
     /**
-     * @param rules Sets the rules known to Schedulr, populating {@link Schedulr#ruleMapping}.
+     * @param rules Sets the rules known to Listr, populating {@link Listr#ruleMapping}.
      */
     private static void setRules(Collection<Rule> rules)
     {
@@ -149,7 +149,7 @@ public final class Schedulr
     }
 
     /**
-     * Removes a rule from Schedulr. This call is a security hole and will be removed in a future update.
+     * Removes a rule from Listr. This call is a security hole and will be removed in a future update.
      *
      * @param which The name of the rule to remove
      * @return true if the the mapping changed as a result of this call; false otherwise
@@ -160,7 +160,7 @@ public final class Schedulr
     }
 
     /**
-     * Populates the completion behavior mapping, {@link Schedulr#completionMapping}, with the parameter completions.
+     * Populates the completion behavior mapping, {@link Listr#completionMapping}, with the parameter completions.
      *
      * @param completions The collection of classes to place into the completion behavior mapping.
      */
@@ -171,7 +171,7 @@ public final class Schedulr
     }
 
     /**
-     * Removes a completion behavior from the {@link Schedulr#completionMapping}. Note that this call is a security hole
+     * Removes a completion behavior from the {@link Listr#completionMapping}. Note that this call is a security hole
      * and will be removed in a future update.
      *
      * @param which The simple name of the class to remove from the mapping.
@@ -183,7 +183,7 @@ public final class Schedulr
     }
 
     /**
-     * @return The names of all rules known to {@link Schedulr}.
+     * @return The names of all rules known to {@link Listr}.
      */
     public static Set<String> getRuleNames()
     {
@@ -206,7 +206,7 @@ public final class Schedulr
     }
 
     /**
-     * @return All tasks inside of {@link Schedulr}.
+     * @return All tasks inside of {@link Listr}.
      */
     public static List<AbstractTask> getAllTasks()
     {
@@ -214,7 +214,7 @@ public final class Schedulr
     }
 
     /**
-     * Sets the list of Schedulr's {@code tasks} to be the {@code taskList} provided here.
+     * Sets the list of Listr's {@code tasks} to be the {@code taskList} provided here.
      *
      * @param taskList The list of tasks to assign to be handled.
      */
@@ -224,7 +224,7 @@ public final class Schedulr
     }
 
     /**
-     * Inserts the implementations into the Schedulr's task list.
+     * Inserts the implementations into the Listr's task list.
      *
      * @param toAdd The implementations to add.
      * @return True if {@code tasks} is changed as a result of this call.
@@ -237,9 +237,9 @@ public final class Schedulr
     }
 
     /**
-     * Inserts the collection of tasks provided, {@code taskList}, into the {@code tasks} that Schedulr is handling.
+     * Inserts the collection of tasks provided, {@code taskList}, into the {@code tasks} that Listr is handling.
      *
-     * @param taskList The taskList to add to Schedulr's {@code tasks}.
+     * @param taskList The taskList to add to Listr's {@code tasks}.
      * @return True if {@code tasks} is changed as a result of this call.
      */
     public static boolean addTasks(Collection<AbstractTask> taskList)
@@ -250,9 +250,9 @@ public final class Schedulr
     }
 
     /**
-     * Removes the implementations {@code toRemove} from the Schedulr's {@code tasks}.
+     * Removes the implementations {@code toRemove} from the Listr's {@code tasks}.
      *
-     * @param toRemove The implementations to remove from Schedulr's {@code tasks}.
+     * @param toRemove The implementations to remove from Listr's {@code tasks}.
      * @return True if the implementations was removed.
      */
     public static boolean removeTask(AbstractTask toRemove)
@@ -263,9 +263,9 @@ public final class Schedulr
     }
 
     /**
-     * Removes the tasks {@code toRemove} from the Schedulr's {@code tasks}.
+     * Removes the tasks {@code toRemove} from the Listr's {@code tasks}.
      *
-     * @param toRemove The tasks to remove from Schedulr's {@code tasks}.
+     * @param toRemove The tasks to remove from Listr's {@code tasks}.
      * @return True if {@code tasks} was changed as a result of this call.
      */
     public static boolean removeTasks(Collection<AbstractTask> toRemove)

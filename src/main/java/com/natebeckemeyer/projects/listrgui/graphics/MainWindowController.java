@@ -1,14 +1,14 @@
-package com.natebeckemeyer.projects.schedulrgui.graphics;
+package com.natebeckemeyer.projects.listrgui.graphics;
 
 
-import com.natebeckemeyer.projects.schedulrgui.core.AbstractTask;
-import com.natebeckemeyer.projects.schedulrgui.core.DynamicBehaviorEngine;
-import com.natebeckemeyer.projects.schedulrgui.core.Rule;
-import com.natebeckemeyer.projects.schedulrgui.core.Schedulr;
-import com.natebeckemeyer.projects.schedulrgui.implementations.DatelessTask;
-import com.natebeckemeyer.projects.schedulrgui.implementations.SimpleTask;
-import com.natebeckemeyer.projects.schedulrgui.implementations.Tag;
-import com.natebeckemeyer.projects.schedulrgui.reference.ProjectPaths;
+import com.natebeckemeyer.projects.listrgui.core.AbstractTask;
+import com.natebeckemeyer.projects.listrgui.core.DynamicBehaviorEngine;
+import com.natebeckemeyer.projects.listrgui.core.Listr;
+import com.natebeckemeyer.projects.listrgui.core.Rule;
+import com.natebeckemeyer.projects.listrgui.implementations.DatelessTask;
+import com.natebeckemeyer.projects.listrgui.implementations.SimpleTask;
+import com.natebeckemeyer.projects.listrgui.implementations.Tag;
+import com.natebeckemeyer.projects.listrgui.reference.ProjectPaths;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -113,9 +113,9 @@ public class MainWindowController
 
         List<AbstractTask> passed;
         if (!showCompletedTasks)
-            passed = Schedulr.getTasksMatchingRule(Rule.and(currentRule, Rule.negate(Schedulr.getRule("completed"))));
+            passed = Listr.getTasksMatchingRule(Rule.and(currentRule, Rule.negate(Listr.getRule("completed"))));
         else
-            passed = Schedulr.getTasksMatchingRule(currentRule);
+            passed = Listr.getTasksMatchingRule(currentRule);
         passed.sort(null);
 
         ObservableList<AbstractTask> tasks = FXCollections.observableArrayList(passed);
@@ -263,8 +263,8 @@ public class MainWindowController
                         {
                             if (task instanceof SimpleTask)
                             {
-                                Schedulr.removeTask(task);
-                                Schedulr.addTask(new DatelessTask(task));
+                                Listr.removeTask(task);
+                                Listr.addTask(new DatelessTask(task));
                             }
                         } else
                         {
@@ -285,8 +285,8 @@ public class MainWindowController
                             newTask.getDueDate().set(Calendar.MONTH, month - 1);
                             newTask.getDueDate().set(Calendar.DAY_OF_MONTH, day_of_month);
 
-                            Schedulr.removeTask(task);
-                            Schedulr.addTask(newTask);
+                            Listr.removeTask(task);
+                            Listr.addTask(newTask);
                         }
                     } catch (NoSuchElementException e)
                     {
@@ -366,7 +366,7 @@ public class MainWindowController
         completionBehaviors.setCellValueFactory(
                 task -> new SimpleStringProperty(task.getValue().getOnComplete().getClass().getSimpleName()));
         completionBehaviors.setOnEditCommit(
-                event -> event.getRowValue().setOnComplete(Schedulr.getCompletionBehavior(event.getNewValue())));
+                event -> event.getRowValue().setOnComplete(Listr.getCompletionBehavior(event.getNewValue())));
         displayTasks();
     }
 
@@ -375,10 +375,10 @@ public class MainWindowController
     {
         if (key.getCode() == KeyCode.DELETE || key.getCode() == KeyCode.BACK_SPACE)
         {
-            List<AbstractTask> tasks = Schedulr.getAllTasks();
+            List<AbstractTask> tasks = Listr.getAllTasks();
             AbstractTask selected = mainTaskList.getSelectionModel().getSelectedItem();
             tasks = tasks.stream().filter(task -> task != selected).collect(Collectors.toList());
-            Schedulr.setTasks(tasks);
+            Listr.setTasks(tasks);
             displayTasks();
         }
     }
@@ -392,7 +392,7 @@ public class MainWindowController
             if (item != ruleNode && item != completionBehaviorNode && item != rootNode)
             {
                 String selected = item.getValue();
-                if (Schedulr.removeRule(selected) || Schedulr.removeCompletionBehavior(selected))
+                if (Listr.removeRule(selected) || Listr.removeCompletionBehavior(selected))
                 {
                     updateSidebar();
                     setAndDisplay();
@@ -405,12 +405,12 @@ public class MainWindowController
     {
         ruleNode = new TreeItem<>("Rules");
         ruleNode.setExpanded(true);
-        for (String ruleName : Schedulr.getRuleNames())
+        for (String ruleName : Listr.getRuleNames())
             ruleNode.getChildren().add(new TreeItem<>(ruleName));
 
         completionBehaviorNode = new TreeItem<>("Completion Behaviors");
         completionBehaviorNode.setExpanded(true);
-        for (String completionBehaviorName : Schedulr.getCompletionBehaviorNames())
+        for (String completionBehaviorName : Listr.getCompletionBehaviorNames())
             completionBehaviorNode.getChildren().add(new TreeItem<>(completionBehaviorName));
 
         rootNode = new TreeItem<>("Behaviors");

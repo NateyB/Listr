@@ -1,10 +1,10 @@
-package com.natebeckemeyer.projects.schedulrgui.reference;
+package com.natebeckemeyer.projects.listrgui.reference;
 
-import com.natebeckemeyer.projects.schedulrgui.core.AbstractTask;
-import com.natebeckemeyer.projects.schedulrgui.core.CompletionBehavior;
-import com.natebeckemeyer.projects.schedulrgui.core.Schedulr;
-import com.natebeckemeyer.projects.schedulrgui.implementations.SimpleCompleted;
-import com.natebeckemeyer.projects.schedulrgui.implementations.SimpleTask;
+import com.natebeckemeyer.projects.listrgui.core.AbstractTask;
+import com.natebeckemeyer.projects.listrgui.core.CompletionBehavior;
+import com.natebeckemeyer.projects.listrgui.core.Listr;
+import com.natebeckemeyer.projects.listrgui.implementations.SimpleCompleted;
+import com.natebeckemeyer.projects.listrgui.implementations.SimpleTask;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Properties;
 
 /**
- * Created for Schedulr by @author Nate Beckemeyer on 2016-07-06.
+ * Created for Listr by @author Nate Beckemeyer on 2016-07-06.
  * <p>
  * This class contains many static methods for identifying appropriate default behaviors. Information about user
  * preferences is managed here. This class is not instantiable.
@@ -136,7 +136,7 @@ public final class Defaults
             userProperties.load(userInput);
         } catch (IOException e)
         {
-            e.printStackTrace();
+            System.err.println("IOException initializing user preferences: " + e.getMessage());
         }
 
         // Load system files (in case the user preferences are not found)
@@ -177,7 +177,7 @@ public final class Defaults
         handlers.put("auto-save-file", value -> defaultAutoFile = value);
         handlers.put("auto-save", value -> autoSaveAll = Boolean.parseBoolean(value));
         handlers.put("auto-load", value -> autoLoadDefault = Boolean.parseBoolean(value));
-        handlers.put("completion-behavior", value -> completionBehavior = Schedulr.getCompletionBehavior(value)
+        handlers.put("completion-behavior", value -> completionBehavior = Listr.getCompletionBehavior(value)
                 .getClass());
     }
 

@@ -1,12 +1,12 @@
-package com.natebeckemeyer.projects.schedulrgui.implementations;
+package com.natebeckemeyer.projects.listrgui.implementations;
 
-import com.natebeckemeyer.projects.schedulrgui.core.AbstractTask;
-import com.natebeckemeyer.projects.schedulrgui.core.Rule;
+import com.natebeckemeyer.projects.listrgui.core.AbstractTask;
+import com.natebeckemeyer.projects.listrgui.core.Rule;
 
 import java.util.GregorianCalendar;
 
 /**
- * Created for Schedulr by @author Nate Beckemeyer on 2016-05-11.
+ * Created for Listr by @author Nate Beckemeyer on 2016-05-11.
  */
 public class Today implements Rule
 {

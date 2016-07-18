@@ -1,8 +1,8 @@
-package com.natebeckemeyer.projects.schedulrgui.implementations;
+package com.natebeckemeyer.projects.listrgui.implementations;
 
-import com.natebeckemeyer.projects.schedulrgui.core.AbstractTask;
-import com.natebeckemeyer.projects.schedulrgui.core.CompletionBehavior;
-import com.natebeckemeyer.projects.schedulrgui.core.Schedulr;
+import com.natebeckemeyer.projects.listrgui.core.AbstractTask;
+import com.natebeckemeyer.projects.listrgui.core.CompletionBehavior;
+import com.natebeckemeyer.projects.listrgui.core.Listr;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -10,23 +10,10 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 /**
- * Created for Schedulr by @author Nate Beckemeyer on 2016-07-06.
+ * Created for Listr by @author Nate Beckemeyer on 2016-04-28.
  */
-public class DatelessTask extends AbstractTask
+public class SimpleTask extends AbstractTask
 {
-    /**
-     * Sets the due date for this task to Integer.MIN_VALUE for each field.
-     */
-    private void setDueDate()
-    {
-        if (this.due == null)
-            this.due = new GregorianCalendar();
-
-        this.due.set(Calendar.YEAR, Integer.MIN_VALUE);
-        this.due.set(Calendar.MONTH, Integer.MIN_VALUE);
-        this.due.set(Calendar.DAY_OF_MONTH, Integer.MIN_VALUE);
-    }
-
     /**
      * Constructs a implementations named {@code name}, due on the date specified {@code dueDate}. The
      * implementations is created with the
@@ -36,11 +23,10 @@ public class DatelessTask extends AbstractTask
      * @param dueDate    The Calendar object representing the due date of the implementations.
      * @param onComplete The specified completion behavior.
      */
-    public DatelessTask(String name, Calendar dueDate,
-                        CompletionBehavior onComplete)
+    public SimpleTask(String name, Calendar dueDate,
+                      CompletionBehavior onComplete)
     {
         super(name, dueDate, onComplete);
-        setDueDate();
     }
 
     /**
@@ -48,10 +34,33 @@ public class DatelessTask extends AbstractTask
      *
      * @param other The implementations to copy.
      */
-    public DatelessTask(AbstractTask other)
+    public SimpleTask(AbstractTask other)
     {
         super(other);
-        setDueDate();
+    }
+
+    /**
+     * @return The year that the task is scheduled to be completed.
+     */
+    private int getDueYear()
+    {
+        return due.get(Calendar.YEAR);
+    }
+
+    /**
+     * @return The month of the year that the task is scheduled to be completed (on a 0-11 scale).
+     */
+    private int getDueMonth()
+    {
+        return due.get(Calendar.MONTH);
+    }
+
+    /**
+     * @return The day of the month that the task is scheduled to be completed.
+     */
+    private int getDueDay()
+    {
+        return due.get(Calendar.DAY_OF_MONTH);
     }
 
     /**
@@ -70,21 +79,19 @@ public class DatelessTask extends AbstractTask
      */
     @Override public String getDueString()
     {
-        return "Eventually";
+        return String.format("%04d-%02d-%02d", getDueYear(), getDueMonth() + 1, getDueDay());
     }
 
-    /**
-     * Provides a formatted string representing the task (for console display).
-     */
-    @Override public String toString()
+    @Override
+    public String toString()
     {
-        return getDueString() + ": " + getName();
+        return String.format("%s: %s", getDueString(), getName());
     }
 
     /**
      * Serializes all of the important data to a string so that it is recoverable. This serialization
      * may include things like the due date, the name, the tags, the completion flag, and behavior.
-     * Cannot include the pipe character, '|'.
+     * Cannot include a newline character.
      *
      * @return The string containing the serialization of this task.
      */
@@ -101,8 +108,10 @@ public class DatelessTask extends AbstractTask
         if (onCompleteOut == null || onCompleteOut.isEmpty())
             onCompleteOut = " ";
 
-        return String.format("%b|%s|%s|%s|%s", isCompleted(), tags.toString().trim(),
-                getOnComplete().getClass().getSimpleName(), onCompleteOut, getName());
+
+        return String.format("%04d|%02d|%02d|%b|%s|%s|%s|%s",
+                getDueYear(), getDueMonth(), getDueDay(), isCompleted(),
+                tags.toString().trim(), getOnComplete().getClass().getSimpleName(), onCompleteOut, getName());
     }
 
     /**
@@ -112,10 +121,10 @@ public class DatelessTask extends AbstractTask
      */
     @Override public void loadFromSerialization(String serialization)
     {
-
         Scanner parser = new Scanner(serialization);
         parser.useDelimiter(Pattern.quote("|"));
 
+        due = new GregorianCalendar(parser.nextInt(), parser.nextInt(), parser.nextInt());
         completed = parser.nextBoolean();
 
         Scanner labelParser = new Scanner(parser.next());
@@ -123,11 +132,10 @@ public class DatelessTask extends AbstractTask
             this.addTag(Tag.getTag(labelParser.next()));
         labelParser.close();
 
-        this.onComplete = Schedulr.getCompletionBehavior(parser.next());
+        this.onComplete = Listr.getCompletionBehavior(parser.next());
         this.onComplete.loadFromString(parser.next());
         this.name = parser.next();
 
         parser.close();
-        setDueDate();
     }
 }

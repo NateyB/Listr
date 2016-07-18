@@ -1,11 +1,11 @@
-package com.natebeckemeyer.projects.schedulrgui.core;
+package com.natebeckemeyer.projects.listrgui.core;
 
-import com.natebeckemeyer.projects.schedulrgui.implementations.Tag;
+import com.natebeckemeyer.projects.listrgui.implementations.Tag;
 
 import java.util.*;
 
 /**
- * Created for Schedulr by @author Nate Beckemeyer on 2016-07-06.
+ * Created for Listr by @author Nate Beckemeyer on 2016-07-06.
  */
 public abstract class AbstractTask implements Comparable<AbstractTask>
 {

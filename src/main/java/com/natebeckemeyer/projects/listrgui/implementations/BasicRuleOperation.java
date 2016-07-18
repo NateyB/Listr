@@ -1,12 +1,12 @@
-package com.natebeckemeyer.projects.schedulrgui.implementations;
+package com.natebeckemeyer.projects.listrgui.implementations;
 
-import com.natebeckemeyer.projects.schedulrgui.core.Rule;
-import com.natebeckemeyer.projects.schedulrgui.core.RuleOperation;
+import com.natebeckemeyer.projects.listrgui.core.Rule;
+import com.natebeckemeyer.projects.listrgui.core.RuleOperation;
 
 import java.util.HashMap;
 
 /**
- * Created for Schedulr by @author Nate Beckemeyer on 2016-06-20.
+ * Created for Listr by @author Nate Beckemeyer on 2016-06-20.
  */
 public enum BasicRuleOperation implements RuleOperation
 {

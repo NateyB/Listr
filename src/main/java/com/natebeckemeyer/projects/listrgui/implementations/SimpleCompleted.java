@@ -1,41 +1,48 @@
-package com.natebeckemeyer.projects.schedulrgui.implementations;
+package com.natebeckemeyer.projects.listrgui.implementations;
 
-import com.natebeckemeyer.projects.schedulrgui.core.AbstractTask;
-import com.natebeckemeyer.projects.schedulrgui.core.CompletionBehavior;
+import com.natebeckemeyer.projects.listrgui.core.AbstractTask;
+import com.natebeckemeyer.projects.listrgui.core.CompletionBehavior;
 
 /**
- * This rule says which objects it marks as completed by printing to the console,
- * as opposed to the normal SimpleCompleted, which makes no such claims.
+ * Created for Listr by @author Nate Beckemeyer on 2016-05-02.
  * <p>
- * Created for Schedulr by @author Nate Beckemeyer on 2016-05-11.
+ * This class is the simple, default behavior for the completion of a implementations: The {@link AbstractTask} is
+ * marked as completed.
  */
-public class VerboseCompleted extends CompletionBehavior
+public class SimpleCompleted extends CompletionBehavior
 {
-    @Override public String toString()
+    public SimpleCompleted()
     {
-        return "Verbose";
     }
 
     /**
-     * Marks {@code task} {@code completed}, if it isn't already, and outputs its action to the console.
+     * Returns the name of the completion behavior (to display to the user). In this case, "Default."
+     *
+     * @return The name of the completion behavior.
+     */
+    @Override public String toString()
+    {
+        return "Default";
+    }
+
+
+    /**
+     * Only if the user wishes to change the implementations's completion flag, change the implementations's
+     * completion flag.
      *
      * @param task      The implementations whose completion value the user has changed.
      * @param completed The boolean value the user wants to set the completion to. This may or may not be different
      */
     @Override public void markCompletion(AbstractTask task, boolean completed)
     {
-        if (task.isCompleted() != completed)
-        {
+        if (completed != task.isCompleted())
             setCompleted(task, completed);
-            System.out.printf("<<Marked the completion flag for task \"%s\" as %b.>>%n", task.getName(), completed);
-        } else
-            System.out.printf("<<Completion for task \"%s\" remains at value %b.>>%n", task.getName(), completed);
     }
 
     /**
      * Deserializes an object from a string. Note that the string <i>cannot</i> contain a pipe character.
      *
-     * @param serialized
+     * @param serialized The string from which to load this object.
      * @return The new object containing the relevant fields.
      */
     @Override public void loadFromString(String serialized)
@@ -50,7 +57,7 @@ public class VerboseCompleted extends CompletionBehavior
      */
     @Override public String convertToString()
     {
-        return "";
+        return null;
     }
 
     /**
@@ -63,6 +70,7 @@ public class VerboseCompleted extends CompletionBehavior
      */
     @Override protected CompletionBehavior copy()
     {
-        return new VerboseCompleted();
+        return new SimpleCompleted();
     }
+
 }

@@ -1,7 +1,7 @@
-package com.natebeckemeyer.projects.schedulrgui.core;
+package com.natebeckemeyer.projects.listrgui.core;
 
 /**
- * Created for Schedulr by @author Nate Beckemeyer on 2016-05-27.
+ * Created for Listr by @author Nate Beckemeyer on 2016-05-27.
  */
 public class InvalidCharacterException extends RuntimeException
 {

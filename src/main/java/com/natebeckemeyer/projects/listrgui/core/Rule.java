@@ -1,10 +1,10 @@
-package com.natebeckemeyer.projects.schedulrgui.core;
+package com.natebeckemeyer.projects.listrgui.core;
 
 import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
- * Created for Schedulr by @author Nate Beckemeyer on 2016-04-28.
+ * Created for Listr by @author Nate Beckemeyer on 2016-04-28.
  */
 @FunctionalInterface
 public interface Rule extends Predicate<AbstractTask>

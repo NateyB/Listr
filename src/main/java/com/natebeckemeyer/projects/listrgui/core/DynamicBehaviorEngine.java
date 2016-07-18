@@ -1,7 +1,7 @@
-package com.natebeckemeyer.projects.schedulrgui.core;
+package com.natebeckemeyer.projects.listrgui.core;
 
-import com.natebeckemeyer.projects.schedulrgui.implementations.BasicRuleOperation;
-import com.natebeckemeyer.projects.schedulrgui.reference.ProjectPaths;
+import com.natebeckemeyer.projects.listrgui.implementations.BasicRuleOperation;
+import com.natebeckemeyer.projects.listrgui.reference.ProjectPaths;
 
 import javax.naming.OperationNotSupportedException;
 import javax.tools.JavaCompiler;
@@ -17,11 +17,11 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 /**
- * Created for Schedulr by @author Nate Beckemeyer on 2016-06-19.
+ * Created for Listr by @author Nate Beckemeyer on 2016-06-19.
  * <p>
  * This class handles dynamically created behaviors; specifically, the {@link Rule rules} and
  * {@link CompletionBehavior completion behaviors} provided by the user. The rules include the rule that the user
- * specifies when attempting to view subsets of the tasks currently loaded into {@link Schedulr}.
+ * specifies when attempting to view subsets of the tasks currently loaded into {@link Listr}.
  */
 public final class DynamicBehaviorEngine
 {
@@ -51,7 +51,7 @@ public final class DynamicBehaviorEngine
      * @param type             The type of behavior.
      */
     public static void compileBehavior(String name, Collection<String> implementationOf, String extensionOf,
-                                       String userCode, Collection<String> imports, Schedulr.Behavior type)
+                                       String userCode, Collection<String> imports, Listr.Behavior type)
     {
         String className = name.substring(0, 1).toUpperCase() + name.substring(1);
         String fileName;
@@ -150,7 +150,7 @@ public final class DynamicBehaviorEngine
     public static Rule compileAndLoadRule(String name, Collection<String> implementationOf, String extensionOf,
                                           String function, Collection<String> imports)
     {
-        compileBehavior(name, implementationOf, extensionOf, function, imports, Schedulr.Behavior.RULE);
+        compileBehavior(name, implementationOf, extensionOf, function, imports, Listr.Behavior.RULE);
         return loadRule(name);
     }
 
@@ -164,12 +164,12 @@ public final class DynamicBehaviorEngine
                                                                       String extensionOf, String function,
                                                                       Collection<String> imports)
     {
-        compileBehavior(name, implementationOf, extensionOf, function, imports, Schedulr.Behavior.COMPLETION);
+        compileBehavior(name, implementationOf, extensionOf, function, imports, Listr.Behavior.COMPLETION);
         return loadCompletionBehavior(name);
     }
 
     /**
-     * Loads the rule of Rule "className" from the user-defined resources. It also adds this rule into Schedulr.
+     * Loads the rule of Rule "className" from the user-defined resources. It also adds this rule into Listr.
      *
      * @param className The name of the Rule to instantiate
      * @return an object of Rule of name {@code className}
@@ -186,7 +186,7 @@ public final class DynamicBehaviorEngine
             if (instantiation instanceof Rule)
             {
                 Rule userRule = (Rule) instantiation;
-                Schedulr.addRule(userRule);
+                Listr.addRule(userRule);
                 return userRule;
             } else
                 throw new OperationNotSupportedException("Attempted to load class that does not implement Rule.");
@@ -202,7 +202,7 @@ public final class DynamicBehaviorEngine
     /**
      * Loads the behavior of {@link CompletionBehavior} {@code className} from the user-defined resources. Adds the
      * class
-     * into the corresponding mapping in Schedulr.
+     * into the corresponding mapping in Listr.
      *
      * @param className The name of the CompletionBehavior to instantiate
      * @return an object of CompletionBehavior of name {@code className}
@@ -218,7 +218,7 @@ public final class DynamicBehaviorEngine
             if (instantiation instanceof CompletionBehavior)
             {
                 CompletionBehavior result = (CompletionBehavior) instantiation;
-                Schedulr.addCompletionBehavior(result.getClass());
+                Listr.addCompletionBehavior(result.getClass());
                 return result;
             } else
                 throw new OperationNotSupportedException(
@@ -330,7 +330,7 @@ public final class DynamicBehaviorEngine
                     input = input.substring(getEndIndex(input, val));
                 } else
                 {
-                    current = Schedulr.getRule(val);
+                    current = Listr.getRule(val);
                     input = input.substring(getEndIndex(input, val));
                 }
             }

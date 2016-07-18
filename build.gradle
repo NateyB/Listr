@@ -2,7 +2,7 @@ apply plugin: 'java'
 
 jar {
     manifest {
-        attributes 'Main-Class': 'com.natebeckemeyer.projects.schedulrgui.graphics.Main'
+        attributes 'Main-Class': 'com.natebeckemeyer.projects.listrgui.graphics.Main'
     }
 }
 

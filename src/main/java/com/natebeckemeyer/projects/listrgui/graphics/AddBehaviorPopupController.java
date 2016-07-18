@@ -1,6 +1,6 @@
-package com.natebeckemeyer.projects.schedulrgui.graphics;
+package com.natebeckemeyer.projects.listrgui.graphics;
 
-import com.natebeckemeyer.projects.schedulrgui.core.DynamicBehaviorEngine;
+import com.natebeckemeyer.projects.listrgui.core.DynamicBehaviorEngine;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.Scanner;
 
 /**
- * Created for Schedulr by @author Nate Beckemeyer on 2016-06-23.
+ * Created for Listr by @author Nate Beckemeyer on 2016-06-23.
  */
 public class AddBehaviorPopupController
 {

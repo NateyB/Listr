@@ -1,7 +1,7 @@
-package com.natebeckemeyer.projects.schedulrgui.core;
+package com.natebeckemeyer.projects.listrgui.core;
 
 /**
- * Created for Schedulr by @author Nate Beckemeyer on 2016-06-20.
+ * Created for Listr by @author Nate Beckemeyer on 2016-06-20.
  * <p>
  * This interface is intended to be extended exclusively by {@link Enum} types. It's used in text-to-Rule parsing.
  */

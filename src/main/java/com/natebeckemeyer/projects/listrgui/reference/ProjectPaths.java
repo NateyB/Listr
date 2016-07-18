@@ -1,4 +1,4 @@
-package com.natebeckemeyer.projects.schedulrgui.reference;
+package com.natebeckemeyer.projects.listrgui.reference;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
- * Created for Schedulr by @author Nate Beckemeyer on 2016-06-23.
+ * Created for Listr by @author Nate Beckemeyer on 2016-06-23.
  * <p>
  * This class contains many static final strings that refer to locations of important files used by the application.
  * It is a convenience class for locating (and updating the location of) files.
@@ -38,7 +38,7 @@ final public class ProjectPaths
     /**
      * The unformatted prefix for the outermost package (where initial source code branching occurs).
      */
-    private static final String thisLocation = "com%snatebeckemeyer%sprojects%sschedulrgui";
+    private static final String thisLocation = "com%snatebeckemeyer%sprojects%slistrgui";
 
     /**
      * The file prefix for the outermost package (where initial source code branching occurs).
@@ -117,7 +117,7 @@ final public class ProjectPaths
     public static final String userTasksDirectory = userResources + fileSeparator + "tasks";
 
     /**
-     * The directory containing the system resource files (those files which are native to Schedulr).
+     * The directory containing the system resource files (those files which are native to Listr).
      */
     public static final String systemFile = resourcesPrefix + fileSeparator + "system";
 

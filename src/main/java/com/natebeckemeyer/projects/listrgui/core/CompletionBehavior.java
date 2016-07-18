@@ -1,7 +1,7 @@
-package com.natebeckemeyer.projects.schedulrgui.core;
+package com.natebeckemeyer.projects.listrgui.core;
 
 /**
- * Created for Schedulr by @author Nate Beckemeyer on 2016-04-28.
+ * Created for Listr by @author Nate Beckemeyer on 2016-04-28.
  */
 public abstract class CompletionBehavior
 {
@@ -11,7 +11,7 @@ public abstract class CompletionBehavior
     protected static void setCompleted(AbstractTask task, boolean completed)
     {
         task.completed = completed;
-        FileParser.defaultSave(Schedulr.getAllTasks());
+        FileParser.defaultSave(Listr.getAllTasks());
     }
 
     /**
