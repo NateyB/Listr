@@ -75,11 +75,10 @@ public final class DynamicBehaviorEngine
 
         fileName = fileName + ProjectPaths.fileSeparator + className + ".java";
 
-        File fileLocation = ProjectPaths.getFile(fileName);
-        File templateLocation = ProjectPaths.getFile(
-                ProjectPaths.templateDirectory + ProjectPaths.fileSeparator + type + ".template");
+        File fileLocation = ProjectPaths.getExternalFile(fileName);
+        String templateLocation = ProjectPaths.templateDirectory + ProjectPaths.fileSeparator + type + ".template";
 
-        try (Scanner readTemplate = new Scanner(templateLocation);
+        try (Scanner readTemplate = new Scanner(ProjectPaths.getResource(templateLocation));
              FileWriter writeNewTask = new FileWriter(fileLocation.getCanonicalFile()))
         {
             // Prepare the imports
@@ -177,7 +176,7 @@ public final class DynamicBehaviorEngine
     public static Rule loadRule(String className)
     {
         try (URLClassLoader classLoader = new URLClassLoader(
-                new URL[]{ProjectPaths.getFile(ProjectPaths.userRulesFile).toURI().toURL()}))
+                new URL[]{ProjectPaths.getExternalFile(ProjectPaths.userRulesFile).toURI().toURL()}))
         {
             String usedName = className.substring(0, 1).toUpperCase() + className.substring(1);
             Class<?> ruleClass = classLoader.loadClass(usedName);
@@ -209,7 +208,7 @@ public final class DynamicBehaviorEngine
      */
     public static CompletionBehavior loadCompletionBehavior(String className)
     {
-        try (URLClassLoader classLoader = new URLClassLoader(new URL[]{ProjectPaths.getFile(
+        try (URLClassLoader classLoader = new URLClassLoader(new URL[]{ProjectPaths.getExternalFile(
                 ProjectPaths.userCompletionsFile).toURI().toURL()}))
         {
             Class<?> completionBehavior = classLoader.loadClass(className);

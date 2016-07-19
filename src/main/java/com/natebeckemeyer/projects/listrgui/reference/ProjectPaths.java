@@ -1,9 +1,7 @@
 package com.natebeckemeyer.projects.listrgui.reference;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.io.InputStream;
 
 /**
  * Created for Listr by @author Nate Beckemeyer on 2016-06-23.
@@ -153,34 +151,9 @@ final public class ProjectPaths
      * @param path The path of the file to open.
      * @return The file if found or created, null otherwise.
      */
-    public static File getFile(String path)
+    public static File getExternalFile(String path)
     {
-        try
-        {
-            URL resource = getResource(path);
-            if (resource != null)
-                return new File(resource.toURI());
-            else
-                return new File(path);
-
-        } catch (URISyntaxException e)
-        {
-            e.printStackTrace();
-        }
-
-        try
-        {
-            File current = new File(path);
-            current.mkdirs();
-            if (!current.exists())
-                current.createNewFile();
-
-            return current;
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        return null;
+        return new File(path);
     }
 
     /**
@@ -189,9 +162,9 @@ final public class ProjectPaths
      * @param path The path of the resource to load.
      * @return The resource.
      */
-    private static URL getResource(String path)
+    public static InputStream getResource(String path)
     {
-        return ProjectPaths.class.getResource(path);
+        return ProjectPaths.class.getResourceAsStream(path);
     }
 
 }

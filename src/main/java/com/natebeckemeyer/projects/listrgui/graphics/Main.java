@@ -48,7 +48,7 @@ public class Main extends Application
 
     static
     {
-        File defaultDirectory = ProjectPaths.getFile(ProjectPaths.userTasksDirectory);
+        File defaultDirectory = ProjectPaths.getExternalFile(ProjectPaths.userTasksDirectory);
         defaultDirectory.mkdirs();
 
         fileChooser.setTitle("Task File");
