@@ -1,0 +1,12 @@
+$$$IMPORTS$$$
+
+public class $$$CLASSNAME$$$ extends CompletionBehavior$$$IMPLEMENTATIONS$$$
+{
+
+    @Override public String toString()
+    {
+        return "$$$NAME$$$";
+    }
+
+    $$$CODE$$$
+}

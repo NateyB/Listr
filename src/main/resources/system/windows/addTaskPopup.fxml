@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="223.0"
+            prefWidth="391.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.natebeckemeyer.projects.listrgui.graphics.AddTaskPopupController">
+    <children>
+        <Button layoutX="210.0" layoutY="188.0" mnemonicParsing="false"
+                onMouseClicked="#addTaskButtonClicked" text="Add Task"/>
+        <TextField fx:id="addTaskNameField" layoutX="119.0" layoutY="20.0" prefHeight="27.0" prefWidth="258.0"
+                   promptText="Read research paper"/>
+        <DatePicker fx:id="addTaskDueDatePicker" layoutX="119.0" layoutY="59.0" prefHeight="27.0" prefWidth="258.0"/>
+        <TextField fx:id="addTaskLabelField" layoutX="119.0" layoutY="98.0" prefHeight="27.0" prefWidth="258.0"
+                   promptText="work household research"/>
+        <ChoiceBox fx:id="addTaskChoiceBox" layoutX="119.0" layoutY="138.0" prefHeight="27.0" prefWidth="258.0"/>
+        <Label layoutX="14.0" layoutY="25.0" text="Task Name:"/>
+        <Label layoutX="14.0" layoutY="64.0" text="Due Date:"/>
+        <Label layoutX="14.0" layoutY="103.0" text="Tags:"/>
+        <Label layoutX="14.0" layoutY="143.0" text="On Completion:"/>
+    </children>
+</AnchorPane>

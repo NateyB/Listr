@@ -1,0 +1,3 @@
+task type|yyyy|mm|dd|isCompleted|tag0Name tag1Name tag2Name|completionBehavior name|completionBehavior output|task name
+SimpleTask|2016|00|15|true|household home-improvement|MarkCompleted| |Build garage
+SimpleTask|2016|11|03|false|work|MarkCompleted| |File grant application
