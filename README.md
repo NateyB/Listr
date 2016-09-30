@@ -8,7 +8,7 @@ that you want to do in your free time.
 Most importantly, Listr is extremely flexible and usable.
 
 ###Rules
-Listr's uses "Rules" to organize its tasks. Rules are simply functions that
+Listr uses "Rules" to organize its tasks. Rules are simply functions that
 indicate whether a given task meets their criteria. For example, the rule
 "week" will state that any task due before the end of the week meets its
 criteria. So, if you wanted to view all of your tasks due this week in Listr,
